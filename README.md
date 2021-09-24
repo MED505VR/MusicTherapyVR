@@ -1,5 +1,5 @@
 # Music Therapy VR
-![ME Lab Logo](https://www.digitalhub.aau.dk/digitalAssets/437/437406_me-lab_stor.jpg)
+![ME Lab Logo](https://pbs.twimg.com/profile_images/1258294264188088320/u0UYNFzw.jpg)
 
 This application was developed to facilitate online musical therapy within virtual reality. 
 
