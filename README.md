@@ -5,14 +5,20 @@ This application was developed to facilitate online musical therapy within virtu
 
 ### Contact
 Hector Thøgersen
+
 :email:: hthage19@student.aau.dk
 
 ### Created By:
 Ali Adjorlu
+
 Hjalte Drejer
+
 Joey Ho
+
 Jacob Noer 
+
 Kresten Carr
+
 Hector Thøgersen
 
 ### Contributions
