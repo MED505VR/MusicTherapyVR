@@ -18,7 +18,8 @@ public class OVRBundleManager
 	private const string BUNDLE_MANAGER_MASTER_BUNDLE = "OVRMasterBundle";
 
 	private const string EXTERNAL_STORAGE_PATH = "/sdcard/Android/data";
-	private const string ADB_TOOL_INITIALIZE_ERROR = "Failed to initialize ADB Tool. Please check Android SDK path in Preferences -> External Tools";
+	private const string ADB_TOOL_INITIALIZE_ERROR =
+ "Failed to initialize ADB Tool. Please check Android SDK path in Preferences -> External Tools";
 
 	private static string externalSceneCache;
 	private static string transitionScenePath;
@@ -44,7 +45,8 @@ public class OVRBundleManager
 		if (String.IsNullOrEmpty(transitionScenePath))
 		{
 			// Get current editor script's directory as base path
-			string[] res = System.IO.Directory.GetFiles(Application.dataPath, "OVRBundleManager.cs", SearchOption.AllDirectories);
+			string[] res =
+ System.IO.Directory.GetFiles(Application.dataPath, "OVRBundleManager.cs", SearchOption.AllDirectories);
 			if (res.Length > 1)
 			{
 				OVRBundleTool.PrintError("More than one OVRBundleManager editor script has been found, please double check your Oculus SDK import.");
@@ -91,7 +93,8 @@ public class OVRBundleManager
 		projectDefaultAppIdentifier = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android);
 		projectDefaultVersion = PlayerSettings.bundleVersion;
 		projectAndroidArchitecture = PlayerSettings.Android.targetArchitectures;
-		projectScriptImplementation = PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup);
+		projectScriptImplementation =
+ PlayerSettings.GetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup);
 		projectManagedStrippingLevel = PlayerSettings.GetManagedStrippingLevel(BuildTargetGroup.Android);
 		projectStripEngineCode = PlayerSettings.stripEngineCode;
 
@@ -170,7 +173,8 @@ public class OVRBundleManager
 	// its dependencies such as scenes that are loaded additively
 	public static void BuildDeployScenes(List<OVRBundleTool.EditorSceneInfo> sceneList, bool forceRestart)
 	{
-		externalSceneCache = EXTERNAL_STORAGE_PATH + "/" + PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android)
+		externalSceneCache =
+ EXTERNAL_STORAGE_PATH + "/" + PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android)
 			+ GetTransitionApkOptionalIdentifier() + "/cache/scenes";
 
 		BuildSceneBundles(sceneList);
@@ -206,9 +210,11 @@ public class OVRBundleManager
 		// Check if assets in Resources need to be packaged
 		if (CheckForResources())
 		{
-			var resourceDirectories = Directory.GetDirectories("Assets", "Resources", SearchOption.AllDirectories).ToArray();
+			var resourceDirectories =
+ Directory.GetDirectories("Assets", "Resources", SearchOption.AllDirectories).ToArray();
 			// Fetch a list of all files in resource directory
-			string[] resourceAssetPaths = AssetDatabase.FindAssets("", resourceDirectories).Select(x => AssetDatabase.GUIDToAssetPath(x)).ToArray();
+			string[] resourceAssetPaths =
+ AssetDatabase.FindAssets("", resourceDirectories).Select(x => AssetDatabase.GUIDToAssetPath(x)).ToArray();
 			ProcessAssets(resourceAssetPaths, "resources", ref uniqueAssetInSceneBundle, ref extToAssetList);
 
 			AssetBundleBuild resourceBundle = new AssetBundleBuild();
@@ -296,7 +302,8 @@ public class OVRBundleManager
 					// Each asset is keyed by full path as a unique identifier
 					if (!uniqueAssetInSceneBundle.ContainsKey(asset))
 					{
-						var assetObject = (UnityEngine.Object)AssetDatabase.LoadAssetAtPath(asset, typeof(UnityEngine.Object));
+						var assetObject =
+ (UnityEngine.Object)AssetDatabase.LoadAssetAtPath(asset, typeof(UnityEngine.Object));
 						if (assetObject == null || (assetObject.hideFlags & HideFlags.DontSaveInBuild) == 0)
 						{
 							uniqueAssetInSceneBundle[asset] = assetParent;
@@ -350,7 +357,8 @@ public class OVRBundleManager
 
 			StreamWriter writer = new StreamWriter(sceneLoadDataPath, true);
 			// Write version and scene names
-			long unixTime = (int)(DateTimeOffset.UtcNow.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
+			long unixTime =
+ (int)(DateTimeOffset.UtcNow.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
 			writer.WriteLine(unixTime.ToString());
 			for (int i = 0; i < sceneList.Count; i++)
 			{
@@ -360,7 +368,8 @@ public class OVRBundleManager
 			writer.Close();
 
 			string absoluteSceneLoadDataPath = Path.Combine(absoluteTempPath, OVRSceneLoader.sceneLoadDataName);
-			string[] pushCommand = { "-d push", "\"" + absoluteSceneLoadDataPath + "\"", "\"" + externalSceneCache + "\"" };
+			string[] pushCommand =
+ { "-d push", "\"" + absoluteSceneLoadDataPath + "\"", "\"" + externalSceneCache + "\"" };
 			string output, error;
 			if (adbTool.RunCommand(pushCommand, null, out output, out error) == 0)
 			{
@@ -392,7 +401,8 @@ public class OVRBundleManager
 			Debug.Log("[OVRBundleManager] - Scene bundle manifest file found. Decoding changes . . .");
 
 			// Load hashes from remote manifest
-			AssetBundle remoteBundle = AssetBundle.LoadFromFile(Path.Combine(absoluteTempPath, BUNDLE_MANAGER_MASTER_BUNDLE));
+			AssetBundle remoteBundle =
+ AssetBundle.LoadFromFile(Path.Combine(absoluteTempPath, BUNDLE_MANAGER_MASTER_BUNDLE));
 			if (remoteBundle == null)
 			{
 				OVRBundleTool.PrintError("Failed to load remote asset bundle manifest file.");
@@ -412,7 +422,8 @@ public class OVRBundleManager
 			remoteBundle.Unload(true);
 
 			// Load hashes from local manifest
-			AssetBundle localBundle = AssetBundle.LoadFromFile(BUNDLE_MANAGER_OUTPUT_PATH + "\\" + BUNDLE_MANAGER_MASTER_BUNDLE
+			AssetBundle localBundle =
+ AssetBundle.LoadFromFile(BUNDLE_MANAGER_OUTPUT_PATH + "\\" + BUNDLE_MANAGER_MASTER_BUNDLE
 					+ "\\" + BUNDLE_MANAGER_MASTER_BUNDLE);
 			if (localBundle == null)
 			{
@@ -426,7 +437,8 @@ public class OVRBundleManager
 				Hash128 zeroHash = new Hash128(0, 0, 0, 0);
 
 				// Build a list of dirty bundles that will have to be transfered
-				string relativeSceneBundlesPath = Path.Combine(BUNDLE_MANAGER_OUTPUT_PATH, BUNDLE_MANAGER_MASTER_BUNDLE);
+				string relativeSceneBundlesPath =
+ Path.Combine(BUNDLE_MANAGER_OUTPUT_PATH, BUNDLE_MANAGER_MASTER_BUNDLE);
 				bundlesToTransfer.Add(Path.Combine(relativeSceneBundlesPath, BUNDLE_MANAGER_MASTER_BUNDLE));
 				string[] assetBundles = localManifest.GetAllAssetBundles();
 				foreach (string bundleName in assetBundles)
@@ -493,7 +505,8 @@ public class OVRBundleManager
 		foreach (string bundle in bundlesToTransfer)
 		{
 			string absoluteBundlePath = Path.Combine(Path.Combine(Application.dataPath, ".."), bundle);
-			string[] pushBundleCommand = { "-d push", "\"" + absoluteBundlePath + "\"", "\"" + externalSceneCache + "\"" };
+			string[] pushBundleCommand =
+ { "-d push", "\"" + absoluteBundlePath + "\"", "\"" + externalSceneCache + "\"" };
 			adbTool.RunCommandAsync(pushBundleCommand, null);
 		}
 		Debug.Log("[OVRBundleManager] - Transfer took " + (DateTime.Now - transferStart).TotalSeconds + " seconds.");
@@ -524,7 +537,8 @@ public class OVRBundleManager
 			string appPackagename = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android)
 				+ GetTransitionApkOptionalIdentifier();
 			string playerActivityName = "\"" + appPackagename + "/com.unity3d.player.UnityPlayerActivity\"";
-			string[] appStartCommand = { "-d shell", "am start -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -S -f 0x10200000 -n", playerActivityName };
+			string[] appStartCommand =
+ { "-d shell", "am start -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -S -f 0x10200000 -n", playerActivityName };
 			if (adbTool.RunCommand(appStartCommand, null, out output, out error) == 0)
 			{
 				OVRBundleTool.PrintSuccess();
@@ -532,7 +546,8 @@ public class OVRBundleManager
 				return true;
 			}
 
-			string completeError = "Failed to launch application. Try launching it manually through the device.\n" + (string.IsNullOrEmpty(error) ? output : error);
+			string completeError =
+ "Failed to launch application. Try launching it manually through the device.\n" + (string.IsNullOrEmpty(error) ? output : error);
 			OVRBundleTool.PrintError(completeError);
 		}
 		else
@@ -574,7 +589,8 @@ public class OVRBundleManager
 		OVRADBTool adbTool = new OVRADBTool(OVRConfig.Instance.GetAndroidSDKPath());
 		if (adbTool.isReady)
 		{
-			externalSceneCache = EXTERNAL_STORAGE_PATH + "/" + PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android)
+			externalSceneCache =
+ EXTERNAL_STORAGE_PATH + "/" + PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android)
 				+ GetTransitionApkOptionalIdentifier() + "/cache/scenes";
 
 			bool failure = false;

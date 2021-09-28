@@ -30,29 +30,23 @@ using System.IO;
 using System.Diagnostics;
 
 [InitializeOnLoad]
-class ONSPAudioPluginUpdater
+internal class ONSPAudioPluginUpdater
 {
     private static bool restartPending = false;
     private static bool unityRunningInBatchmode = false;
 
-    private static System.Version invalidVersion = new System.Version("0.0.0");
+    private static Version invalidVersion = new Version("0.0.0");
 
     static ONSPAudioPluginUpdater()
     {
         EditorApplication.delayCall += OnDelayCall;
     }
 
-    static void OnDelayCall()
+    private static void OnDelayCall()
     {
-        if (System.Environment.CommandLine.Contains("-batchmode"))
-        {
-            unityRunningInBatchmode = true;
-        }
+        if (Environment.CommandLine.Contains("-batchmode")) unityRunningInBatchmode = true;
 
-        if (ShouldAttemptPluginUpdate())
-        {
-            AttemptSpatializerPluginUpdate(true);
-        }
+        if (ShouldAttemptPluginUpdate()) AttemptSpatializerPluginUpdate(true);
     }
 
     private static string GetCurrentProjectPath()
@@ -64,43 +58,36 @@ class ONSPAudioPluginUpdater
     {
         var so = ScriptableObject.CreateInstance(typeof(ONSPAudioPluginUpdaterStub));
         var script = MonoScript.FromScriptableObject(so);
-        string assetPath = AssetDatabase.GetAssetPath(script);
-        string editorDir = Directory.GetParent(assetPath).FullName;
-        string ovrDir = Directory.GetParent(editorDir).FullName;
+        var assetPath = AssetDatabase.GetAssetPath(script);
+        var editorDir = Directory.GetParent(assetPath).FullName;
+        var ovrDir = Directory.GetParent(editorDir).FullName;
 
         return ovrDir;
     }
 
-    public static string GetVersionDescription(System.Version version)
+    public static string GetVersionDescription(Version version)
     {
-        bool isVersionValid = (version != invalidVersion);
+        var isVersionValid = version != invalidVersion;
         return isVersionValid ? version.ToString() : "(Unknown)";
     }
 
     private static bool ShouldAttemptPluginUpdate()
     {
         if (unityRunningInBatchmode)
-        {
             return false;
-        }
         else
-        {
-            return (autoUpdateEnabled && !restartPending && !Application.isPlaying);
-        }
+            return autoUpdateEnabled && !restartPending && !Application.isPlaying;
     }
 
-    private static readonly string autoUpdateEnabledKey = "Oculus_Utilities_ONSPAudioPluginUpdater_AutoUpdate_" + 1.0;//PASOVRManager.utilitiesVersion;
+    private static readonly string
+        autoUpdateEnabledKey =
+            "Oculus_Utilities_ONSPAudioPluginUpdater_AutoUpdate_" + 1.0; //PASOVRManager.utilitiesVersion;
+
     private static bool autoUpdateEnabled
     {
-        get
-        {
-            return PlayerPrefs.GetInt(autoUpdateEnabledKey, 1) == 1;
-        }
+        get => PlayerPrefs.GetInt(autoUpdateEnabledKey, 1) == 1;
 
-        set
-        {
-            PlayerPrefs.SetInt(autoUpdateEnabledKey, value ? 1 : 0);
-        }
+        set => PlayerPrefs.SetInt(autoUpdateEnabledKey, value ? 1 : 0);
     }
 
     [MenuItem("Oculus/Tools/Update Spatializer Plugin")]
@@ -119,8 +106,8 @@ class ONSPAudioPluginUpdater
 
     private static string GetSpatializerPluginsRootPath()
     {
-        string ovrPath = GetUtilitiesRootPath();
-        string spatializerPluginsPath = Path.GetFullPath(Path.Combine(ovrPath, "../Spatializer/Plugins"));
+        var ovrPath = GetUtilitiesRootPath();
+        var spatializerPluginsPath = Path.GetFullPath(Path.Combine(ovrPath, "../Spatializer/Plugins"));
         return spatializerPluginsPath;
     }
 
@@ -128,10 +115,10 @@ class ONSPAudioPluginUpdater
     {
         if (File.Exists(currentPluginPath))
         {
-            int index = 0;
+            var index = 0;
             string targetPluginPath;
             string targetPluginMetaPath;
-            for (; ; )
+            for (;;)
             {
                 targetPluginPath = currentPluginPath + ".old" + index.ToString();
                 targetPluginMetaPath = targetPluginPath + ".meta";
@@ -139,19 +126,23 @@ class ONSPAudioPluginUpdater
                     break;
                 ++index;
             }
+
             try
             {
                 File.Move(currentPluginPath, targetPluginPath);
                 File.Move(currentPluginPath + ".meta", targetPluginMetaPath);
-                UnityEngine.Debug.LogFormat("Spatializer plugin renamed: {0} to {1}", currentPluginPath, targetPluginPath);
+                UnityEngine.Debug.LogFormat("Spatializer plugin renamed: {0} to {1}", currentPluginPath,
+                    targetPluginPath);
                 return true;
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.LogWarningFormat("Unable to rename spatializer plugin: {0}, exception {1}", currentPluginPath, e.Message);
+                UnityEngine.Debug.LogWarningFormat("Unable to rename spatializer plugin: {0}, exception {1}",
+                    currentPluginPath, e.Message);
                 return false;
             }
         }
+
         return false;
     }
 
@@ -160,12 +151,13 @@ class ONSPAudioPluginUpdater
         // We use a simplified path to update spatializer plugins:
         // If there is a new AudioPluginOculusSpatializer.dll.new, we'll rename the original one to .old, and the new one to .dll, and restart the editor
 
-        string pluginsPath = GetSpatializerPluginsRootPath();
-        string newX86PluginPath = Path.GetFullPath(Path.Combine(pluginsPath, "x86/AudioPluginOculusSpatializer.dll.new"));
-        string newX64PluginPath = Path.GetFullPath(Path.Combine(pluginsPath, "x86_64/AudioPluginOculusSpatializer.dll.new"));
+        var pluginsPath = GetSpatializerPluginsRootPath();
+        var newX86PluginPath = Path.GetFullPath(Path.Combine(pluginsPath, "x86/AudioPluginOculusSpatializer.dll.new"));
+        var newX64PluginPath =
+            Path.GetFullPath(Path.Combine(pluginsPath, "x86_64/AudioPluginOculusSpatializer.dll.new"));
         if (File.Exists(newX86PluginPath) || File.Exists(newX64PluginPath))
         {
-            bool userAcceptsUpdate = false;
+            var userAcceptsUpdate = false;
 
             if (unityRunningInBatchmode)
             {
@@ -173,7 +165,7 @@ class ONSPAudioPluginUpdater
             }
             else
             {
-                int dialogResult = EditorUtility.DisplayDialogComplex("Update Spatializer Plugins",
+                var dialogResult = EditorUtility.DisplayDialogComplex("Update Spatializer Plugins",
                     "New spatializer plugin found. Do you want to upgrade? If you choose 'Upgrade', the old plugin will be renamed to AudioPluginOculusSpatializer.old",
                     "Upgrade", "Don't upgrade", "Delete new plugin");
                 if (dialogResult == 0)
@@ -193,17 +185,18 @@ class ONSPAudioPluginUpdater
                         File.Delete(newX64PluginPath);
                         File.Delete(newX64PluginPath + ".meta");
                     }
-                    catch (Exception e) 
+                    catch (Exception e)
                     {
-                        UnityEngine.Debug.LogWarning("Exception happened when deleting new spatializer plugin: " + e.Message);
+                        UnityEngine.Debug.LogWarning("Exception happened when deleting new spatializer plugin: " +
+                                                     e.Message);
                     }
                 }
             }
 
             if (userAcceptsUpdate)
             {
-                bool upgradeDone = false;
-                string curX86PluginPath = Path.Combine(pluginsPath, "x86/AudioPluginOculusSpatializer.dll");
+                var upgradeDone = false;
+                var curX86PluginPath = Path.Combine(pluginsPath, "x86/AudioPluginOculusSpatializer.dll");
                 if (File.Exists(newX86PluginPath))
                 {
                     RenameSpatializerPluginToOld(curX86PluginPath);
@@ -213,10 +206,11 @@ class ONSPAudioPluginUpdater
                         File.Move(newX86PluginPath + ".meta", curX86PluginPath + ".meta");
 
                         // fix the platform
-                        string curX86PluginPathRel = "Assets/Oculus/Spatializer/Plugins/x86/AudioPluginOculusSpatializer.dll";
+                        var curX86PluginPathRel =
+                            "Assets/Oculus/Spatializer/Plugins/x86/AudioPluginOculusSpatializer.dll";
                         UnityEngine.Debug.Log("path = " + curX86PluginPathRel);
                         AssetDatabase.ImportAsset(curX86PluginPathRel, ImportAssetOptions.ForceUpdate);
-                        PluginImporter pi = PluginImporter.GetAtPath(curX86PluginPathRel) as PluginImporter;
+                        var pi = AssetImporter.GetAtPath(curX86PluginPathRel) as PluginImporter;
                         pi.SetCompatibleWithEditor(false);
                         pi.SetCompatibleWithAnyPlatform(false);
                         pi.SetCompatibleWithPlatform(BuildTarget.Android, false);
@@ -246,7 +240,8 @@ class ONSPAudioPluginUpdater
                         UnityEngine.Debug.LogWarning("Unable to rename the new spatializer plugin: " + e.Message);
                     }
                 }
-                string curX64PluginPath = Path.Combine(pluginsPath, "x86_64/AudioPluginOculusSpatializer.dll");
+
+                var curX64PluginPath = Path.Combine(pluginsPath, "x86_64/AudioPluginOculusSpatializer.dll");
                 if (File.Exists(newX64PluginPath))
                 {
                     RenameSpatializerPluginToOld(curX64PluginPath);
@@ -256,10 +251,11 @@ class ONSPAudioPluginUpdater
                         File.Move(newX64PluginPath + ".meta", curX64PluginPath + ".meta");
 
                         // fix the platform
-                        string curX64PluginPathRel = "Assets/Oculus/Spatializer/Plugins/x86_64/AudioPluginOculusSpatializer.dll";
+                        var curX64PluginPathRel =
+                            "Assets/Oculus/Spatializer/Plugins/x86_64/AudioPluginOculusSpatializer.dll";
                         UnityEngine.Debug.Log("path = " + curX64PluginPathRel);
                         AssetDatabase.ImportAsset(curX64PluginPathRel, ImportAssetOptions.ForceUpdate);
-                        PluginImporter pi = PluginImporter.GetAtPath(curX64PluginPathRel) as PluginImporter;
+                        var pi = AssetImporter.GetAtPath(curX64PluginPathRel) as PluginImporter;
                         pi.SetCompatibleWithEditor(false);
                         pi.SetCompatibleWithAnyPlatform(false);
                         pi.SetCompatibleWithPlatform(BuildTarget.Android, false);
@@ -289,23 +285,19 @@ class ONSPAudioPluginUpdater
                         UnityEngine.Debug.LogWarning("Unable to rename the new spatializer plugin: " + e.Message);
                     }
                 }
-                
+
                 if (upgradeDone)
-                {
                     if (unityRunningInBatchmode
                         || EditorUtility.DisplayDialog("Restart Unity",
                             "Spatializer plugins has been upgraded."
-                                + "\n\nPlease restart the Unity Editor to complete the update process."
+                            + "\n\nPlease restart the Unity Editor to complete the update process."
 #if !UNITY_2017_1_OR_NEWER
  + " You may need to manually relaunch Unity if you are using Unity 5.6 and higher."
 #endif
-,
+                            ,
                             "Restart",
                             "Not Now"))
-                    {
                         RestartUnityEditor();
-                    }
-                }
             }
         }
     }

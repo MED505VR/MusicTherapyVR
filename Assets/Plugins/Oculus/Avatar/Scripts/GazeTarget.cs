@@ -14,13 +14,13 @@ public class GazeTarget : MonoBehaviour
         RuntimeTargetList.targetCount = 1;
     }
 
-    void Start()
+    private void Start()
     {
         UpdateGazeTarget();
         transform.hasChanged = false;
     }
 
-    void Update()
+    private void Update()
     {
         if (transform.hasChanged)
         {
@@ -29,21 +29,22 @@ public class GazeTarget : MonoBehaviour
         }
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
-        UInt32[] targetIds = new UInt32[1];
-        targetIds[0] = (UInt32) transform.GetInstanceID();
+        var targetIds = new uint[1];
+        targetIds[0] = (uint)transform.GetInstanceID();
         CAPI.ovrAvatar_RemoveGazeTargets(1, targetIds);
     }
 
     private void UpdateGazeTarget()
     {
-        ovrAvatarGazeTarget target = CreateOvrGazeTarget((UInt32) transform.GetInstanceID(), transform.position, Type);
+        var target = CreateOvrGazeTarget((uint)transform.GetInstanceID(), transform.position, Type);
         RuntimeTargetList.targets[0] = target;
         CAPI.ovrAvatar_UpdateGazeTargets(RuntimeTargetList);
     }
 
-    private ovrAvatarGazeTarget CreateOvrGazeTarget(UInt32 targetId, Vector3 targetPosition, ovrAvatarGazeTargetType targetType)
+    private ovrAvatarGazeTarget CreateOvrGazeTarget(uint targetId, Vector3 targetPosition,
+        ovrAvatarGazeTargetType targetType)
     {
         return new ovrAvatarGazeTarget
         {

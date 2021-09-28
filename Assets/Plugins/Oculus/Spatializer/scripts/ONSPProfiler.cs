@@ -18,6 +18,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ************************************************************************************/
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -28,29 +29,27 @@ using UnityEngine.Networking;
 public class ONSPProfiler : MonoBehaviour
 {
     public bool profilerEnabled = false;
-    const int DEFAULT_PORT = 2121;
+    private const int DEFAULT_PORT = 2121;
     public int port = DEFAULT_PORT;
 
-    void Start()
+    private void Start()
     {
         Application.runInBackground = true;
     }
 
-    void Update()
+    private void Update()
     {
-        if (port < 0 || port > 65535)
-        {
-            port = DEFAULT_PORT;
-        }
+        if (port < 0 || port > 65535) port = DEFAULT_PORT;
         ONSP_SetProfilerPort(port);
         ONSP_SetProfilerEnabled(profilerEnabled);
     }
 
-	// Import functions
+    // Import functions
     public const string strONSPS = "AudioPluginOculusSpatializer";
-	
+
     [DllImport(strONSPS)]
     private static extern int ONSP_SetProfilerEnabled(bool enabled);
+
     [DllImport(strONSPS)]
     private static extern int ONSP_SetProfilerPort(int port);
 }

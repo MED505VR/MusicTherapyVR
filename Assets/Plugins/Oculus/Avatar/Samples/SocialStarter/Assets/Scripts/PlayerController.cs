@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using Oculus.Platform;
 using Oculus.Platform.Models;
 
 public class PlayerController : SocialPlatformManager
 {
-
     // Secondary camera to debug and view the whole scene from above
     public Camera spyCamera;
 
@@ -37,62 +35,44 @@ public class PlayerController : SocialPlatformManager
     }
 
     // Check for input from the touch controllers
-    void checkInput()
+    private void checkInput()
     {
         if (UnityEngine.Application.platform == RuntimePlatform.Android)
         {
             // GearVR Controller
 
             // Bring up friend invite list
-            if (OVRInput.GetDown(OVRInput.Button.Back))
-            {
-                Rooms.LaunchInvitableUserFlow(roomManager.roomID);
-            }
+            if (OVRInput.GetDown(OVRInput.Button.Back)) Rooms.LaunchInvitableUserFlow(roomManager.roomID);
 
             // Toggle Camera
-            if (OVRInput.GetDown(OVRInput.Button.PrimaryTouchpad))
-            {
-                ToggleCamera();
-            }
+            if (OVRInput.GetDown(OVRInput.Button.PrimaryTouchpad)) ToggleCamera();
 
             // Toggle Help UI
-            if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger))
-            {
-                ToggleUI();
-            }
+            if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger)) ToggleUI();
         }
         else
         {
             // PC Touch 
 
             // Bring up friend invite list
-            if (OVRInput.GetDown(OVRInput.Button.Three))
-            {
-                Rooms.LaunchInvitableUserFlow (roomManager.roomID);
-            }
+            if (OVRInput.GetDown(OVRInput.Button.Three)) Rooms.LaunchInvitableUserFlow(roomManager.roomID);
 
             // Toggle Camera
-            if (OVRInput.GetDown(OVRInput.Button.Four))
-            {
-                ToggleCamera();
-            }
+            if (OVRInput.GetDown(OVRInput.Button.Four)) ToggleCamera();
 
             // Toggle Help UI
-            if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick))
-            {
-                ToggleUI();
-            }
+            if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick)) ToggleUI();
         }
     }
 
-    void ToggleCamera()
+    private void ToggleCamera()
     {
         spyCamera.enabled = !spyCamera.enabled;
         localAvatar.ShowThirdPerson = !localAvatar.ShowThirdPerson;
         cameraRig.SetActive(!cameraRig.activeSelf);
     }
 
-    void ToggleUI()
+    private void ToggleUI()
     {
         showUI = !showUI;
         helpPanel.SetActive(showUI);

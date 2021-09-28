@@ -29,52 +29,34 @@ namespace UnityEngine.EventSystems
         /// <summary>
         /// Layer mask used to filter events. Always combined with the camera's culling mask if a camera is used.
         /// </summary>
-        [SerializeField]
-        protected LayerMask m_EventMask = kNoEventMaskSet;
+        [SerializeField] protected LayerMask m_EventMask = kNoEventMaskSet;
 
         protected OVRPhysicsRaycaster()
-        { }
-
-        public override Camera eventCamera
         {
-            get
-            {
-                return GetComponent<OVRCameraRig>().leftEyeCamera;
-            }
         }
+
+        public override Camera eventCamera => GetComponent<OVRCameraRig>().leftEyeCamera;
 
         /// <summary>
         /// Depth used to determine the order of event processing.
         /// </summary>
-        public virtual int depth
-        {
-            get { return (eventCamera != null) ? (int)eventCamera.depth : 0xFFFFFF; }
-        }
+        public virtual int depth => eventCamera != null ? (int)eventCamera.depth : 0xFFFFFF;
 
         public int sortOrder = 0;
-        public override int sortOrderPriority
-        {
-            get
-            {
-                return sortOrder;
-            }
-        }
+        public override int sortOrderPriority => sortOrder;
 
         /// <summary>
         /// Event mask used to determine which objects will receive events.
         /// </summary>
-        public int finalEventMask
-        {
-            get { return (eventCamera != null) ? eventCamera.cullingMask & m_EventMask : kNoEventMaskSet; }
-        }
+        public int finalEventMask => eventCamera != null ? eventCamera.cullingMask & m_EventMask : kNoEventMaskSet;
 
         /// <summary>
         /// Layer mask used to filter events. Always combined with the camera's culling mask if a camera is used.
         /// </summary>
         public LayerMask eventMask
         {
-            get { return m_EventMask; }
-            set { m_EventMask = value; }
+            get => m_EventMask;
+            set => m_EventMask = value;
         }
 
 
@@ -95,7 +77,7 @@ namespace UnityEngine.EventSystems
 
             var ray = eventData.GetRay();
 
-            float dist = eventCamera.farClipPlane - eventCamera.nearClipPlane;
+            var dist = eventCamera.farClipPlane - eventCamera.nearClipPlane;
 
             var hits = Physics.RaycastAll(ray, dist, finalEventMask);
 
@@ -103,7 +85,6 @@ namespace UnityEngine.EventSystems
                 System.Array.Sort(hits, (r1, r2) => r1.distance.CompareTo(r2.distance));
 
             if (hits.Length != 0)
-            {
                 for (int b = 0, bmax = hits.Length; b < bmax; ++b)
                 {
                     var result = new RaycastResult
@@ -113,11 +94,10 @@ namespace UnityEngine.EventSystems
                         distance = hits[b].distance,
                         index = resultAppendList.Count,
                         worldPosition = hits[0].point,
-                        worldNormal = hits[0].normal,
+                        worldNormal = hits[0].normal
                     };
                     resultAppendList.Add(result);
                 }
-            }
         }
 
         /// <summary>
@@ -137,7 +117,7 @@ namespace UnityEngine.EventSystems
             var ray = eventData.GetRay();
 
 
-            float dist = eventCamera.farClipPlane - eventCamera.nearClipPlane;
+            var dist = eventCamera.farClipPlane - eventCamera.nearClipPlane;
 
             var hits = Physics.SphereCastAll(ray, radius, dist, finalEventMask);
 
@@ -145,7 +125,6 @@ namespace UnityEngine.EventSystems
                 System.Array.Sort(hits, (r1, r2) => r1.distance.CompareTo(r2.distance));
 
             if (hits.Length != 0)
-            {
                 for (int b = 0, bmax = hits.Length; b < bmax; ++b)
                 {
                     var result = new RaycastResult
@@ -155,12 +134,12 @@ namespace UnityEngine.EventSystems
                         distance = hits[b].distance,
                         index = resultAppendList.Count,
                         worldPosition = hits[0].point,
-                        worldNormal = hits[0].normal,
+                        worldNormal = hits[0].normal
                     };
                     resultAppendList.Add(result);
                 }
-            }
         }
+
         /// <summary>
         /// Get screen position of this world position as seen by the event camera of this OVRPhysicsRaycaster
         /// </summary>

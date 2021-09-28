@@ -1,29 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class DrumColor : MonoBehaviour
+namespace Drum
 {
-    public Color DrumSkinOriginal = new Color(204,204,169,255);
-    public Color DrumSkinHit = new Color(89, 89, 89, 255);
-    private GameObject leftHand, rightHand, myObject;
-
-    private void Awake()
+    public class DrumColor : MonoBehaviour
     {
-        leftHand = GameObject.Find("LeftHandAnchor");
-        rightHand = GameObject.Find("RightHandAnchor");
-        myObject = GameObject.Find("Skin");
-    }
+        public Color drumSkinOriginal = new Color(204, 204, 169, 255);
+        public Color drumSkinHit = new Color(89, 89, 89, 255);
+        private GameObject leftHand, rightHand, myObject;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject == leftHand || other.gameObject == rightHand)
+        private void Awake()
         {
-            myObject.GetComponent<Renderer>().material.color = DrumSkinHit;
+            leftHand = GameObject.Find("LeftHandAnchor");
+            rightHand = GameObject.Find("RightHandAnchor");
+            myObject = GameObject.Find("Skin");
         }
-        else if (other.gameObject != leftHand || other.gameObject != rightHand)
+
+        private void OnTriggerEnter(Collider other)
         {
-            myObject.GetComponent<Renderer>().material.color = DrumSkinOriginal;
+            if (other.gameObject == leftHand || other.gameObject == rightHand)
+                myObject.GetComponent<Renderer>().material.color = drumSkinHit;
+            else if (other.gameObject != leftHand || other.gameObject != rightHand)
+                myObject.GetComponent<Renderer>().material.color = drumSkinOriginal;
         }
     }
 }

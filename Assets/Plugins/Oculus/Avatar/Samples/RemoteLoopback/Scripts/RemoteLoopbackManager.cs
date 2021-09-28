@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 public class RemoteLoopbackManager : MonoBehaviour
 {
-    class PacketLatencyPair
+    private class PacketLatencyPair
     {
         public byte[] PacketData;
         public float FakeLatency;
@@ -17,20 +17,17 @@ public class RemoteLoopbackManager : MonoBehaviour
     public OvrAvatar LocalAvatar;
     public OvrAvatar LoopbackAvatar;
 
-    [System.Serializable]
+    [Serializable]
     public class SimulatedLatencySettings
     {
-        [Range(0.0f, 0.5f)]
-        public float FakeLatencyMax = 0.25f; //250 ms max latency
+        [Range(0.0f, 0.5f)] public float FakeLatencyMax = 0.25f; //250 ms max latency
 
-        [Range(0.0f, 0.5f)]
-        public float FakeLatencyMin = 0.002f; //2ms min latency
+        [Range(0.0f, 0.5f)] public float FakeLatencyMin = 0.002f; //2ms min latency
 
         [Range(0.0f, 1.0f)]
-        public float LatencyWeight = 0.25f;  // How much the latest sample impacts the current latency
+        public float LatencyWeight = 0.25f; // How much the latest sample impacts the current latency
 
-        [Range(0,10)]
-        public int MaxSamples = 4; //How many samples in our window
+        [Range(0, 10)] public int MaxSamples = 4; //How many samples in our window
 
         internal float AverageWindow = 0f;
         internal float LatencySum = 0f;
@@ -39,8 +36,8 @@ public class RemoteLoopbackManager : MonoBehaviour
         public float NextValue()
         {
             AverageWindow = LatencySum / (float)LatencyValues.Count;
-            float RandomLatency = UnityEngine.Random.Range(FakeLatencyMin, FakeLatencyMax);
-            float FakeLatency = AverageWindow * (1f - LatencyWeight) + LatencyWeight * RandomLatency;
+            var RandomLatency = UnityEngine.Random.Range(FakeLatencyMin, FakeLatencyMax);
+            var FakeLatency = AverageWindow * (1f - LatencyWeight) + LatencyWeight * RandomLatency;
 
             if (LatencyValues.Count >= MaxSamples)
             {
@@ -59,27 +56,27 @@ public class RemoteLoopbackManager : MonoBehaviour
 
     private int PacketSequence = 0;
 
-    LinkedList<PacketLatencyPair> packetQueue = new LinkedList<PacketLatencyPair>();
+    private LinkedList<PacketLatencyPair> packetQueue = new LinkedList<PacketLatencyPair>();
 
-    void Start()
+    private void Start()
     {
         LocalAvatar.RecordPackets = true;
         LocalAvatar.PacketRecorded += OnLocalAvatarPacketRecorded;
-        float FirstValue = UnityEngine.Random.Range(LatencySettings.FakeLatencyMin, LatencySettings.FakeLatencyMax);
+        var FirstValue = UnityEngine.Random.Range(LatencySettings.FakeLatencyMin, LatencySettings.FakeLatencyMax);
         LatencySettings.LatencyValues.AddFirst(FirstValue);
         LatencySettings.LatencySum += FirstValue;
     }
 
-    void OnLocalAvatarPacketRecorded(object sender, OvrAvatar.PacketEventArgs args)
+    private void OnLocalAvatarPacketRecorded(object sender, OvrAvatar.PacketEventArgs args)
     {
-        using (MemoryStream outputStream = new MemoryStream())
+        using (var outputStream = new MemoryStream())
         {
-            BinaryWriter writer = new BinaryWriter(outputStream);
+            var writer = new BinaryWriter(outputStream);
 
             if (LocalAvatar.UseSDKPackets)
             {
                 var size = CAPI.ovrAvatarPacket_GetSize(args.Packet.ovrNativePacket);
-                byte[] data = new byte[size];
+                var data = new byte[size];
                 CAPI.ovrAvatarPacket_Write(args.Packet.ovrNativePacket, size, data);
 
                 writer.Write(PacketSequence++);
@@ -96,11 +93,11 @@ public class RemoteLoopbackManager : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
         if (packetQueue.Count > 0)
         {
-            List<PacketLatencyPair> deadList = new List<PacketLatencyPair>();
+            var deadList = new List<PacketLatencyPair>();
             foreach (var packet in packetQueue)
             {
                 packet.FakeLatency -= Time.deltaTime;
@@ -112,36 +109,33 @@ public class RemoteLoopbackManager : MonoBehaviour
                 }
             }
 
-            foreach (var packet in deadList)
-            {
-                packetQueue.Remove(packet);
-            }
+            foreach (var packet in deadList) packetQueue.Remove(packet);
         }
     }
-    
-    void SendPacketData(byte[] data)
+
+    private void SendPacketData(byte[] data)
     {
-        PacketLatencyPair PacketPair = new PacketLatencyPair();
+        var PacketPair = new PacketLatencyPair();
         PacketPair.PacketData = data;
         PacketPair.FakeLatency = LatencySettings.NextValue();
 
         packetQueue.AddLast(PacketPair);
     }
 
-    void ReceivePacketData(byte[] data)
+    private void ReceivePacketData(byte[] data)
     {
-        using (MemoryStream inputStream = new MemoryStream(data))
+        using (var inputStream = new MemoryStream(data))
         {
-            BinaryReader reader = new BinaryReader(inputStream);
-            int sequence = reader.ReadInt32();
+            var reader = new BinaryReader(inputStream);
+            var sequence = reader.ReadInt32();
 
             OvrAvatarPacket avatarPacket;
             if (LoopbackAvatar.UseSDKPackets)
             {
-                int size = reader.ReadInt32();
-                byte[] sdkData = reader.ReadBytes(size);
+                var size = reader.ReadInt32();
+                var sdkData = reader.ReadBytes(size);
 
-                IntPtr packet = CAPI.ovrAvatarPacket_Read((UInt32)data.Length, sdkData);
+                var packet = CAPI.ovrAvatarPacket_Read((uint)data.Length, sdkData);
                 avatarPacket = new OvrAvatarPacket { ovrNativePacket = packet };
             }
             else

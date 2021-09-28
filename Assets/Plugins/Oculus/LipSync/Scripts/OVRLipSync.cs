@@ -20,6 +20,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ************************************************************************************/
+
 using UnityEngine;
 using System;
 using System.Runtime.InteropServices;
@@ -38,13 +39,13 @@ public class OVRLipSync : MonoBehaviour
     public enum Result
     {
         Success = 0,
-        Unknown = -2200,  //< An unknown error has occurred
-        CannotCreateContext = -2201,  //< Unable to create a context
-        InvalidParam = -2202,  //< An invalid parameter, e.g. NULL pointer or out of range
-        BadSampleRate = -2203,  //< An unsupported sample rate was declared
-        MissingDLL = -2204,  //< The DLL or shared library could not be found
-        BadVersion = -2205,  //< Mismatched versions between header and libs
-        UndefinedFunction = -2206   //< An undefined function
+        Unknown = -2200, //< An unknown error has occurred
+        CannotCreateContext = -2201, //< Unable to create a context
+        InvalidParam = -2202, //< An invalid parameter, e.g. NULL pointer or out of range
+        BadSampleRate = -2203, //< An unsupported sample rate was declared
+        MissingDLL = -2204, //< The DLL or shared library could not be found
+        BadVersion = -2205, //< Mismatched versions between header and libs
+        UndefinedFunction = -2206 //< An undefined function
     };
 
     // Audio buffer data type
@@ -52,10 +53,13 @@ public class OVRLipSync : MonoBehaviour
     {
         // Signed 16-bit integer mono audio stream
         S16_Mono,
+
         // Signed 16-bit integer stereo audio stream
         S16_Stereo,
+
         // Signed 32-bit float mono audio stream
         F32_Mono,
+
         // Signed 32-bit float stereo audio stream
         F32_Stereo
     };
@@ -99,13 +103,12 @@ public class OVRLipSync : MonoBehaviour
     {
         Original,
         Enhanced,
-        Enhanced_with_Laughter,
+        Enhanced_with_Laughter
     };
 
     /// NOTE: Opaque typedef for lip-sync context is an unsigned int (uint)
-
     /// Current phoneme frame results
-    [System.Serializable]
+    [Serializable]
     public class Frame
     {
         public void CopyInput(Frame input)
@@ -124,39 +127,45 @@ public class OVRLipSync : MonoBehaviour
             laughterScore = 0;
         }
 
-        public int frameNumber;    // count from start of recognition
-        public int frameDelay;     // in ms
-        public float[] Visemes = new float[VisemeCount];       // Array of floats for viseme frame. Size of Viseme Count, above
+        public int frameNumber; // count from start of recognition
+        public int frameDelay; // in ms
+
+        public float[]
+            Visemes = new float[VisemeCount]; // Array of floats for viseme frame. Size of Viseme Count, above
+
         public float laughterScore; // probability of laughter presence.
     };
 
     // * * * * * * * * * * * * *
     // Import functions
-    #if !UNITY_IOS || UNITY_EDITOR
+#if !UNITY_IOS || UNITY_EDITOR
     public const string strOVRLS = "OVRLipSync";
-    #else
+#else
     public const string strOVRLS = "__Internal";
-    #endif
+#endif
     [DllImport(strOVRLS)]
     private static extern int ovrLipSyncDll_Initialize(int samplerate, int buffersize);
+
     [DllImport(strOVRLS)]
     private static extern void ovrLipSyncDll_Shutdown();
+
     [DllImport(strOVRLS)]
     private static extern IntPtr ovrLipSyncDll_GetVersion(ref int Major,
-                                                          ref int Minor,
-                                                          ref int Patch);
+        ref int Minor,
+        ref int Patch);
+
     [DllImport(strOVRLS)]
     private static extern int ovrLipSyncDll_CreateContextEx(ref uint context,
-                                                           ContextProviders provider,
-                                                           int sampleRate,
-                                                           bool enableAcceleration);
+        ContextProviders provider,
+        int sampleRate,
+        bool enableAcceleration);
 
     [DllImport(strOVRLS)]
     private static extern int ovrLipSyncDll_CreateContextWithModelFile(ref uint context,
-                                                       ContextProviders provider,
-                                                       string modelPath,
-                                                       int sampleRate,
-                                                       bool enableAcceleration);
+        ContextProviders provider,
+        string modelPath,
+        int sampleRate,
+        bool enableAcceleration);
 
     [DllImport(strOVRLS)]
     private static extern int ovrLipSyncDll_DestroyContext(uint context);
@@ -164,10 +173,12 @@ public class OVRLipSync : MonoBehaviour
 
     [DllImport(strOVRLS)]
     private static extern int ovrLipSyncDll_ResetContext(uint context);
+
     [DllImport(strOVRLS)]
     private static extern int ovrLipSyncDll_SendSignal(uint context,
-                                                       Signals signal,
-                                                       int arg1, int arg2);
+        Signals signal,
+        int arg1, int arg2);
+
     [DllImport(strOVRLS)]
     private static extern int ovrLipSyncDll_ProcessFrameEx(
         uint context,
@@ -199,7 +210,7 @@ public class OVRLipSync : MonoBehaviour
     /// <summary>
     /// Awake this instance.
     /// </summary>
-    void Awake()
+    private void Awake()
     {
         // We can only have one instance of OVRLipSync in a scene (use this for local property query)
         if (sInstance == null)
@@ -208,7 +219,8 @@ public class OVRLipSync : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning(System.String.Format("OVRLipSync Awake: Only one instance of OVRPLipSync can exist in the scene."));
+            Debug.LogWarning(
+                string.Format("OVRLipSync Awake: Only one instance of OVRPLipSync can exist in the scene."));
             return;
         }
 
@@ -217,26 +229,23 @@ public class OVRLipSync : MonoBehaviour
             sInitialized = Initialize();
 
             if (sInitialized != Result.Success)
-            {
-                Debug.LogWarning(System.String.Format
-                ("OvrLipSync Awake: Failed to init Speech Rec library"));
-            }
+                Debug.LogWarning(string.Format
+                    ("OvrLipSync Awake: Failed to init Speech Rec library"));
         }
 
         // Important: Use the touchpad mechanism for input, call Create on the OVRTouchpad helper class
         OVRTouchpad.Create();
-
     }
 
     /// <summary>
     /// Raises the destroy event.
     /// </summary>
-    void OnDestroy()
+    private void OnDestroy()
     {
         if (sInstance != this)
         {
             Debug.LogWarning(
-            "OVRLipSync OnDestroy: This is not the correct OVRLipSync instance.");
+                "OVRLipSync OnDestroy: This is not the correct OVRLipSync instance.");
             return;
         }
 
@@ -260,8 +269,8 @@ public class OVRLipSync : MonoBehaviour
         // Get the current buffer size and number of buffers
         AudioSettings.GetDSPBufferSize(out bufferSize, out numbuf);
 
-        String str = System.String.Format
-        ("OvrLipSync Awake: Queried SampleRate: {0:F0} BufferSize: {1:F0}", sampleRate, bufferSize);
+        var str = string.Format
+            ("OvrLipSync Awake: Queried SampleRate: {0:F0} BufferSize: {1:F0}", sampleRate, bufferSize);
         Debug.LogWarning(str);
 
         sInitialized = (Result)ovrLipSyncDll_Initialize(sampleRate, bufferSize);
@@ -270,8 +279,8 @@ public class OVRLipSync : MonoBehaviour
 
     public static Result Initialize(int sampleRate, int bufferSize)
     {
-        String str = System.String.Format
-        ("OvrLipSync Awake: Queried SampleRate: {0:F0} BufferSize: {1:F0}", sampleRate, bufferSize);
+        var str = string.Format
+            ("OvrLipSync Awake: Queried SampleRate: {0:F0} BufferSize: {1:F0}", sampleRate, bufferSize);
         Debug.LogWarning(str);
 
         sInitialized = (Result)ovrLipSyncDll_Initialize(sampleRate, bufferSize);
@@ -399,15 +408,14 @@ public class OVRLipSync : MonoBehaviour
         var numSamples = (uint)(stereo ? audioBuffer.Length / 2 : audioBuffer.Length);
         var handle = GCHandle.Alloc(audioBuffer, GCHandleType.Pinned);
         var rc = ovrLipSyncDll_ProcessFrameEx(context,
-                                              handle.AddrOfPinnedObject(), numSamples, dataType,
-                                              ref frame.frameNumber, ref frame.frameDelay,
-                                              frame.Visemes, frame.Visemes.Length,
-                                              ref frame.laughterScore,
-                                              null, 0
-                                              );
+            handle.AddrOfPinnedObject(), numSamples, dataType,
+            ref frame.frameNumber, ref frame.frameDelay,
+            frame.Visemes, frame.Visemes.Length,
+            ref frame.laughterScore,
+            null, 0
+        );
         handle.Free();
         return (Result)rc;
-
     }
 
     /// <summary>
@@ -419,7 +427,7 @@ public class OVRLipSync : MonoBehaviour
     /// <param name="frame">Lip-sync Frame.</param>
     /// <param name="stereo">Whether buffer is part of stereo or mono stream.</param>
     public static Result ProcessFrame(
-    uint context, short[] audioBuffer, Frame frame, bool stereo = true)
+        uint context, short[] audioBuffer, Frame frame, bool stereo = true)
     {
         if (IsInitialized() != Result.Success)
             return Result.Unknown;
@@ -428,14 +436,13 @@ public class OVRLipSync : MonoBehaviour
         var numSamples = (uint)(stereo ? audioBuffer.Length / 2 : audioBuffer.Length);
         var handle = GCHandle.Alloc(audioBuffer, GCHandleType.Pinned);
         var rc = ovrLipSyncDll_ProcessFrameEx(context,
-                                              handle.AddrOfPinnedObject(), numSamples, dataType,
-                                              ref frame.frameNumber, ref frame.frameDelay,
-                                              frame.Visemes, frame.Visemes.Length,
-                                              ref frame.laughterScore,
-                                              null, 0
-                                              );
+            handle.AddrOfPinnedObject(), numSamples, dataType,
+            ref frame.frameNumber, ref frame.frameDelay,
+            frame.Visemes, frame.Visemes.Length,
+            ref frame.laughterScore,
+            null, 0
+        );
         handle.Free();
         return (Result)rc;
     }
-
 }

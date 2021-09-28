@@ -31,40 +31,34 @@ namespace UnityEngine.EventSystems
         [Tooltip("Keyboard button to act as gaze click")]
         public KeyCode gazeClickKey = KeyCode.Space;
 
-        [Header("Physics")]
-        [Tooltip("Perform an sphere cast to determine correct depth for gaze pointer")]
+        [Header("Physics")] [Tooltip("Perform an sphere cast to determine correct depth for gaze pointer")]
         public bool performSphereCastForGazepointer;
 
-        [Header("Gamepad Stick Scroll")]
-        [Tooltip("Enable scrolling with the right stick on a gamepad")]
+        [Header("Gamepad Stick Scroll")] [Tooltip("Enable scrolling with the right stick on a gamepad")]
         public bool useRightStickScroll = true;
 
         [Tooltip("Deadzone for right stick to prevent accidental scrolling")]
         public float rightStickDeadZone = 0.15f;
 
-        [Header("Touchpad Swipe Scroll")]
-        [Tooltip("Enable scrolling by swiping the touchpad")]
+        [Header("Touchpad Swipe Scroll")] [Tooltip("Enable scrolling by swiping the touchpad")]
         public bool useSwipeScroll = true;
+
         [Tooltip("Minimum trackpad movement in pixels to start swiping")]
         public float swipeDragThreshold = 2;
+
         [Tooltip("Distance scrolled when swipe scroll occurs")]
         public float swipeDragScale = 1f;
-        [Tooltip("Invert X axis on touchpad")]
-        public bool InvertSwipeXAxis = false;
+
+        [Tooltip("Invert X axis on touchpad")] public bool InvertSwipeXAxis = false;
 
 
         // The raycaster that gets to do pointer interaction (e.g. with a mouse), gaze interaction always works
-        [NonSerialized]
-        public OVRRaycaster activeGraphicRaycaster;
-        [Header("Dragging")]
-        [Tooltip("Minimum pointer movement in degrees to start dragging")]
+        [NonSerialized] public OVRRaycaster activeGraphicRaycaster;
+
+        [Header("Dragging")] [Tooltip("Minimum pointer movement in degrees to start dragging")]
         public float angleDragThreshold = 1;
 
-        [SerializeField]
-        private float m_SpherecastRadius = 1.0f;
-
-
-
+        [SerializeField] private float m_SpherecastRadius = 1.0f;
 
 
         // The following region contains code exactly the same as the implementation
@@ -78,14 +72,17 @@ namespace UnityEngine.EventSystems
         // Process
         // ProcessMouseEvent
         // UseMouse
+
         #region StandaloneInputModule code
-         private float m_NextAction;
+
+        private float m_NextAction;
 
         private Vector2 m_LastMousePosition;
         private Vector2 m_MousePosition;
 
         protected OVRInputModule()
-        {}
+        {
+        }
 
 #if UNITY_EDITOR
         protected override void Reset()
@@ -94,56 +91,50 @@ namespace UnityEngine.EventSystems
         }
 #endif
 
-        [Obsolete("Mode is no longer needed on input module as it handles both mouse and keyboard simultaneously.", false)]
+        [Obsolete("Mode is no longer needed on input module as it handles both mouse and keyboard simultaneously.",
+            false)]
         public enum InputMode
         {
             Mouse,
             Buttons
         }
 
-        [Obsolete("Mode is no longer needed on input module as it handles both mouse and keyboard simultaneously.", false)]
-        public InputMode inputMode
-        {
-            get { return InputMode.Mouse; }
-        }
-        [Header("Standalone Input Module")]
-        [SerializeField]
+        [Obsolete("Mode is no longer needed on input module as it handles both mouse and keyboard simultaneously.",
+            false)]
+        public InputMode inputMode => InputMode.Mouse;
+
+        [Header("Standalone Input Module")] [SerializeField]
         private string m_HorizontalAxis = "Horizontal";
 
         /// <summary>
         /// Name of the vertical axis for movement (if axis events are used).
         /// </summary>
-        [SerializeField]
-        private string m_VerticalAxis = "Vertical";
+        [SerializeField] private string m_VerticalAxis = "Vertical";
 
         /// <summary>
         /// Name of the submit button.
         /// </summary>
-        [SerializeField]
-        private string m_SubmitButton = "Submit";
+        [SerializeField] private string m_SubmitButton = "Submit";
 
         /// <summary>
         /// Name of the submit button.
         /// </summary>
-        [SerializeField]
-        private string m_CancelButton = "Cancel";
+        [SerializeField] private string m_CancelButton = "Cancel";
 
-        [SerializeField]
-        private float m_InputActionsPerSecond = 10;
+        [SerializeField] private float m_InputActionsPerSecond = 10;
 
-        [SerializeField]
-        private bool m_AllowActivationOnMobileDevice;
+        [SerializeField] private bool m_AllowActivationOnMobileDevice;
 
         public bool allowActivationOnMobileDevice
         {
-            get { return m_AllowActivationOnMobileDevice; }
-            set { m_AllowActivationOnMobileDevice = value; }
+            get => m_AllowActivationOnMobileDevice;
+            set => m_AllowActivationOnMobileDevice = value;
         }
 
         public float inputActionsPerSecond
         {
-            get { return m_InputActionsPerSecond; }
-            set { m_InputActionsPerSecond = value; }
+            get => m_InputActionsPerSecond;
+            set => m_InputActionsPerSecond = value;
         }
 
         /// <summary>
@@ -151,8 +142,8 @@ namespace UnityEngine.EventSystems
         /// </summary>
         public string horizontalAxis
         {
-            get { return m_HorizontalAxis; }
-            set { m_HorizontalAxis = value; }
+            get => m_HorizontalAxis;
+            set => m_HorizontalAxis = value;
         }
 
         /// <summary>
@@ -160,20 +151,20 @@ namespace UnityEngine.EventSystems
         /// </summary>
         public string verticalAxis
         {
-            get { return m_VerticalAxis; }
-            set { m_VerticalAxis = value; }
+            get => m_VerticalAxis;
+            set => m_VerticalAxis = value;
         }
 
         public string submitButton
         {
-            get { return m_SubmitButton; }
-            set { m_SubmitButton = value; }
+            get => m_SubmitButton;
+            set => m_SubmitButton = value;
         }
 
         public string cancelButton
         {
-            get { return m_CancelButton; }
-            set { m_CancelButton = value; }
+            get => m_CancelButton;
+            set => m_CancelButton = value;
         }
 
         public override void UpdateModule()
@@ -224,7 +215,6 @@ namespace UnityEngine.EventSystems
         }
 
 
-
         /// <summary>
         /// Process submit keys.
         /// </summary>
@@ -244,15 +234,15 @@ namespace UnityEngine.EventSystems
 
         private bool AllowMoveEventProcessing(float time)
         {
-            bool allow = Input.GetButtonDown(m_HorizontalAxis);
+            var allow = Input.GetButtonDown(m_HorizontalAxis);
             allow |= Input.GetButtonDown(m_VerticalAxis);
-            allow |= (time > m_NextAction);
+            allow |= time > m_NextAction;
             return allow;
         }
 
         private Vector2 GetRawMoveVector()
         {
-            Vector2 move = Vector2.zero;
+            var move = Vector2.zero;
             move.x = Input.GetAxisRaw(m_HorizontalAxis);
             move.y = Input.GetAxisRaw(m_VerticalAxis);
 
@@ -263,6 +253,7 @@ namespace UnityEngine.EventSystems
                 if (move.x > 0)
                     move.x = 1f;
             }
+
             if (Input.GetButtonDown(m_VerticalAxis))
             {
                 if (move.y < 0)
@@ -270,6 +261,7 @@ namespace UnityEngine.EventSystems
                 if (move.y > 0)
                     move.y = 1f;
             }
+
             return move;
         }
 
@@ -278,25 +270,20 @@ namespace UnityEngine.EventSystems
         /// </summary>
         private bool SendMoveEventToSelectedObject()
         {
-            float time = Time.unscaledTime;
+            var time = Time.unscaledTime;
 
             if (!AllowMoveEventProcessing(time))
                 return false;
 
-            Vector2 movement = GetRawMoveVector();
+            var movement = GetRawMoveVector();
             // Debug.Log(m_ProcessingEvent.rawType + " axis:" + m_AllowAxisEvents + " value:" + "(" + x + "," + y + ")");
             var axisEventData = GetAxisEventData(movement.x, movement.y, 0.6f);
             if (!Mathf.Approximately(axisEventData.moveVector.x, 0f)
                 || !Mathf.Approximately(axisEventData.moveVector.y, 0f))
-            {
                 ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, axisEventData, ExecuteEvents.moveHandler);
-            }
             m_NextAction = time + 1f / m_InputActionsPerSecond;
             return axisEventData.used;
         }
-
-
-
 
 
         private bool SendUpdateEventToSelectedObject()
@@ -325,10 +312,7 @@ namespace UnityEngine.EventSystems
                 pointerEvent.dragging = false;
                 pointerEvent.useDragThreshold = true;
                 pointerEvent.pressPosition = pointerEvent.position;
-                if (pointerEvent.IsVRPointer())
-                {
-                    pointerEvent.SetSwipeStart(Input.mousePosition);
-                }
+                if (pointerEvent.IsVRPointer()) pointerEvent.SetSwipeStart(Input.mousePosition);
                 pointerEvent.pointerPressRaycast = pointerEvent.pointerCurrentRaycast;
 
                 DeselectIfSelectionChanged(currentOverGo, pointerEvent);
@@ -336,7 +320,8 @@ namespace UnityEngine.EventSystems
                 // search for the control that will receive the press
                 // if we can't find a press handler set the press
                 // handler to be what would receive a click.
-                var newPressed = ExecuteEvents.ExecuteHierarchy(currentOverGo, pointerEvent, ExecuteEvents.pointerDownHandler);
+                var newPressed =
+                    ExecuteEvents.ExecuteHierarchy(currentOverGo, pointerEvent, ExecuteEvents.pointerDownHandler);
 
                 // didnt find a press handler... search for a click handler
                 if (newPressed == null)
@@ -344,7 +329,7 @@ namespace UnityEngine.EventSystems
 
                 // Debug.Log("Pressed: " + newPressed);
 
-                float time = Time.unscaledTime;
+                var time = Time.unscaledTime;
 
                 if (newPressed == pointerEvent.lastPress)
                 {
@@ -370,7 +355,8 @@ namespace UnityEngine.EventSystems
                 pointerEvent.pointerDrag = ExecuteEvents.GetEventHandler<IDragHandler>(currentOverGo);
 
                 if (pointerEvent.pointerDrag != null)
-                    ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, ExecuteEvents.initializePotentialDrag);
+                    ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent,
+                        ExecuteEvents.initializePotentialDrag);
             }
 
             // PointerUp notification
@@ -386,13 +372,9 @@ namespace UnityEngine.EventSystems
 
                 // PointerClick and Drop events
                 if (pointerEvent.pointerPress == pointerUpHandler && pointerEvent.eligibleForClick)
-                {
                     ExecuteEvents.Execute(pointerEvent.pointerPress, pointerEvent, ExecuteEvents.pointerClickHandler);
-                }
                 else if (pointerEvent.pointerDrag != null)
-                {
                     ExecuteEvents.ExecuteHierarchy(currentOverGo, pointerEvent, ExecuteEvents.dropHandler);
-                }
 
                 pointerEvent.eligibleForClick = false;
                 pointerEvent.pointerPress = null;
@@ -415,7 +397,9 @@ namespace UnityEngine.EventSystems
                 }
             }
         }
-#endregion
+
+        #endregion
+
         #region Modified StandaloneInputModule methods
 
         /// <summary>
@@ -446,7 +430,9 @@ namespace UnityEngine.EventSystems
 
             if (!Mathf.Approximately(leftButtonData.buttonData.scrollDelta.sqrMagnitude, 0.0f))
             {
-                var scrollHandler = ExecuteEvents.GetEventHandler<IScrollHandler>(leftButtonData.buttonData.pointerCurrentRaycast.gameObject);
+                var scrollHandler =
+                    ExecuteEvents.GetEventHandler<IScrollHandler>(leftButtonData.buttonData.pointerCurrentRaycast
+                        .gameObject);
                 ExecuteEvents.ExecuteHierarchy(scrollHandler, leftButtonData.buttonData, ExecuteEvents.scrollHandler);
             }
         }
@@ -457,7 +443,7 @@ namespace UnityEngine.EventSystems
         /// </summary>
         public override void Process()
         {
-            bool usedEvent = SendUpdateEventToSelectedObject();
+            var usedEvent = SendUpdateEventToSelectedObject();
 
             if (eventSystem.sendNavigationEvents)
             {
@@ -473,17 +459,19 @@ namespace UnityEngine.EventSystems
             ProcessMouseEvent(GetCanvasPointerData());
 #endif
         }
+
         /// <summary>
         /// Decide if mouse events need to be processed this frame. Same as StandloneInputModule except
         /// that the IsPointerMoving method from this class is used, instead of the method on PointerEventData
         /// </summary>
-       private static bool UseMouse(bool pressed, bool released, PointerEventData pointerData)
+        private static bool UseMouse(bool pressed, bool released, PointerEventData pointerData)
         {
             if (pressed || released || IsPointerMoving(pointerData) || pointerData.IsScrolling())
                 return true;
 
             return false;
         }
+
         #endregion
 
 
@@ -501,6 +489,7 @@ namespace UnityEngine.EventSystems
             @to.pointerEnter = @from.pointerEnter;
             @to.worldSpaceRay = @from.worldSpaceRay;
         }
+
         /// <summary>
         /// Convenience function for cloning PointerEventData
         /// </summary>
@@ -519,7 +508,8 @@ namespace UnityEngine.EventSystems
         // In the following region we extend the PointerEventData system implemented in PointerInputModule
         // We define an additional dictionary for ray(e.g. gaze) based pointers. Mouse pointers still use the dictionary
         // in PointerInputModule
-#region PointerEventData pool
+
+        #region PointerEventData pool
 
         // Pool for OVRRayPointerEventData for ray based pointers
         protected Dictionary<int, OVRPointerEventData> m_VRRayPointerData = new Dictionary<int, OVRPointerEventData>();
@@ -531,12 +521,13 @@ namespace UnityEngine.EventSystems
             {
                 data = new OVRPointerEventData(eventSystem)
                 {
-                    pointerId = id,
+                    pointerId = id
                 };
 
                 m_VRRayPointerData.Add(id, data);
                 return true;
             }
+
             return false;
         }
 
@@ -548,30 +539,27 @@ namespace UnityEngine.EventSystems
             var baseEventData = GetBaseEventData();
 
             foreach (var pointer in m_PointerData.Values)
-            {
                 // clear all selection
                 HandlePointerExitAndEnter(pointer, null);
-            }
             foreach (var pointer in m_VRRayPointerData.Values)
-            {
                 // clear all selection
                 HandlePointerExitAndEnter(pointer, null);
-            }
 
             m_PointerData.Clear();
             eventSystem.SetSelectedGameObject(null, baseEventData);
         }
-#endregion
+
+        #endregion
 
         /// <summary>
         /// For RectTransform, calculate it's normal in world space
         /// </summary>
-        static Vector3 GetRectTransformNormal(RectTransform rectTransform)
+        private static Vector3 GetRectTransformNormal(RectTransform rectTransform)
         {
-            Vector3[] corners = new Vector3[4];
+            var corners = new Vector3[4];
             rectTransform.GetWorldCorners(corners);
-            Vector3 BottomEdge = corners[3] - corners[0];
-            Vector3 LeftEdge = corners[1] - corners[0];
+            var BottomEdge = corners[3] - corners[0];
+            var LeftEdge = corners[1] - corners[0];
             rectTransform.GetWorldCorners(corners);
             return Vector3.Cross(BottomEdge, LeftEdge).normalized;
         }
@@ -586,11 +574,11 @@ namespace UnityEngine.EventSystems
         /// State for a pointer controlled by a world space ray. E.g. gaze pointer
         /// </summary>
         /// <returns></returns>
-        virtual protected MouseState GetGazePointerData()
+        protected virtual MouseState GetGazePointerData()
         {
             // Get the OVRRayPointerEventData reference
             OVRPointerEventData leftData;
-            GetPointerData(kMouseLeftId, out leftData, true );
+            GetPointerData(kMouseLeftId, out leftData, true);
             leftData.Reset();
 
             //Now set the world space ray. This ray is what the user uses to point at UI elements
@@ -608,7 +596,7 @@ namespace UnityEngine.EventSystems
 
             m_Cursor.SetCursorRay(rayTransform);
 
-            OVRRaycaster ovrRaycaster = raycast.module as OVRRaycaster;
+            var ovrRaycaster = raycast.module as OVRRaycaster;
             // We're only interested in intersections from OVRRaycasters
             if (ovrRaycaster)
             {
@@ -618,32 +606,30 @@ namespace UnityEngine.EventSystems
                 leftData.position = ovrRaycaster.GetScreenPosition(raycast);
 
                 // Find the world position and normal the Graphic the ray intersected
-                RectTransform graphicRect = raycast.gameObject.GetComponent<RectTransform>();
+                var graphicRect = raycast.gameObject.GetComponent<RectTransform>();
                 if (graphicRect != null)
                 {
                     // Set are gaze indicator with this world position and normal
-                    Vector3 worldPos = raycast.worldPosition;
-                    Vector3 normal = GetRectTransformNormal(graphicRect);
+                    var worldPos = raycast.worldPosition;
+                    var normal = GetRectTransformNormal(graphicRect);
                     m_Cursor.SetCursorStartDest(rayTransform.position, worldPos, normal);
                 }
             }
 
             // Now process physical raycast intersections
-            OVRPhysicsRaycaster physicsRaycaster = raycast.module as OVRPhysicsRaycaster;
+            var physicsRaycaster = raycast.module as OVRPhysicsRaycaster;
             if (physicsRaycaster)
             {
-                Vector3 position =  raycast.worldPosition;
+                var position = raycast.worldPosition;
 
                 if (performSphereCastForGazepointer)
                 {
                     // Here we cast a sphere into the scene rather than a ray. This gives a more accurate depth
                     // for positioning a circular gaze pointer
-                    List<RaycastResult> results = new List<RaycastResult>();
+                    var results = new List<RaycastResult>();
                     physicsRaycaster.Spherecast(leftData, results, m_SpherecastRadius);
                     if (results.Count > 0 && results[0].distance < raycast.distance)
-                    {
                         position = results[0].worldPosition;
-                    }
                 }
 
                 leftData.position = physicsRaycaster.GetScreenPos(raycast.worldPosition);
@@ -655,19 +641,21 @@ namespace UnityEngine.EventSystems
 
             // copy the apropriate data into right and middle slots
             OVRPointerEventData rightData;
-            GetPointerData(kMouseRightId, out rightData, true );
+            GetPointerData(kMouseRightId, out rightData, true);
             CopyFromTo(leftData, rightData);
             rightData.button = PointerEventData.InputButton.Right;
 
             OVRPointerEventData middleData;
-            GetPointerData(kMouseMiddleId, out middleData, true );
+            GetPointerData(kMouseMiddleId, out middleData, true);
             CopyFromTo(leftData, middleData);
             middleData.button = PointerEventData.InputButton.Middle;
 
 
             m_MouseState.SetButtonState(PointerEventData.InputButton.Left, GetGazeButtonState(), leftData);
-            m_MouseState.SetButtonState(PointerEventData.InputButton.Right, PointerEventData.FramePressState.NotChanged, rightData);
-            m_MouseState.SetButtonState(PointerEventData.InputButton.Middle, PointerEventData.FramePressState.NotChanged, middleData);
+            m_MouseState.SetButtonState(PointerEventData.InputButton.Right, PointerEventData.FramePressState.NotChanged,
+                rightData);
+            m_MouseState.SetButtonState(PointerEventData.InputButton.Middle,
+                PointerEventData.FramePressState.NotChanged, middleData);
             return m_MouseState;
         }
 
@@ -679,7 +667,7 @@ namespace UnityEngine.EventSystems
         {
             // Get the OVRRayPointerEventData reference
             PointerEventData leftData;
-            GetPointerData(kMouseLeftId, out leftData, true );
+            GetPointerData(kMouseLeftId, out leftData, true);
             leftData.Reset();
 
             // Setup default values here. Set position to zero because we don't actually know the pointer
@@ -696,13 +684,13 @@ namespace UnityEngine.EventSystems
                 leftData.pointerCurrentRaycast = raycast;
                 m_RaycastResultCache.Clear();
 
-                OVRRaycaster ovrRaycaster = raycast.module as OVRRaycaster;
+                var ovrRaycaster = raycast.module as OVRRaycaster;
                 if (ovrRaycaster) // raycast may not actually contain a result
                 {
                     // The Unity UI system expects event data to have a screen position
                     // so even though this raycast came from a world space ray we must get a screen
                     // space position for the camera attached to this raycaster for compatability
-                    Vector2 position = ovrRaycaster.GetScreenPosition(raycast);
+                    var position = ovrRaycaster.GetScreenPosition(raycast);
 
                     leftData.delta = position - leftData.position;
                     leftData.position = position;
@@ -711,12 +699,12 @@ namespace UnityEngine.EventSystems
 
             // copy the apropriate data into right and middle slots
             PointerEventData rightData;
-            GetPointerData(kMouseRightId, out rightData, true );
+            GetPointerData(kMouseRightId, out rightData, true);
             CopyFromTo(leftData, rightData);
             rightData.button = PointerEventData.InputButton.Right;
 
             PointerEventData middleData;
-            GetPointerData(kMouseMiddleId, out middleData, true );
+            GetPointerData(kMouseMiddleId, out middleData, true);
             CopyFromTo(leftData, middleData);
             middleData.button = PointerEventData.InputButton.Middle;
 
@@ -740,12 +728,13 @@ namespace UnityEngine.EventSystems
 
             if (!pointerEvent.IsVRPointer())
             {
-                 // Same as original behaviour for canvas based pointers
-                return (pointerEvent.pressPosition - pointerEvent.position).sqrMagnitude >= eventSystem.pixelDragThreshold * eventSystem.pixelDragThreshold;
+                // Same as original behaviour for canvas based pointers
+                return (pointerEvent.pressPosition - pointerEvent.position).sqrMagnitude >=
+                       eventSystem.pixelDragThreshold * eventSystem.pixelDragThreshold;
             }
             else
             {
-#if UNITY_ANDROID && !UNITY_EDITOR  // On android allow swiping to start drag
+#if UNITY_ANDROID && !UNITY_EDITOR // On android allow swiping to start drag
                 if (useSwipeScroll && ((Vector3)pointerEvent.GetSwipeStart() - Input.mousePosition).magnitude > swipeDragThreshold)
                 {
                     return true;
@@ -753,10 +742,10 @@ namespace UnityEngine.EventSystems
 #endif
                 // When it's not a screen space pointer we have to look at the angle it moved rather than the pixels distance
                 // For gaze based pointing screen-space distance moved will always be near 0
-                Vector3 cameraPos = pointerEvent.pressEventCamera.transform.position;
-                Vector3 pressDir = (pointerEvent.pointerPressRaycast.worldPosition - cameraPos).normalized;
-                Vector3 currentDir = (pointerEvent.pointerCurrentRaycast.worldPosition - cameraPos).normalized;
-                return Vector3.Dot(pressDir, currentDir) < Mathf.Cos(Mathf.Deg2Rad * (angleDragThreshold));
+                var cameraPos = pointerEvent.pressEventCamera.transform.position;
+                var pressDir = (pointerEvent.pointerPressRaycast.worldPosition - cameraPos).normalized;
+                var currentDir = (pointerEvent.pointerCurrentRaycast.worldPosition - cameraPos).normalized;
+                return Vector3.Dot(pressDir, currentDir) < Mathf.Cos(Mathf.Deg2Rad * angleDragThreshold);
             }
         }
 
@@ -771,7 +760,7 @@ namespace UnityEngine.EventSystems
         /// </summary>
         /// <param name="pointerEvent"></param>
         /// <returns></returns>
-        static bool IsPointerMoving(PointerEventData pointerEvent)
+        private static bool IsPointerMoving(PointerEventData pointerEvent)
         {
             if (pointerEvent.IsVRPointer())
                 return true;
@@ -787,14 +776,13 @@ namespace UnityEngine.EventSystems
             // use the touchpad to drag draggable UI elements
             if (useSwipeScroll)
             {
-                Vector2 delta =  (Vector2)Input.mousePosition - pointerEvent.GetSwipeStart();
+                Vector2 delta = (Vector2)Input.mousePosition - pointerEvent.GetSwipeStart();
                 if (InvertSwipeXAxis)
                     delta.x *= -1;
                 return originalPosition + delta * swipeDragScale;
             }
 #endif
             return originalPosition;
-
         }
 
         /// <summary>
@@ -806,18 +794,16 @@ namespace UnityEngine.EventSystems
         /// <param name="pointerEvent"></param>
         protected override void ProcessDrag(PointerEventData pointerEvent)
         {
-            Vector2 originalPosition = pointerEvent.position;
-            bool moving = IsPointerMoving(pointerEvent);
+            var originalPosition = pointerEvent.position;
+            var moving = IsPointerMoving(pointerEvent);
             if (moving && pointerEvent.pointerDrag != null
-                && !pointerEvent.dragging
-                && ShouldStartDrag(pointerEvent))
+                       && !pointerEvent.dragging
+                       && ShouldStartDrag(pointerEvent))
             {
                 if (pointerEvent.IsVRPointer())
-                {
                     //adjust the position used based on swiping action. Allowing the user to
                     //drag items by swiping on the touchpad
-                    pointerEvent.position = SwipeAdjustedPosition (originalPosition, pointerEvent);
-                }
+                    pointerEvent.position = SwipeAdjustedPosition(originalPosition, pointerEvent);
                 ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, ExecuteEvents.beginDragHandler);
                 pointerEvent.dragging = true;
             }
@@ -826,9 +812,7 @@ namespace UnityEngine.EventSystems
             if (pointerEvent.dragging && moving && pointerEvent.pointerDrag != null)
             {
                 if (pointerEvent.IsVRPointer())
-                {
                     pointerEvent.position = SwipeAdjustedPosition(originalPosition, pointerEvent);
-                }
                 // Before doing drag we should cancel any pointer down state
                 // And clear selection!
                 if (pointerEvent.pointerPress != pointerEvent.pointerDrag)
@@ -839,6 +823,7 @@ namespace UnityEngine.EventSystems
                     pointerEvent.pointerPress = null;
                     pointerEvent.rawPointerPress = null;
                 }
+
                 ExecuteEvents.Execute(pointerEvent.pointerDrag, pointerEvent, ExecuteEvents.dragHandler);
             }
         }
@@ -847,7 +832,7 @@ namespace UnityEngine.EventSystems
         /// Get state of button corresponding to gaze pointer
         /// </summary>
         /// <returns></returns>
-        virtual protected PointerEventData.FramePressState GetGazeButtonState()
+        protected virtual PointerEventData.FramePressState GetGazeButtonState()
         {
             var pressed = Input.GetKeyDown(gazeClickKey) || OVRInput.GetDown(joyPadClickButton);
             var released = Input.GetKeyUp(gazeClickKey) || OVRInput.GetUp(joyPadClickButton);
@@ -871,14 +856,15 @@ namespace UnityEngine.EventSystems
         /// </summary>
         protected Vector2 GetExtraScrollDelta()
         {
-            Vector2 scrollDelta = new Vector2();
+            var scrollDelta = new Vector2();
             if (useRightStickScroll)
             {
-                Vector2 s = OVRInput.Get(OVRInput.Axis2D.SecondaryThumbstick);
+                var s = OVRInput.Get(OVRInput.Axis2D.SecondaryThumbstick);
                 if (Mathf.Abs(s.x) < rightStickDeadZone) s.x = 0;
                 if (Mathf.Abs(s.y) < rightStickDeadZone) s.y = 0;
                 scrollDelta = s;
             }
+
             return scrollDelta;
         }
     };

@@ -5,34 +5,28 @@ public class GazeTargetSpawner : MonoBehaviour
     public GameObject GazeTargetPrefab;
     public int NumberOfDummyTargets = 100;
     public int RadiusMultiplier = 3;
-    [SerializeField]
-    private bool isVisible;
+    [SerializeField] private bool isVisible;
+
     public bool IsVisible
     {
-        get
-        {
-            return isVisible;
-        }
+        get => isVisible;
         set
         {
             isVisible = value;
-            GazeTarget[] dummyGazeTargets = gameObject.GetComponentsInChildren<GazeTarget>();
-            for (int i = 0; i < dummyGazeTargets.Length; ++i)
+            var dummyGazeTargets = gameObject.GetComponentsInChildren<GazeTarget>();
+            for (var i = 0; i < dummyGazeTargets.Length; ++i)
             {
-                MeshRenderer dummyMesh = dummyGazeTargets[i].GetComponent<MeshRenderer>();
-                if (dummyMesh != null)
-                {
-                    dummyMesh.enabled = isVisible;
-                }
+                var dummyMesh = dummyGazeTargets[i].GetComponent<MeshRenderer>();
+                if (dummyMesh != null) dummyMesh.enabled = isVisible;
             }
         }
     }
 
-    void Start ()
+    private void Start()
     {
-        for (int i = 0; i < NumberOfDummyTargets; ++i)
+        for (var i = 0; i < NumberOfDummyTargets; ++i)
         {
-            GameObject target = Instantiate(GazeTargetPrefab, transform);
+            var target = Instantiate(GazeTargetPrefab, transform);
             target.name += "_" + i;
             target.transform.localPosition = Random.insideUnitSphere * RadiusMultiplier;
             target.transform.rotation = Quaternion.identity;
@@ -40,7 +34,7 @@ public class GazeTargetSpawner : MonoBehaviour
         }
     }
 
-    void OnValidate()
+    private void OnValidate()
     {
         // Run through OnValidate to pick up changes from inspector
         IsVisible = isVisible;

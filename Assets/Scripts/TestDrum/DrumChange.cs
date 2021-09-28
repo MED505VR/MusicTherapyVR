@@ -5,9 +5,7 @@ using Normal.Realtime;
 
 public class DrumChange : MonoBehaviour
 {
-
-    [SerializeField]
-    private float maxCollisionVelocity = 5f;
+    [SerializeField] private float maxCollisionVelocity = 5f;
 
     private GameObject leftHand, rightHand;
     private Transform leftHandPosition, rightHandPosition;
@@ -35,26 +33,25 @@ public class DrumChange : MonoBehaviour
         myView = myObject.GetComponent<RealtimeView>();
         _sync = GetComponent<VolHitSync>();
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == leftHand)
         {
             myView.RequestOwnership();
 
-            float volumeLeft = CalculateVolume(LeftControllerSpeed);
+            var volumeLeft = CalculateVolume(LeftControllerSpeed);
             print(volumeLeft);
             _volume = volumeLeft;
             _hit = true;
             //audioSource.pitch = volumeLeft;
             //audioSource.Play();
-
-
         }
 
         else if (other.gameObject == rightHand)
         {
             myView.RequestOwnership();
-            float volumeRight = CalculateVolume(RightControllerSpeed);
+            var volumeRight = CalculateVolume(RightControllerSpeed);
             print(volumeRight);
             _volume = volumeRight;
             _hit = true;
@@ -74,25 +71,14 @@ public class DrumChange : MonoBehaviour
     {
         float changeInValue = 1;
         float startingValue = 0;
-        return changeInValue * ((velocity = velocity / maxCollisionVelocity - 1) * velocity * velocity + 1) + startingValue;
+        return changeInValue * ((velocity = velocity / maxCollisionVelocity - 1) * velocity * velocity + 1) +
+               startingValue;
     }
 
 
-    private float RightControllerSpeed
-    {
-        get
-        {
-            return OVRInput.GetLocalControllerVelocity(OVRInput.Controller.RTouch).magnitude;
-        }
-    }
+    private float RightControllerSpeed => OVRInput.GetLocalControllerVelocity(OVRInput.Controller.RTouch).magnitude;
 
-    private float LeftControllerSpeed
-    {
-        get
-        {
-            return OVRInput.GetLocalControllerVelocity(OVRInput.Controller.LTouch).magnitude;
-        }
-    }
+    private float LeftControllerSpeed => OVRInput.GetLocalControllerVelocity(OVRInput.Controller.LTouch).magnitude;
 
 
     private void Update()
@@ -102,11 +88,11 @@ public class DrumChange : MonoBehaviour
             _sync.SetVolume(_volume);
             _prevVolume = _volume;
         }
+
         if (_hit != _prevHit)
         {
             _sync.SetHit(_hit);
             _prevHit = _hit;
         }
     }
-
 }

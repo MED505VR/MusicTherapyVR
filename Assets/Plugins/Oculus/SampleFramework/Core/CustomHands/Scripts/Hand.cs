@@ -3,7 +3,7 @@
 Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.  
 
 See SampleFramework license.txt for license terms.  Unless required by applicable law 
-or agreed to in writing, the sample code is provided ìAS ISî WITHOUT WARRANTIES OR 
+or agreed to in writing, the sample code is provided ‚ÄúAS IS‚Äù WITHOUT WARRANTIES OR 
 CONDITIONS OF ANY KIND, either express or implied.  See the license for specific 
 language governing permissions and limitations under the license.
 
@@ -39,18 +39,15 @@ namespace OVRTouchSample
         public const float TRIGGER_DEBOUNCE_TIME = 0.05f;
         public const float THUMB_DEBOUNCE_TIME = 0.15f;
 
-        [SerializeField]
-        private OVRInput.Controller m_controller = OVRInput.Controller.None;
-        [SerializeField]
-        private Animator m_animator = null;
-        [SerializeField]
-        private HandPose m_defaultGrabPose = null;
+        [SerializeField] private OVRInput.Controller m_controller = OVRInput.Controller.None;
+        [SerializeField] private Animator m_animator = null;
+        [SerializeField] private HandPose m_defaultGrabPose = null;
 
         private Collider[] m_colliders = null;
         private bool m_collisionEnabled = true;
         private OVRGrabber m_grabber;
 
-        List<Renderer> m_showAfterInputFocusAcquired;
+        private List<Renderer> m_showAfterInputFocusAcquired;
 
         private int m_animLayerIndexThumb = -1;
         private int m_animLayerIndexPoint = -1;
@@ -66,6 +63,7 @@ namespace OVRTouchSample
 
         private RealtimeView _realtimeView;
         private RealtimeTransform _realtimeTransform;
+
         private void Awake()
         {
             m_grabber = GetComponent<OVRGrabber>();
@@ -77,7 +75,8 @@ namespace OVRTouchSample
             m_showAfterInputFocusAcquired = new List<Renderer>();
 
             // Collision starts disabled. We'll enable it for certain cases such as making a fist.
-            m_colliders = this.GetComponentsInChildren<Collider>().Where(childCollider => !childCollider.isTrigger).ToArray();
+            m_colliders = GetComponentsInChildren<Collider>().Where(childCollider => !childCollider.isTrigger)
+                .ToArray();
             CollisionEnable(false);
 
             // Get animator layer indices by name, for later use switching between hand visuals
@@ -89,7 +88,8 @@ namespace OVRTouchSample
             OVRManager.InputFocusAcquired += OnInputFocusAcquired;
             OVRManager.InputFocusLost += OnInputFocusLost;
 #if UNITY_EDITOR
-            OVRPlugin.SendEvent("custom_hand", (SceneManager.GetActiveScene().name == "CustomHands").ToString(), "sample_framework");
+            OVRPlugin.SendEvent("custom_hand", (SceneManager.GetActiveScene().name == "CustomHands").ToString(),
+                "sample_framework");
 #endif
         }
 
@@ -101,21 +101,20 @@ namespace OVRTouchSample
 
         private void Update()
         {
-            if (_realtimeView.isOwnedLocallyInHierarchy) {
-               UpdateCapTouchStates();
+            if (_realtimeView.isOwnedLocallyInHierarchy)
+            {
+                UpdateCapTouchStates();
 
                 m_pointBlend = InputValueRateChange(m_isPointing, m_pointBlend);
                 m_thumbsUpBlend = InputValueRateChange(m_isGivingThumbsUp, m_thumbsUpBlend);
 
-                float flex = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, m_controller);
+                var flex = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, m_controller);
 
-                bool collisionEnabled = m_grabber.grabbedObject == null && flex >= THRESH_COLLISION_FLEX;
+                var collisionEnabled = m_grabber.grabbedObject == null && flex >= THRESH_COLLISION_FLEX;
                 CollisionEnable(collisionEnabled);
 
                 UpdateAnimStates();
             }
-
-
         }
 
         // Just checking the state of the index and thumb cap touch sensors, but with a little bit of
@@ -134,11 +133,13 @@ namespace OVRTouchSample
             // Hand's collision grows over a short amount of time on enable, rather than snapping to on, to help somewhat with interpenetration issues.
             if (m_collisionEnabled && m_collisionScaleCurrent + Mathf.Epsilon < COLLIDER_SCALE_MAX)
             {
-                m_collisionScaleCurrent = Mathf.Min(COLLIDER_SCALE_MAX, m_collisionScaleCurrent + Time.deltaTime * COLLIDER_SCALE_PER_SECOND);
-                for (int i = 0; i < m_colliders.Length; ++i)
+                m_collisionScaleCurrent = Mathf.Min(COLLIDER_SCALE_MAX,
+                    m_collisionScaleCurrent + Time.deltaTime * COLLIDER_SCALE_PER_SECOND);
+                for (var i = 0; i < m_colliders.Length; ++i)
                 {
-                    Collider collider = m_colliders[i];
-                    collider.transform.localScale = new Vector3(m_collisionScaleCurrent, m_collisionScaleCurrent, m_collisionScaleCurrent);
+                    var collider = m_colliders[i];
+                    collider.transform.localScale = new Vector3(m_collisionScaleCurrent, m_collisionScaleCurrent,
+                        m_collisionScaleCurrent);
                 }
             }
         }
@@ -149,15 +150,13 @@ namespace OVRTouchSample
             if (gameObject.activeInHierarchy)
             {
                 m_showAfterInputFocusAcquired.Clear();
-                Renderer[] renderers = GetComponentsInChildren<Renderer>();
-                for (int i = 0; i < renderers.Length; ++i)
-                {
+                var renderers = GetComponentsInChildren<Renderer>();
+                for (var i = 0; i < renderers.Length; ++i)
                     if (renderers[i].enabled)
                     {
                         renderers[i].enabled = false;
                         m_showAfterInputFocusAcquired.Add(renderers[i]);
                     }
-                }
 
                 CollisionEnable(false);
 
@@ -169,13 +168,9 @@ namespace OVRTouchSample
         {
             if (m_restoreOnInputAcquired)
             {
-                for (int i = 0; i < m_showAfterInputFocusAcquired.Count; ++i)
-                {
+                for (var i = 0; i < m_showAfterInputFocusAcquired.Count; ++i)
                     if (m_showAfterInputFocusAcquired[i])
-                    {
                         m_showAfterInputFocusAcquired[i].enabled = true;
-                    }
-                }
                 m_showAfterInputFocusAcquired.Clear();
 
                 // Update function will update this flag appropriately. Do not set it to a potentially incorrect value here.
@@ -187,40 +182,41 @@ namespace OVRTouchSample
 
         private float InputValueRateChange(bool isDown, float value)
         {
-            float rateDelta = Time.deltaTime * INPUT_RATE_CHANGE;
-            float sign = isDown ? 1.0f : -1.0f;
+            var rateDelta = Time.deltaTime * INPUT_RATE_CHANGE;
+            var sign = isDown ? 1.0f : -1.0f;
             return Mathf.Clamp01(value + rateDelta * sign);
         }
 
         private void UpdateAnimStates()
         {
-            bool grabbing = m_grabber.grabbedObject != null;
-            HandPose grabPose = m_defaultGrabPose;
+            var grabbing = m_grabber.grabbedObject != null;
+            var grabPose = m_defaultGrabPose;
             if (grabbing)
             {
-                HandPose customPose = m_grabber.grabbedObject.GetComponent<HandPose>();
+                var customPose = m_grabber.grabbedObject.GetComponent<HandPose>();
                 if (customPose != null) grabPose = customPose;
             }
+
             // Pose
-            HandPoseId handPoseId = grabPose.PoseId;
+            var handPoseId = grabPose.PoseId;
             m_animator.SetInteger(m_animParamIndexPose, (int)handPoseId);
 
             // Flex
             // blend between open hand and fully closed fist
-            float flex = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, m_controller);
+            var flex = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, m_controller);
             m_animator.SetFloat(m_animParamIndexFlex, flex);
 
             // Point
-            bool canPoint = !grabbing || grabPose.AllowPointing;
-            float point = canPoint ? m_pointBlend : 0.0f;
+            var canPoint = !grabbing || grabPose.AllowPointing;
+            var point = canPoint ? m_pointBlend : 0.0f;
             m_animator.SetLayerWeight(m_animLayerIndexPoint, point);
 
             // Thumbs up
-            bool canThumbsUp = !grabbing || grabPose.AllowThumbsUp;
-            float thumbsUp = canThumbsUp ? m_thumbsUpBlend : 0.0f;
+            var canThumbsUp = !grabbing || grabPose.AllowThumbsUp;
+            var thumbsUp = canThumbsUp ? m_thumbsUpBlend : 0.0f;
             m_animator.SetLayerWeight(m_animLayerIndexThumb, thumbsUp);
 
-            float pinch = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, m_controller);
+            var pinch = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, m_controller);
             m_animator.SetFloat("Pinch", pinch);
         }
 
@@ -228,30 +224,29 @@ namespace OVRTouchSample
 
         private void CollisionEnable(bool enabled)
         {
-            if (m_collisionEnabled == enabled)
-            {
-                return;
-            }
+            if (m_collisionEnabled == enabled) return;
             m_collisionEnabled = enabled;
 
             if (enabled)
             {
                 m_collisionScaleCurrent = COLLIDER_SCALE_MIN;
-                for (int i = 0; i < m_colliders.Length; ++i)
+                for (var i = 0; i < m_colliders.Length; ++i)
                 {
-                    Collider collider = m_colliders[i];
-                    collider.transform.localScale = new Vector3(COLLIDER_SCALE_MIN, COLLIDER_SCALE_MIN, COLLIDER_SCALE_MIN);
+                    var collider = m_colliders[i];
+                    collider.transform.localScale =
+                        new Vector3(COLLIDER_SCALE_MIN, COLLIDER_SCALE_MIN, COLLIDER_SCALE_MIN);
                     collider.enabled = true;
                 }
             }
             else
             {
                 m_collisionScaleCurrent = COLLIDER_SCALE_MAX;
-                for (int i = 0; i < m_colliders.Length; ++i)
+                for (var i = 0; i < m_colliders.Length; ++i)
                 {
-                    Collider collider = m_colliders[i];
+                    var collider = m_colliders[i];
                     collider.enabled = false;
-                    collider.transform.localScale = new Vector3(COLLIDER_SCALE_MIN, COLLIDER_SCALE_MIN, COLLIDER_SCALE_MIN);
+                    collider.transform.localScale =
+                        new Vector3(COLLIDER_SCALE_MIN, COLLIDER_SCALE_MIN, COLLIDER_SCALE_MIN);
                 }
             }
         }

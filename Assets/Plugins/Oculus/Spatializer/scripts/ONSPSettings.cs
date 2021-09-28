@@ -6,10 +6,10 @@ using System.Collections;
 #endif
 public sealed class ONSPSettings : ScriptableObject
 {
-    [SerializeField]
-    public int voiceLimit = 64;
+    [SerializeField] public int voiceLimit = 64;
 
     private static ONSPSettings instance;
+
     public static ONSPSettings Instance
     {
         get
@@ -23,17 +23,15 @@ public sealed class ONSPSettings : ScriptableObject
                 // Use a dummy object with defaults for the getters so we don't have a null pointer exception
                 if (instance == null)
                 {
-                    instance = ScriptableObject.CreateInstance<ONSPSettings>();
+                    instance = CreateInstance<ONSPSettings>();
 
 #if UNITY_EDITOR
                     // Only in the editor should we save it to disk
-                    string properPath = System.IO.Path.Combine(UnityEngine.Application.dataPath, "Resources");
+                    var properPath = System.IO.Path.Combine(Application.dataPath, "Resources");
                     if (!System.IO.Directory.Exists(properPath))
-                    {
                         UnityEditor.AssetDatabase.CreateFolder("Assets", "Resources");
-                    }
 
-                    string fullPath = System.IO.Path.Combine(
+                    var fullPath = System.IO.Path.Combine(
                         System.IO.Path.Combine("Assets", "Resources"),
                         "ONSPSettings.asset");
                     UnityEditor.AssetDatabase.CreateAsset(instance, fullPath);

@@ -16,7 +16,7 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-abstract public class OVRCursor : MonoBehaviour
+public abstract class OVRCursor : MonoBehaviour
 {
     public abstract void SetCursorRay(Transform ray);
     public abstract void SetCursorStartDest(Vector3 start, Vector3 dest, Vector3 normal);

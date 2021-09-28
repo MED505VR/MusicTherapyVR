@@ -7,12 +7,13 @@ public class OvrAvatarAssetTexture : OvrAvatarAsset
     public Texture2D texture;
     private const int ASTCHeaderSize = 16;
 
-    public OvrAvatarAssetTexture(UInt64 _assetId, IntPtr asset) {
+    public OvrAvatarAssetTexture(ulong _assetId, IntPtr asset)
+    {
         assetID = _assetId;
-        ovrAvatarTextureAssetData textureAssetData = CAPI.ovrAvatarAsset_GetTextureData(asset);
+        var textureAssetData = CAPI.ovrAvatarAsset_GetTextureData(asset);
         TextureFormat format;
-        IntPtr textureData = textureAssetData.textureData;
-        int textureDataSize = (int)textureAssetData.textureDataSize;
+        var textureData = textureAssetData.textureData;
+        var textureDataSize = (int)textureAssetData.textureDataSize;
 
         AvatarLogger.Log(
             "OvrAvatarAssetTexture - "
@@ -54,15 +55,16 @@ public class OvrAvatarAssetTexture : OvrAvatarAsset
             default:
                 throw new NotImplementedException(
                     string.Format("Unsupported texture format {0}",
-                                  textureAssetData.format.ToString()));
+                        textureAssetData.format.ToString()));
         }
+
         texture = new Texture2D(
             (int)textureAssetData.sizeX, (int)textureAssetData.sizeY,
             format, textureAssetData.mipCount > 1,
             QualitySettings.activeColorSpace == ColorSpace.Gamma ? false : true)
         {
             filterMode = FilterMode.Trilinear,
-            anisoLevel = 4,
+            anisoLevel = 4
         };
         texture.LoadRawTextureData(textureData, textureDataSize);
         texture.Apply(true, false);

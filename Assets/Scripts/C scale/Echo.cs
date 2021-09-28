@@ -1,55 +1,52 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Echo : MonoBehaviour
+namespace C_scale
 {
-    public bool echo  = false;
-    private bool previousEcho;
-
-    public GameObject table;
-    public AudioEchoFilter[] note;
-
-    private MeshRenderer meshRenderer;
-    private GameObject button;
-    private void Awake()
+    public class Echo : MonoBehaviour
     {
-        button = GameObject.Find("Echo");
-        meshRenderer = button.GetComponent<MeshRenderer>();
-        table = GameObject.Find("Table");
-        note = table.GetComponentsInChildren<AudioEchoFilter>();
-        for (int i = 0; i < note.Length; i++)
-        {
-            note[i].enabled = false;
-            echo = false;
-        }
-    }
+        public bool echo = false;
+        private bool previousEcho;
 
-    // Start is called before the first frame update
-    // Update is called once per frame
-    void Update()
-    {
-        if (echo != previousEcho)
+        public GameObject table;
+        public AudioEchoFilter[] note;
+
+        private MeshRenderer meshRenderer;
+        private GameObject button;
+
+        private void Awake()
         {
-            if (echo)
+            button = GameObject.Find("Echo");
+            meshRenderer = button.GetComponent<MeshRenderer>();
+            table = GameObject.Find("Table");
+            note = table.GetComponentsInChildren<AudioEchoFilter>();
+            for (var i = 0; i < note.Length; i++)
             {
-                for (int i = 0; i < note.Length; i++)
-                {
-                    meshRenderer.material.color = Color.green;
-                    note[i].enabled = true;
-                    previousEcho = echo;
-                    
-                }
+                note[i].enabled = false;
+                echo = false;
             }
-            if (!echo)
+        }
+
+        // Start is called before the first frame update
+        // Update is called once per frame
+        private void Update()
+        {
+            if (echo != previousEcho)
             {
-                for (int i = 0; i < note.Length; i++)
-                {
-                    meshRenderer.material.color = Color.black;
-                    note[i].enabled = false;
-                    previousEcho = echo;
-                    
-                }
+                if (echo)
+                    for (var i = 0; i < note.Length; i++)
+                    {
+                        meshRenderer.material.color = Color.green;
+                        note[i].enabled = true;
+                        previousEcho = echo;
+                    }
+
+                if (!echo)
+                    for (var i = 0; i < note.Length; i++)
+                    {
+                        meshRenderer.material.color = Color.black;
+                        note[i].enabled = false;
+                        previousEcho = echo;
+                    }
             }
         }
     }

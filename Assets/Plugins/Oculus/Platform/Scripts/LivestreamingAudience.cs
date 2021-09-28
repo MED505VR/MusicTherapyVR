@@ -2,23 +2,16 @@
 
 namespace Oculus.Platform
 {
+    using Description = System.ComponentModel.DescriptionAttribute;
 
-  using Description = System.ComponentModel.DescriptionAttribute;
+    public enum LivestreamingAudience : int
+    {
+        [Description("UNKNOWN")] Unknown,
 
-  public enum LivestreamingAudience : int
-  {
-    [Description("UNKNOWN")]
-    Unknown,
+        [Description("PUBLIC")] Public,
 
-    [Description("PUBLIC")]
-    Public,
+        [Description("FRIENDS")] Friends,
 
-    [Description("FRIENDS")]
-    Friends,
-
-    [Description("ONLY_ME")]
-    OnlyMe,
-
-  }
-
+        [Description("ONLY_ME")] OnlyMe
+    }
 }

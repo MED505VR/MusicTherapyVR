@@ -3,142 +3,156 @@ using System.Collections;
 
 namespace OVR
 {
-
 /*
 -----------------------
 SoundFXRef
 just a references to a SoundFX.. all the SoundFX methods are called indirectly from here
 -----------------------
 */
-[System.Serializable]
-public class SoundFXRef {
+    [System.Serializable]
+    public class SoundFXRef
+    {
+        public string soundFXName = string.Empty;
 
-	public string			soundFXName = string.Empty;
+        private bool initialized = false;
+        private SoundFX soundFXCached = null;
 
-	private bool			initialized = false;
-	private SoundFX			soundFXCached = null;
-	public SoundFX			soundFX { 
-		get {
-			if ( !initialized ) {
-				Init();
-			}
-			return soundFXCached;
-		}
-	}
-	public string name { get { return soundFXName; } set { soundFXName = value; Init(); } }
+        public SoundFX soundFX
+        {
+            get
+            {
+                if (!initialized) Init();
+                return soundFXCached;
+            }
+        }
 
-	/*
-	-----------------------
-	Init()
-	-----------------------
-	*/
-	void Init() {
-		// look up the actual SoundFX object
-		soundFXCached = AudioManager.FindSoundFX( soundFXName );
-		if ( soundFXCached == null ) {
-			soundFXCached = AudioManager.FindSoundFX( string.Empty );
-		}
-		initialized = true;
-	}
+        public string name
+        {
+            get => soundFXName;
+            set
+            {
+                soundFXName = value;
+                Init();
+            }
+        }
 
-	/*
-	-----------------------
-	Length()
-	-----------------------
-	*/
-	public int 	Length { get { return soundFX.Length; } }
+        /*
+        -----------------------
+        Init()
+        -----------------------
+        */
+        private void Init()
+        {
+            // look up the actual SoundFX object
+            soundFXCached = AudioManager.FindSoundFX(soundFXName);
+            if (soundFXCached == null) soundFXCached = AudioManager.FindSoundFX(string.Empty);
+            initialized = true;
+        }
 
-	/*
-	-----------------------
-	IsValid()
-	-----------------------
-	*/
-	public bool IsValid { get { return soundFX.IsValid; } }
+        /*
+        -----------------------
+        Length()
+        -----------------------
+        */
+        public int Length => soundFX.Length;
 
-	/*
-	-----------------------
-	GetClip()
-	-----------------------
-	*/
-	public AudioClip GetClip() {	
-		return soundFX.GetClip(); 
-	}
+        /*
+        -----------------------
+        IsValid()
+        -----------------------
+        */
+        public bool IsValid => soundFX.IsValid;
 
-	/*
-	-----------------------
-	GetClipLength()
-	-----------------------
-	*/
-	public float GetClipLength( int idx ) {
-		return soundFX.GetClipLength( idx );
-	}
+        /*
+        -----------------------
+        GetClip()
+        -----------------------
+        */
+        public AudioClip GetClip()
+        {
+            return soundFX.GetClip();
+        }
 
-	/*
-	-----------------------
-	PlaySound()
-	-----------------------
-	*/
-	public int PlaySound( float delaySecs = 0.0f ) {
-		return soundFX.PlaySound( delaySecs );
-	}
-	
-	/*
-	-----------------------
-	PlaySoundAt()
-	-----------------------
-	*/
-	public int PlaySoundAt( Vector3 pos, float delaySecs = 0.0f, float volume = 1.0f, float pitchMultiplier = 1.0f ) {
-		return soundFX.PlaySoundAt( pos, delaySecs, volume, pitchMultiplier );
-	}
+        /*
+        -----------------------
+        GetClipLength()
+        -----------------------
+        */
+        public float GetClipLength(int idx)
+        {
+            return soundFX.GetClipLength(idx);
+        }
 
-	/*
-	-----------------------
-	SetOnFinished()
-	get a callback when the sound is finished playing
-	-----------------------
-	*/
-	public void SetOnFinished( System.Action onFinished ) {
-		soundFX.SetOnFinished( onFinished );
-	}
+        /*
+        -----------------------
+        PlaySound()
+        -----------------------
+        */
+        public int PlaySound(float delaySecs = 0.0f)
+        {
+            return soundFX.PlaySound(delaySecs);
+        }
 
-	/*
-	-----------------------
-	SetOnFinished()
-	get a callback with an object parameter when the sound is finished playing
-	-----------------------
-	*/
-	public void SetOnFinished( System.Action<object> onFinished, object obj ) {
-		soundFX.SetOnFinished( onFinished, obj );
-	}
+        /*
+        -----------------------
+        PlaySoundAt()
+        -----------------------
+        */
+        public int PlaySoundAt(Vector3 pos, float delaySecs = 0.0f, float volume = 1.0f, float pitchMultiplier = 1.0f)
+        {
+            return soundFX.PlaySoundAt(pos, delaySecs, volume, pitchMultiplier);
+        }
 
-	/*
-	-----------------------
-	StopSound()
-	-----------------------
-	*/
-	public bool StopSound() {
-		return soundFX.StopSound();
-	}
+        /*
+        -----------------------
+        SetOnFinished()
+        get a callback when the sound is finished playing
+        -----------------------
+        */
+        public void SetOnFinished(System.Action onFinished)
+        {
+            soundFX.SetOnFinished(onFinished);
+        }
 
-	/*
-	-----------------------
-	AttachToParent()
-	-----------------------
-	*/
-	public void AttachToParent( Transform parent)
-	{
-		soundFX.AttachToParent( parent);
-	}
+        /*
+        -----------------------
+        SetOnFinished()
+        get a callback with an object parameter when the sound is finished playing
+        -----------------------
+        */
+        public void SetOnFinished(System.Action<object> onFinished, object obj)
+        {
+            soundFX.SetOnFinished(onFinished, obj);
+        }
 
-	/*
-	-----------------------
-	DetachFromParent()
-	-----------------------
-	*/
-	public void DetachFromParent()
-	{
-		soundFX.DetachFromParent();
-	}
-}
+        /*
+        -----------------------
+        StopSound()
+        -----------------------
+        */
+        public bool StopSound()
+        {
+            return soundFX.StopSound();
+        }
 
+        /*
+        -----------------------
+        AttachToParent()
+        -----------------------
+        */
+        public void AttachToParent(Transform parent)
+        {
+            soundFX.AttachToParent(parent);
+        }
+
+        /*
+        -----------------------
+        DetachFromParent()
+        -----------------------
+        */
+        public void DetachFromParent()
+        {
+            soundFX.DetachFromParent();
+        }
+    }
 } // namespace OVR

@@ -47,13 +47,13 @@ public class OvrAvatarMaterialManager : MonoBehaviour
 
     private readonly string[] TextureTypeToShaderProperties =
     {
-        "_MainTex",       // TextureType.DiffuseTextures = 0
-        "_NormalMap",     // TextureType.NormalMaps
-        "_RoughnessMap"   // TextureType.RoughnessMaps
+        "_MainTex", // TextureType.DiffuseTextures = 0
+        "_NormalMap", // TextureType.NormalMaps
+        "_RoughnessMap" // TextureType.RoughnessMaps
     };
 
     // Container class for all the data relating to an avatar material description
-    [System.Serializable]
+    [Serializable]
     public class AvatarMaterialConfig
     {
         public AvatarComponentMaterialProperties[] ComponentMaterialProperties;
@@ -67,6 +67,7 @@ public class OvrAvatarMaterialManager : MonoBehaviour
 
     // Cache the previous shader when swapping in the loading shader.
     private Shader CombinedShader;
+
     // Shader properties
     public static string AVATAR_SHADER_LOADER = "OvrAvatar/Avatar_Mobile_Loader";
     public static string AVATAR_SHADER_MAINTEX = "_MainTex";
@@ -90,11 +91,13 @@ public class OvrAvatarMaterialManager : MonoBehaviour
     public static string AVATAR_SHADER_LIP_SMOOTHNESS = "_LipSmoothness";
 
     // Diffuse Intensity constants: body, clothes, eyewear, hair, beard
-    public static float[] DiffuseIntensities = new[] {0.3f, 0.1f, 0f, 0.15f, 0.15f};
+    public static float[] DiffuseIntensities = new[] { 0.3f, 0.1f, 0f, 0.15f, 0.15f };
+
     // Rim Intensity constants: body, clothes, eyewear, hair, beard
-    public static float[] RimIntensities = new[] {5f, 2f, 2.84f, 4f, 4f};
+    public static float[] RimIntensities = new[] { 5f, 2f, 2.84f, 4f, 4f };
+
     // Reflection Intensity constants: body, clothes, eyewear, hair, beard
-    public static float[] ReflectionIntensities = new[] {0f, 0.3f, 0.4f, 0f, 0f};
+    public static float[] ReflectionIntensities = new[] { 0f, 0.3f, 0.4f, 0f, 0f };
 
     // Loading animation
     private const float LOADING_ANIMATION_AMPLITUDE = 0.5f;
@@ -113,10 +116,8 @@ public class OvrAvatarMaterialManager : MonoBehaviour
         LocalAvatarConfig.MaterialPropertyBlock.RimIntensities = new float[componentCount];
         LocalAvatarConfig.MaterialPropertyBlock.ReflectionIntensities = new float[componentCount];
 
-        for (int i = 0; i < LocalAvatarConfig.ComponentMaterialProperties.Length; ++i)
-        {
+        for (var i = 0; i < LocalAvatarConfig.ComponentMaterialProperties.Length; ++i)
             LocalAvatarConfig.ComponentMaterialProperties[i].Textures = new Texture2D[textureTypeCount];
-        }
 
         TextureArrays = new AvatarTextureArrayProperties[textureTypeCount];
     }
@@ -153,7 +154,7 @@ public class OvrAvatarMaterialManager : MonoBehaviour
     {
         var localProps = LocalAvatarConfig.ComponentMaterialProperties[0];
 
-        for (int i = 0; i < TextureArrays.Length && i < localProps.Textures.Length; i++)
+        for (var i = 0; i < TextureArrays.Length && i < localProps.Textures.Length; i++)
         {
             TextureArrays[i].TextureArray = new Texture2DArray(
                 localProps.Textures[0].height, localProps.Textures[0].width,
@@ -161,22 +162,26 @@ public class OvrAvatarMaterialManager : MonoBehaviour
                 localProps.Textures[0].format,
                 true,
                 QualitySettings.activeColorSpace == ColorSpace.Gamma ? false : true
-            ) { filterMode = FilterMode.Trilinear,
+            )
+            {
+                filterMode = FilterMode.Trilinear,
                 //Can probably get away with 4 for roughness maps as well, once we switch
                 //to BC7/ASTC4x4 texture compression.
-                anisoLevel = (TextureType)i == TextureType.RoughnessMaps ? 16 : 4 };
+                anisoLevel = (TextureType)i == TextureType.RoughnessMaps ? 16 : 4
+            };
             //So a name shows up in Renderdoc
             TextureArrays[i].TextureArray.name = string.Format("Texture Array Type: {0}", (TextureType)i);
 
             TextureArrays[i].Textures
                 = new Texture2D[LocalAvatarConfig.ComponentMaterialProperties.Length];
 
-            for (int j = 0; j < LocalAvatarConfig.ComponentMaterialProperties.Length; j++)
+            for (var j = 0; j < LocalAvatarConfig.ComponentMaterialProperties.Length; j++)
             {
                 TextureArrays[i].Textures[j]
                     = LocalAvatarConfig.ComponentMaterialProperties[j].Textures[i];
                 //So a name shows up in Renderdoc
-                TextureArrays[i].Textures[j].name = string.Format("Texture Type: {0} Component: {1}", (TextureType)i, j);
+                TextureArrays[i].Textures[j].name =
+                    string.Format("Texture Type: {0} Component: {1}", (TextureType)i, j);
             }
 
             ProcessTexturesWithMips(
@@ -191,15 +196,15 @@ public class OvrAvatarMaterialManager : MonoBehaviour
         int texArrayResolution,
         Texture2DArray texArray)
     {
-        for (int i = 0; i < textures.Length; i++)
+        for (var i = 0; i < textures.Length; i++)
         {
-            int currentMipSize = texArrayResolution;
-            int correctNumberOfMips = textures[i].mipmapCount - 1;
+            var currentMipSize = texArrayResolution;
+            var correctNumberOfMips = textures[i].mipmapCount - 1;
 
             // Add mips to copyTexture queue in low-high order from correctNumberOfMips..0
-            for (int mipLevel = correctNumberOfMips; mipLevel >= 0; mipLevel--)
+            for (var mipLevel = correctNumberOfMips; mipLevel >= 0; mipLevel--)
             {
-                int mipSize = texArrayResolution / currentMipSize;
+                var mipSize = texArrayResolution / currentMipSize;
                 OvrAvatarSDKManager.Instance.GetTextureCopyManager().CopyTexture(
                     textures[i],
                     texArray,
@@ -216,8 +221,7 @@ public class OvrAvatarMaterialManager : MonoBehaviour
     private void SetMaterialPropertyBlock()
     {
         if (TargetRenderer != null)
-        {
-            for (int i = 0; i < LocalAvatarConfig.ComponentMaterialProperties.Length; i++)
+            for (var i = 0; i < LocalAvatarConfig.ComponentMaterialProperties.Length; i++)
             {
                 LocalAvatarConfig.MaterialPropertyBlock.Colors[i]
                     = LocalAvatarConfig.ComponentMaterialProperties[i].Color;
@@ -225,12 +229,11 @@ public class OvrAvatarMaterialManager : MonoBehaviour
                 LocalAvatarConfig.MaterialPropertyBlock.RimIntensities[i] = RimIntensities[i];
                 LocalAvatarConfig.MaterialPropertyBlock.ReflectionIntensities[i] = ReflectionIntensities[i];
             }
-        }
     }
 
     private void ApplyMaterialPropertyBlock()
     {
-        MaterialPropertyBlock materialPropertyBlock = new MaterialPropertyBlock();
+        var materialPropertyBlock = new MaterialPropertyBlock();
         materialPropertyBlock.SetVectorArray(AVATAR_SHADER_COLOR,
             LocalAvatarConfig.MaterialPropertyBlock.Colors);
         materialPropertyBlock.SetFloatArray(AVATAR_SHADER_DIFFUSEINTENSITY,
@@ -242,15 +245,11 @@ public class OvrAvatarMaterialManager : MonoBehaviour
         TargetRenderer.GetClosestReflectionProbes(ReflectionProbes);
 
         if (ReflectionProbes != null && ReflectionProbes.Count > 0 && ReflectionProbes[0].probe.texture != null)
-        {
             materialPropertyBlock.SetTexture(AVATAR_SHADER_CUBEMAP, ReflectionProbes[0].probe.texture);
-        }
 
-        for (int i = 0; i < TextureArrays.Length; i++)
-        {
+        for (var i = 0; i < TextureArrays.Length; i++)
             materialPropertyBlock.SetTexture(TextureTypeToShaderProperties[i],
                 TextureArrays[(int)(TextureType)i].TextureArray);
-        }
 
         TargetRenderer.SetPropertyBlock(materialPropertyBlock);
     }
@@ -259,43 +258,25 @@ public class OvrAvatarMaterialManager : MonoBehaviour
     public static ovrAvatarBodyPartType GetComponentType(string objectName)
     {
         if (objectName.Contains("0"))
-        {
             return ovrAvatarBodyPartType.Body;
-        }
         else if (objectName.Contains("1"))
-        {
             return ovrAvatarBodyPartType.Clothing;
-        }
         else if (objectName.Contains("2"))
-        {
             return ovrAvatarBodyPartType.Eyewear;
-        }
         else if (objectName.Contains("3"))
-        {
             return ovrAvatarBodyPartType.Hair;
-        }
-        else if (objectName.Contains("4"))
-        {
-            return ovrAvatarBodyPartType.Beard;
-        }
+        else if (objectName.Contains("4")) return ovrAvatarBodyPartType.Beard;
 
         return ovrAvatarBodyPartType.Count;
     }
 
-    UInt64 GetTextureIDForType(ovrAvatarPBSMaterialState materialState, TextureType type)
+    private ulong GetTextureIDForType(ovrAvatarPBSMaterialState materialState, TextureType type)
     {
         if (type == TextureType.DiffuseTextures)
-        {
             return materialState.albedoTextureID;
-        }
         else if (type == TextureType.NormalMaps)
-        {
             return materialState.normalTextureID;
-        }
-        else if (type == TextureType.RoughnessMaps)
-        {
-            return materialState.metallicnessTextureID;
-        }
+        else if (type == TextureType.RoughnessMaps) return materialState.metallicnessTextureID;
 
         return 0;
     }
@@ -304,66 +285,56 @@ public class OvrAvatarMaterialManager : MonoBehaviour
     {
         var props = LocalAvatarConfig.ComponentMaterialProperties;
 
-        int[] heights = new int[(int)TextureType.Count];
-        TextureFormat[] formats = new TextureFormat[(int)TextureType.Count];
+        var heights = new int[(int)TextureType.Count];
+        var formats = new TextureFormat[(int)TextureType.Count];
 
         for (var propIndex = 0; propIndex < props.Length; propIndex++)
+        for (var index = 0; index < props[propIndex].Textures.Length; index++)
         {
-            for (var index = 0; index < props[propIndex].Textures.Length; index++)
-            {
-                if (props[propIndex].Textures[index] == null)
-                {
-                    throw new System.Exception(
-                        props[propIndex].TypeIndex.ToString()
-                        + "Invalid: "
-                        + ((TextureType)index).ToString());
-                }
+            if (props[propIndex].Textures[index] == null)
+                throw new Exception(
+                    props[propIndex].TypeIndex.ToString()
+                    + "Invalid: "
+                    + ((TextureType)index).ToString());
 
-                heights[index] = props[propIndex].Textures[index].height;
-                formats[index] = props[propIndex].Textures[index].format;
-            }
+            heights[index] = props[propIndex].Textures[index].height;
+            formats[index] = props[propIndex].Textures[index].format;
         }
 
-        for (int textureIndex = 0; textureIndex < (int)TextureType.Count; textureIndex++)
+        for (var textureIndex = 0; textureIndex < (int)TextureType.Count; textureIndex++)
+        for (var propIndex = 1; propIndex < props.Length; propIndex++)
         {
-            for (var propIndex = 1; propIndex < props.Length; propIndex++)
-            {
-                if (props[propIndex - 1].Textures[textureIndex].height
-                    != props[propIndex].Textures[textureIndex].height)
-                {
-                    throw new System.Exception(
-                        props[propIndex].TypeIndex.ToString()
-                        + " Mismatching Resolutions: "
-                        + ((TextureType)textureIndex).ToString()
-                        + " "
-                        + props[propIndex - 1].Textures[textureIndex].height
-                        + " (ID: "
-                        + GetTextureIDForType(materialStates[propIndex - 1], (TextureType)textureIndex)
-                        + ") vs "
-                        + props[propIndex].Textures[textureIndex].height
-                        + " (ID: "
-                        + GetTextureIDForType(materialStates[propIndex], (TextureType)textureIndex)
-                        + ") Ensure you are using ASTC texture compression on Android or turn off CombineMeshes");
-                }
+            if (props[propIndex - 1].Textures[textureIndex].height
+                != props[propIndex].Textures[textureIndex].height)
+                throw new Exception(
+                    props[propIndex].TypeIndex.ToString()
+                    + " Mismatching Resolutions: "
+                    + ((TextureType)textureIndex).ToString()
+                    + " "
+                    + props[propIndex - 1].Textures[textureIndex].height
+                    + " (ID: "
+                    + GetTextureIDForType(materialStates[propIndex - 1], (TextureType)textureIndex)
+                    + ") vs "
+                    + props[propIndex].Textures[textureIndex].height
+                    + " (ID: "
+                    + GetTextureIDForType(materialStates[propIndex], (TextureType)textureIndex)
+                    + ") Ensure you are using ASTC texture compression on Android or turn off CombineMeshes");
 
-                if (props[propIndex - 1].Textures[textureIndex].format
-                    != props[propIndex].Textures[textureIndex].format)
-                {
-                    throw new System.Exception(
-                        props[propIndex].TypeIndex.ToString()
-                        + " Mismatching Formats: "
-                        + ((TextureType)textureIndex).ToString()
-                        + " "
-                        + props[propIndex - 1].Textures[textureIndex].format
-                        + " (ID: "
-                        + GetTextureIDForType(materialStates[propIndex - 1], (TextureType)textureIndex)
-                        + ") vs "
-                        + props[propIndex].Textures[textureIndex].format
-                        + " (ID: "
-                        + GetTextureIDForType(materialStates[propIndex], (TextureType)textureIndex)
-                        + ") Ensure you are using ASTC texture compression on Android or turn off CombineMeshes");
-                }
-            }
+            if (props[propIndex - 1].Textures[textureIndex].format
+                != props[propIndex].Textures[textureIndex].format)
+                throw new Exception(
+                    props[propIndex].TypeIndex.ToString()
+                    + " Mismatching Formats: "
+                    + ((TextureType)textureIndex).ToString()
+                    + " "
+                    + props[propIndex - 1].Textures[textureIndex].format
+                    + " (ID: "
+                    + GetTextureIDForType(materialStates[propIndex - 1], (TextureType)textureIndex)
+                    + ") vs "
+                    + props[propIndex].Textures[textureIndex].format
+                    + " (ID: "
+                    + GetTextureIDForType(materialStates[propIndex], (TextureType)textureIndex)
+                    + ") Ensure you are using ASTC texture compression on Android or turn off CombineMeshes");
         }
     }
 
@@ -375,14 +346,14 @@ public class OvrAvatarMaterialManager : MonoBehaviour
         CombinedShader = TargetRenderer.sharedMaterial.shader;
 
         // Save shader properties
-        int srcBlend = TargetRenderer.sharedMaterial.GetInt("_SrcBlend");
-        int dstBlend = TargetRenderer.sharedMaterial.GetInt("_DstBlend");
-        string lightModeTag = TargetRenderer.sharedMaterial.GetTag("LightMode", false);
-        string renderTypeTag = TargetRenderer.sharedMaterial.GetTag("RenderType", false);
-        string renderQueueTag = TargetRenderer.sharedMaterial.GetTag("Queue", false);
-        string ignoreProjectorTag = TargetRenderer.sharedMaterial.GetTag("IgnoreProjector", false);
-        int renderQueue = TargetRenderer.sharedMaterial.renderQueue;
-        bool transparentQueue = TargetRenderer.sharedMaterial.IsKeywordEnabled("_ALPHATEST_ON");
+        var srcBlend = TargetRenderer.sharedMaterial.GetInt("_SrcBlend");
+        var dstBlend = TargetRenderer.sharedMaterial.GetInt("_DstBlend");
+        var lightModeTag = TargetRenderer.sharedMaterial.GetTag("LightMode", false);
+        var renderTypeTag = TargetRenderer.sharedMaterial.GetTag("RenderType", false);
+        var renderQueueTag = TargetRenderer.sharedMaterial.GetTag("Queue", false);
+        var ignoreProjectorTag = TargetRenderer.sharedMaterial.GetTag("IgnoreProjector", false);
+        var renderQueue = TargetRenderer.sharedMaterial.renderQueue;
+        var transparentQueue = TargetRenderer.sharedMaterial.IsKeywordEnabled("_ALPHATEST_ON");
 
         // Swap in loading shader
         TargetRenderer.sharedMaterial.shader = Shader.Find(AVATAR_SHADER_LOADER);
@@ -390,11 +361,13 @@ public class OvrAvatarMaterialManager : MonoBehaviour
 
         while (OvrAvatarSDKManager.Instance.GetTextureCopyManager().GetTextureCount() > 0)
         {
-            float distance = (LOADING_ANIMATION_AMPLITUDE * Mathf.Sin(Time.timeSinceLevelLoad / LOADING_ANIMATION_PERIOD) +
-                LOADING_ANIMATION_AMPLITUDE) * (LOADING_ANIMATION_CURVE_SCALE) + LOADING_ANIMATION_DIMMER_MIN;
+            var distance =
+                (LOADING_ANIMATION_AMPLITUDE * Mathf.Sin(Time.timeSinceLevelLoad / LOADING_ANIMATION_PERIOD) +
+                 LOADING_ANIMATION_AMPLITUDE) * LOADING_ANIMATION_CURVE_SCALE + LOADING_ANIMATION_DIMMER_MIN;
             TargetRenderer.sharedMaterial.SetFloat(AVATAR_SHADER_LOADING_DIMMER, distance);
             yield return null;
         }
+
         // Swap back main shader
         TargetRenderer.sharedMaterial.SetFloat(AVATAR_SHADER_LOADING_DIMMER, 1f);
         TargetRenderer.sharedMaterial.shader = CombinedShader;
@@ -418,13 +391,11 @@ public class OvrAvatarMaterialManager : MonoBehaviour
             TargetRenderer.sharedMaterial.DisableKeyword("_ALPHABLEND_ON");
             TargetRenderer.sharedMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
         }
+
         TargetRenderer.sharedMaterial.renderQueue = renderQueue;
 
         ApplyMaterialPropertyBlock();
 
-        if (callBack != null)
-        {
-            callBack();
-        }
+        if (callBack != null) callBack();
     }
 }

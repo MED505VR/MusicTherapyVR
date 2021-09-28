@@ -12,11 +12,13 @@ public class OvrAvatarTextureCopyManager : MonoBehaviour
         public Texture2D DiffuseRoughness;
         public Texture2D Normal;
     }
+
     // Fallback texture sets are indexed with ovrAvatarAssetLevelOfDetail.
     // We currently only use 1, 3 (mobile default), 5 (PC default).
-    public FallbackTextureSet[] FallbackTextureSets = new FallbackTextureSet[(int)ovrAvatarAssetLevelOfDetail.Highest + 1];
+    public FallbackTextureSet[] FallbackTextureSets =
+        new FallbackTextureSet[(int)ovrAvatarAssetLevelOfDetail.Highest + 1];
 
-    struct CopyTextureParams
+    private struct CopyTextureParams
     {
         public Texture Src;
         public Texture Dst;
@@ -25,19 +27,20 @@ public class OvrAvatarTextureCopyManager : MonoBehaviour
         public int DstElement;
 
         public CopyTextureParams(
-            Texture src, 
-            Texture dst, 
-            int mip, 
-            int srcSize, 
+            Texture src,
+            Texture dst,
+            int mip,
+            int srcSize,
             int dstElement)
         {
             Src = src;
             Dst = dst;
-            Mip = mip;  
+            Mip = mip;
             SrcSize = srcSize;
             DstElement = dstElement;
         }
     }
+
     private Queue<CopyTextureParams> texturesToCopy;
 
     public struct TextureSet
@@ -58,8 +61,9 @@ public class OvrAvatarTextureCopyManager : MonoBehaviour
             IsProcessed = isProcessed;
         }
     }
+
     private Dictionary<int, TextureSet> textureSets;
-    
+
     private const int TEXTURES_TO_COPY_QUEUE_CAPACITY = 256;
     private const int COPIES_PER_FRAME = 8;
 
@@ -72,8 +76,9 @@ public class OvrAvatarTextureCopyManager : MonoBehaviour
         "null",
         PATH_MEDIUM_DIFFUSE_ROUGHNESS,
         "null",
-        PATH_HIGHEST_DIFFUSE_ROUGHNESS,
+        PATH_HIGHEST_DIFFUSE_ROUGHNESS
     };
+
     private readonly string[] FALLBACK_TEXTURE_PATHS_NORMAL = new string[]
     {
         "null",
@@ -81,7 +86,7 @@ public class OvrAvatarTextureCopyManager : MonoBehaviour
         "null",
         PATH_MEDIUM_NORMAL,
         "null",
-        PATH_HIGHEST_NORMAL,
+        PATH_HIGHEST_NORMAL
     };
 
     private const string PATH_HIGHEST_DIFFUSE_ROUGHNESS = "FallbackTextures/fallback_diffuse_roughness_2048";
@@ -101,17 +106,12 @@ public class OvrAvatarTextureCopyManager : MonoBehaviour
 
     public void Update()
     {
-        if (texturesToCopy.Count == 0)
-        {
-            return;
-        }
+        if (texturesToCopy.Count == 0) return;
 
         lock (texturesToCopy)
         {
-            for (int i = 0; i < Mathf.Min(COPIES_PER_FRAME, texturesToCopy.Count); ++i)
-            {
+            for (var i = 0; i < Mathf.Min(COPIES_PER_FRAME, texturesToCopy.Count); ++i)
                 CopyTexture(texturesToCopy.Dequeue());
-            }
         }
     }
 
@@ -131,24 +131,16 @@ public class OvrAvatarTextureCopyManager : MonoBehaviour
         var copyTextureParams = new CopyTextureParams(src, dst, mipLevel, mipSize, dstElement);
 
         if (useQueue)
-        {
             lock (texturesToCopy)
             {
                 if (texturesToCopy.Count < TEXTURES_TO_COPY_QUEUE_CAPACITY)
-                {
                     texturesToCopy.Enqueue(copyTextureParams);
-                }
                 else
-                {
                     // Queue is full so copy texture immediately
                     CopyTexture(copyTextureParams);
-                }
             }
-        }
         else
-        {
             CopyTexture(copyTextureParams);
-        }
     }
 
     private void CopyTexture(CopyTextureParams copyTextureParams)
@@ -166,7 +158,7 @@ public class OvrAvatarTextureCopyManager : MonoBehaviour
     {
         if (!textureSets.ContainsKey(gameobjectID))
         {
-            TextureSet newTextureSet = new TextureSet(new Dictionary<ulong, bool>(), false);
+            var newTextureSet = new TextureSet(new Dictionary<ulong, bool>(), false);
             newTextureSet.TextureIDSingleMeshPair.Add(textureID, isSingleMesh);
             textureSets.Add(gameobjectID, newTextureSet);
         }
@@ -176,9 +168,7 @@ public class OvrAvatarTextureCopyManager : MonoBehaviour
             if (textureSets[gameobjectID].TextureIDSingleMeshPair.TryGetValue(textureID, out TexIDSingleMesh))
             {
                 if (!TexIDSingleMesh && isSingleMesh)
-                {
                     textureSets[gameobjectID].TextureIDSingleMeshPair[textureID] = true;
-                }
             }
             else
             {
@@ -191,15 +181,10 @@ public class OvrAvatarTextureCopyManager : MonoBehaviour
     public void DeleteTextureSet(int gameobjectID)
     {
         TextureSet textureSetToDelete;
-        if (!textureSets.TryGetValue(gameobjectID, out textureSetToDelete))
-        {
-            return;
-        };
+        if (!textureSets.TryGetValue(gameobjectID, out textureSetToDelete)) return;
+        ;
 
-        if (textureSetToDelete.IsProcessed)
-        {
-            return;
-        }
+        if (textureSetToDelete.IsProcessed) return;
 
         StartCoroutine(DeleteTextureSetCoroutine(textureSetToDelete, gameobjectID));
     }
@@ -211,26 +196,18 @@ public class OvrAvatarTextureCopyManager : MonoBehaviour
         yield return new WaitForSeconds(GPU_TEXTURE_COPY_WAIT_TIME);
 
         // Spin if an avatar is loading
-        while (OvrAvatarSDKManager.Instance.IsAvatarLoading())
-        {
-            yield return null;
-        }
+        while (OvrAvatarSDKManager.Instance.IsAvatarLoading()) yield return null;
 
         // The avatar's texture set is compared against all other loaded or loading avatar texture sets.
         foreach (var textureIdAndSingleMeshFlag in textureSetToDelete.TextureIDSingleMeshPair)
         {
-            bool triggerDelete = !textureIdAndSingleMeshFlag.Value;
+            var triggerDelete = !textureIdAndSingleMeshFlag.Value;
             if (triggerDelete)
-            {
-                foreach (KeyValuePair<int, TextureSet> textureSet in textureSets)
+                foreach (var textureSet in textureSets)
                 {
-                    if (textureSet.Key == gameobjectID)
-                    {
-                        continue;
-                    }
+                    if (textureSet.Key == gameobjectID) continue;
 
                     foreach (var comparisonTextureIDSingleMeshPair in textureSet.Value.TextureIDSingleMeshPair)
-                    {
                         // Mark the texture as not deletable if it's present in another set and that set hasn't been processed
                         // or that texture ID is marked as part of a single mesh component.
                         if (comparisonTextureIDSingleMeshPair.Key == textureIdAndSingleMeshFlag.Key &&
@@ -239,18 +216,13 @@ public class OvrAvatarTextureCopyManager : MonoBehaviour
                             triggerDelete = false;
                             break;
                         }
-                    }
 
-                    if (!triggerDelete)
-                    {
-                        break;
-                    }
+                    if (!triggerDelete) break;
                 }
-            }
 
             if (triggerDelete)
             {
-                Texture2D textureToDelete = OvrAvatarComponent.GetLoadedTexture(textureIdAndSingleMeshFlag.Key);
+                var textureToDelete = OvrAvatarComponent.GetLoadedTexture(textureIdAndSingleMeshFlag.Key);
                 if (textureToDelete != null)
                 {
                     AvatarLogger.Log("Deleting texture " + textureIdAndSingleMeshFlag.Key);
@@ -259,16 +231,14 @@ public class OvrAvatarTextureCopyManager : MonoBehaviour
                 }
             }
         }
+
         textureSetToDelete.IsProcessed = true;
         textureSets.Remove(gameobjectID);
     }
 
     public void CheckFallbackTextureSet(ovrAvatarAssetLevelOfDetail lod)
     {
-        if (FallbackTextureSets[(int)lod].Initialized)
-        {
-            return;
-        }
+        if (FallbackTextureSets[(int)lod].Initialized) return;
 
         InitFallbackTextureSet(lod);
     }

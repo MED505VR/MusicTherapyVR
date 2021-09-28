@@ -4,12 +4,12 @@ using System;
 using System.Collections.Generic;
 using Oculus.Avatar;
 
-public class OvrAvatarTestDriver : OvrAvatarDriver {
-
+public class OvrAvatarTestDriver : OvrAvatarDriver
+{
     private Vector3 headPos = new Vector3(0f, 1.6f, 0f);
     private Quaternion headRot = Quaternion.identity;
 
-    ControllerPose GetMalibuControllerPose(OVRInput.Controller controller)
+    private ControllerPose GetMalibuControllerPose(OVRInput.Controller controller)
     {
         ovrAvatarButton buttons = 0;
         if (OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controller)) buttons |= ovrAvatarButton.One;
@@ -21,12 +21,13 @@ public class OvrAvatarTestDriver : OvrAvatarDriver {
             joystickPosition = OVRInput.Get(OVRInput.Axis2D.PrimaryTouchpad, controller),
             indexTrigger = 0f,
             handTrigger = 0f,
-            isActive = (OVRInput.GetActiveController() & controller) != 0,
+            isActive = (OVRInput.GetActiveController() & controller) != 0
         };
     }
 
-    float voiceAmplitude = 0.0f;
-    ControllerPose GetControllerPose(OVRInput.Controller controller)
+    private float voiceAmplitude = 0.0f;
+
+    private ControllerPose GetControllerPose(OVRInput.Controller controller)
     {
         ovrAvatarButton buttons = 0;
         if (OVRInput.Get(OVRInput.Button.One, controller)) buttons |= ovrAvatarButton.One;
@@ -50,7 +51,7 @@ public class OvrAvatarTestDriver : OvrAvatarDriver {
             joystickPosition = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, controller),
             indexTrigger = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, controller),
             handTrigger = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, controller),
-            isActive = (OVRInput.GetActiveController() & controller) != 0,
+            isActive = (OVRInput.GetActiveController() & controller) != 0
         };
     }
 
@@ -66,7 +67,7 @@ public class OvrAvatarTestDriver : OvrAvatarDriver {
             handRightPosition = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch),
             handRightRotation = OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch),
             controllerLeftPose = GetControllerPose(OVRInput.Controller.LTouch),
-            controllerRightPose = GetControllerPose(OVRInput.Controller.RTouch),
+            controllerRightPose = GetControllerPose(OVRInput.Controller.RTouch)
         };
     }
 

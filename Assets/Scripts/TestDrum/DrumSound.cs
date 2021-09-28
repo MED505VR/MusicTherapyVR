@@ -12,25 +12,21 @@ public class DrumSound : MonoBehaviour
     private AudioSource audioSource;
 
     // Start is called before the first frame update
-    void Awake()
+    private void Awake()
     {
         hit = false;
         audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (hit != prevHit)
-        {
             if (hit)
             {
                 audioSource.pitch = volume;
                 audioSource.Play();
                 prevHit = hit;
-
-
             }
-        }
     }
 }

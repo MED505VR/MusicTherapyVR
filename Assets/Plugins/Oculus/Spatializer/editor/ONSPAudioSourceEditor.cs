@@ -18,6 +18,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ************************************************************************************/
+
 #define CUSTOM_LAYOUT
 
 using UnityEditor;
@@ -25,76 +26,71 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [CustomEditor(typeof(ONSPAudioSource))]
-
 public class OculusSpatializerUserParamsEditor : Editor
 {
-	// target component
-	private ONSPAudioSource m_Component;
+    // target component
+    private ONSPAudioSource m_Component;
 
-	// OnEnable
-	void OnEnable()
-	{
-		m_Component = (ONSPAudioSource)target;
-	}
-	
-	// OnInspectorGUI
-	public override void OnInspectorGUI()
-	{
-		GUI.color = Color.white;
-		Undo.RecordObject(m_Component, "OculusSpatializerUserParams");
-		
-		{
-			#if CUSTOM_LAYOUT
-			m_Component.EnableSpatialization = EditorGUILayout.Toggle("Spatialization Enabled", m_Component.EnableSpatialization);
-			m_Component.EnableRfl  = EditorGUILayout.Toggle("Reflections Enabled", m_Component.EnableRfl);
-			m_Component.Gain  = EditorGUILayout.FloatField("Gain", m_Component.Gain);
+    // OnEnable
+    private void OnEnable()
+    {
+        m_Component = (ONSPAudioSource)target;
+    }
 
-			Separator();
+    // OnInspectorGUI
+    public override void OnInspectorGUI()
+    {
+        GUI.color = Color.white;
+        Undo.RecordObject(m_Component, "OculusSpatializerUserParams");
 
-			Label ("OCULUS ATTENUATION");
-			m_Component.UseInvSqr = EditorGUILayout.Toggle("Enabled", m_Component.UseInvSqr);
-			Label ("");
-			Label("RANGE (0.0 - 1000000.0 meters)");
-			m_Component.Near  = EditorGUILayout.FloatField("Minimum", m_Component.Near);
-			m_Component.Far   = EditorGUILayout.FloatField("Maximum", m_Component.Far);
+        {
+#if CUSTOM_LAYOUT
+            m_Component.EnableSpatialization =
+                EditorGUILayout.Toggle("Spatialization Enabled", m_Component.EnableSpatialization);
+            m_Component.EnableRfl = EditorGUILayout.Toggle("Reflections Enabled", m_Component.EnableRfl);
+            m_Component.Gain = EditorGUILayout.FloatField("Gain", m_Component.Gain);
+
+            Separator();
+
+            Label("OCULUS ATTENUATION");
+            m_Component.UseInvSqr = EditorGUILayout.Toggle("Enabled", m_Component.UseInvSqr);
+            Label("");
+            Label("RANGE (0.0 - 1000000.0 meters)");
+            m_Component.Near = EditorGUILayout.FloatField("Minimum", m_Component.Near);
+            m_Component.Far = EditorGUILayout.FloatField("Maximum", m_Component.Far);
 
             Label("");
             Label("VOLUMETRIC RADIUS (0.0 - 1000.0 meters)");
             m_Component.VolumetricRadius = EditorGUILayout.FloatField("Radius", m_Component.VolumetricRadius);
 
-			Separator();
+            Separator();
 
-			Label("REVERB SEND LEVEL (-60.0 - 20.0 decibels)");
-			m_Component.ReverbSend  = EditorGUILayout.FloatField(" ", m_Component.ReverbSend);
+            Label("REVERB SEND LEVEL (-60.0 - 20.0 decibels)");
+            m_Component.ReverbSend = EditorGUILayout.FloatField(" ", m_Component.ReverbSend);
 
-			Separator();
+            Separator();
 
-			#else			 
+#else
 			DrawDefaultInspector ();
-			#endif
-		}
-		
-		if (GUI.changed)
-		{
-			EditorUtility.SetDirty(m_Component);
-		}
-	}	
-	
-	// Utilities, move out of here (or copy over to other editor script)
-	
-	// Separator
-	void Separator()
-	{
-		GUI.color = new Color(1, 1, 1, 0.25f);
-		GUILayout.Box("", "HorizontalSlider", GUILayout.Height(16));
-		GUI.color = Color.white;
-	}
-	
-	// Label
-	void Label(string label)
-	{
-		EditorGUILayout.LabelField (label);
-	}
-	
-}
+#endif
+        }
 
+        if (GUI.changed) EditorUtility.SetDirty(m_Component);
+    }
+
+    // Utilities, move out of here (or copy over to other editor script)
+
+    // Separator
+    private void Separator()
+    {
+        GUI.color = new Color(1, 1, 1, 0.25f);
+        GUILayout.Box("", "HorizontalSlider", GUILayout.Height(16));
+        GUI.color = Color.white;
+    }
+
+    // Label
+    private void Label(string label)
+    {
+        EditorGUILayout.LabelField(label);
+    }
+}

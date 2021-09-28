@@ -20,6 +20,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ************************************************************************************/
+
 using UnityEngine;
 using System.Linq;
 
@@ -33,13 +34,14 @@ public class OVRLipSyncContextMorphTarget : MonoBehaviour
 
     // Set the blendshape index to go to (-1 means there is not one assigned)
     [Tooltip("Blendshape index to trigger for each viseme.")]
-    public int [] visemeToBlendTargets = Enumerable.Range(0, OVRLipSync.VisemeCount).ToArray();
+    public int[] visemeToBlendTargets = Enumerable.Range(0, OVRLipSync.VisemeCount).ToArray();
 
     // enable/disable sending signals to viseme engine
     [Tooltip("Enable using the test keys defined below to manually trigger each viseme.")]
     public bool enableVisemeTestKeys = false;
+
     [Tooltip("Test keys used to manually trigger an individual viseme - by " +
-        "default the QWERTY row of a US keyboard.")]
+             "default the QWERTY row of a US keyboard.")]
     public KeyCode[] visemeTestKeys =
     {
         KeyCode.BackQuote,
@@ -56,7 +58,7 @@ public class OVRLipSyncContextMorphTarget : MonoBehaviour
         KeyCode.P,
         KeyCode.LeftBracket,
         KeyCode.RightBracket,
-        KeyCode.Backslash,
+        KeyCode.Backslash
     };
 
     [Tooltip("Test key used to manually trigger laughter and visualise the results")]
@@ -69,13 +71,13 @@ public class OVRLipSyncContextMorphTarget : MonoBehaviour
     [Tooltip("Laughter probability threshold above which the laughter blendshape will be activated")]
     public float laughterThreshold = 0.5f;
 
-    [Range(0.0f, 3.0f)]
-    [Tooltip("Laughter animation linear multiplier, the final output will be clamped to 1.0")]
+    [Range(0.0f, 3.0f)] [Tooltip("Laughter animation linear multiplier, the final output will be clamped to 1.0")]
     public float laughterMultiplier = 1.5f;
 
     // smoothing amount
     [Range(1, 100)]
-    [Tooltip("Smoothing of 1 will yield only the current predicted viseme, 100 will yield an extremely smooth viseme response.")]
+    [Tooltip(
+        "Smoothing of 1 will yield only the current predicted viseme, 100 will yield an extremely smooth viseme response.")]
     public int smoothAmount = 70;
 
     // PRIVATE
@@ -87,39 +89,35 @@ public class OVRLipSyncContextMorphTarget : MonoBehaviour
     /// <summary>
     /// Start this instance.
     /// </summary>
-    void Start ()
+    private void Start()
     {
         // morph target needs to be set manually; possibly other components will need the same
-        if(skinnedMeshRenderer == null)
+        if (skinnedMeshRenderer == null)
         {
             Debug.LogError("LipSyncContextMorphTarget.Start Error: " +
-                "Please set the target Skinned Mesh Renderer to be controlled!");
+                           "Please set the target Skinned Mesh Renderer to be controlled!");
             return;
         }
 
         // make sure there is a phoneme context assigned to this object
         lipsyncContext = GetComponent<OVRLipSyncContextBase>();
-        if(lipsyncContext == null)
-        {
+        if (lipsyncContext == null)
             Debug.LogError("LipSyncContextMorphTarget.Start Error: " +
-                "No OVRLipSyncContext component on this object!");
-        }
+                           "No OVRLipSyncContext component on this object!");
         else
-        {
             // Send smoothing amount to context
             lipsyncContext.Smoothing = smoothAmount;
-        }
     }
 
     /// <summary>
     /// Update this instance.
     /// </summary>
-    void Update ()
+    private void Update()
     {
-        if((lipsyncContext != null) && (skinnedMeshRenderer != null))
+        if (lipsyncContext != null && skinnedMeshRenderer != null)
         {
             // get the current viseme frame
-            OVRLipSync.Frame frame = lipsyncContext.GetCurrentPhonemeFrame();
+            var frame = lipsyncContext.GetCurrentPhonemeFrame();
             if (frame != null)
             {
                 SetVisemeToMorphTarget(frame);
@@ -131,25 +129,18 @@ public class OVRLipSyncContextMorphTarget : MonoBehaviour
             CheckForKeys();
 
             // Update smoothing value
-            if (smoothAmount != lipsyncContext.Smoothing)
-            {
-                lipsyncContext.Smoothing = smoothAmount;
-            }
+            if (smoothAmount != lipsyncContext.Smoothing) lipsyncContext.Smoothing = smoothAmount;
         }
     }
 
     /// <summary>
     /// Sends the signals.
     /// </summary>
-    void CheckForKeys()
+    private void CheckForKeys()
     {
         if (enableVisemeTestKeys)
-        {
-            for (int i = 0; i < OVRLipSync.VisemeCount; ++i)
-            {
+            for (var i = 0; i < OVRLipSync.VisemeCount; ++i)
                 CheckVisemeKey(visemeTestKeys[i], i, 100);
-            }
-        }
 
         CheckLaughterKey();
     }
@@ -157,29 +148,25 @@ public class OVRLipSyncContextMorphTarget : MonoBehaviour
     /// <summary>
     /// Sets the viseme to morph target.
     /// </summary>
-    void SetVisemeToMorphTarget(OVRLipSync.Frame frame)
+    private void SetVisemeToMorphTarget(OVRLipSync.Frame frame)
     {
-        for (int i = 0; i < visemeToBlendTargets.Length; i++)
-        {
+        for (var i = 0; i < visemeToBlendTargets.Length; i++)
             if (visemeToBlendTargets[i] != -1)
-            {
                 // Viseme blend weights are in range of 0->1.0, we need to make range 100
                 skinnedMeshRenderer.SetBlendShapeWeight(
                     visemeToBlendTargets[i],
                     frame.Visemes[i] * 100.0f);
-            }
-        }
     }
 
     /// <summary>
     /// Sets the laughter to morph target.
     /// </summary>
-    void SetLaughterToMorphTarget(OVRLipSync.Frame frame)
+    private void SetLaughterToMorphTarget(OVRLipSync.Frame frame)
     {
         if (laughterBlendTarget != -1)
         {
             // Laughter score will be raw classifier output in [0,1]
-            float laughterScore = frame.laughterScore;
+            var laughterScore = frame.laughterScore;
 
             // Threshold then re-map to [0,1]
             laughterScore = laughterScore < laughterThreshold ? 0.0f : laughterScore - laughterThreshold;
@@ -198,30 +185,18 @@ public class OVRLipSyncContextMorphTarget : MonoBehaviour
     /// <param name="key">Key.</param>
     /// <param name="viseme">Viseme.</param>
     /// <param name="arg1">Arg1.</param>
-    void CheckVisemeKey(KeyCode key, int viseme, int amount)
+    private void CheckVisemeKey(KeyCode key, int viseme, int amount)
     {
-        if (Input.GetKeyDown(key))
-        {
-            lipsyncContext.SetVisemeBlend(visemeToBlendTargets[viseme], amount);
-        }
-        if (Input.GetKeyUp(key))
-        {
-            lipsyncContext.SetVisemeBlend(visemeToBlendTargets[viseme], 0);
-        }
+        if (Input.GetKeyDown(key)) lipsyncContext.SetVisemeBlend(visemeToBlendTargets[viseme], amount);
+        if (Input.GetKeyUp(key)) lipsyncContext.SetVisemeBlend(visemeToBlendTargets[viseme], 0);
     }
 
     /// <summary>
     /// Sends the laughter signal.
     /// </summary>
-    void CheckLaughterKey()
+    private void CheckLaughterKey()
     {
-        if (Input.GetKeyDown(laughterKey))
-        {
-            lipsyncContext.SetLaughterBlend(100);
-        }
-        if (Input.GetKeyUp(laughterKey))
-        {
-            lipsyncContext.SetLaughterBlend(0);
-        }
+        if (Input.GetKeyDown(laughterKey)) lipsyncContext.SetLaughterBlend(100);
+        if (Input.GetKeyUp(laughterKey)) lipsyncContext.SetLaughterBlend(0);
     }
 }

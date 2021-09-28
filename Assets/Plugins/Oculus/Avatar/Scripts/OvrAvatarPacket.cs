@@ -12,12 +12,12 @@ public class OvrAvatarPacket
     // ===============================================================
     // All code below used for unity only pose blending option.
     // ===============================================================
-    List<float> frameTimes = new List<float>();
-    List<OvrAvatarDriver.PoseFrame> frames = new List<OvrAvatarDriver.PoseFrame>();
-    List<byte[]> encodedAudioPackets = new List<byte[]>();
+    private List<float> frameTimes = new List<float>();
+    private List<OvrAvatarDriver.PoseFrame> frames = new List<OvrAvatarDriver.PoseFrame>();
+    private List<byte[]> encodedAudioPackets = new List<byte[]>();
 
-    public float Duration { get { return frameTimes[frameTimes.Count - 1]; } }
-    public OvrAvatarDriver.PoseFrame FinalFrame { get { return frames[frames.Count - 1]; } }
+    public float Duration => frameTimes[frameTimes.Count - 1];
+    public OvrAvatarDriver.PoseFrame FinalFrame => frames[frames.Count - 1];
 
     public OvrAvatarPacket()
     {
@@ -29,7 +29,7 @@ public class OvrAvatarPacket
         frames.Add(initialPose);
     }
 
-    OvrAvatarPacket(List<float> frameTimes, List<OvrAvatarDriver.PoseFrame> frames, List<byte[]> audioPackets)
+    private OvrAvatarPacket(List<float> frameTimes, List<OvrAvatarDriver.PoseFrame> frames, List<byte[]> audioPackets)
     {
         this.frameTimes = frameTimes;
         this.frames = frames;
@@ -43,49 +43,37 @@ public class OvrAvatarPacket
 
     public OvrAvatarDriver.PoseFrame GetPoseFrame(float seconds)
     {
-        if (frames.Count == 1)
-        {
-            return frames[0];
-        }
+        if (frames.Count == 1) return frames[0];
 
         // This can be replaced with a more efficient binary search
-        int tailIndex = 1;
-        while (tailIndex < frameTimes.Count && frameTimes[tailIndex] < seconds)
-        {
-            ++tailIndex;
-        }
-        OvrAvatarDriver.PoseFrame a = frames[tailIndex - 1];
-        OvrAvatarDriver.PoseFrame b = frames[tailIndex];
-        float aTime = frameTimes[tailIndex - 1];
-        float bTime = frameTimes[tailIndex];
-        float t = (seconds - aTime) / (bTime - aTime);
+        var tailIndex = 1;
+        while (tailIndex < frameTimes.Count && frameTimes[tailIndex] < seconds) ++tailIndex;
+        var a = frames[tailIndex - 1];
+        var b = frames[tailIndex];
+        var aTime = frameTimes[tailIndex - 1];
+        var bTime = frameTimes[tailIndex];
+        var t = (seconds - aTime) / (bTime - aTime);
         return OvrAvatarDriver.PoseFrame.Interpolate(a, b, t);
     }
 
     public static OvrAvatarPacket Read(Stream stream)
     {
-        BinaryReader reader = new BinaryReader(stream);
+        var reader = new BinaryReader(stream);
 
         // Todo: bounds check frame count
-        int frameCount = reader.ReadInt32();
-        List<float> frameTimes = new List<float>(frameCount);
-        for (int i = 0; i < frameCount; ++i)
-        {
-            frameTimes.Add(reader.ReadSingle());
-        }
-        List<OvrAvatarDriver.PoseFrame> frames = new List<OvrAvatarDriver.PoseFrame>(frameCount);
-        for (int i = 0; i < frameCount; ++i)
-        {
-            frames.Add(reader.ReadPoseFrame());
-        }
+        var frameCount = reader.ReadInt32();
+        var frameTimes = new List<float>(frameCount);
+        for (var i = 0; i < frameCount; ++i) frameTimes.Add(reader.ReadSingle());
+        var frames = new List<OvrAvatarDriver.PoseFrame>(frameCount);
+        for (var i = 0; i < frameCount; ++i) frames.Add(reader.ReadPoseFrame());
 
         // Todo: bounds check audio packet count
-        int audioPacketCount = reader.ReadInt32();
-        List<byte[]> audioPackets = new List<byte[]>(audioPacketCount);
-        for (int i = 0; i < audioPacketCount; ++i)
+        var audioPacketCount = reader.ReadInt32();
+        var audioPackets = new List<byte[]>(audioPacketCount);
+        for (var i = 0; i < audioPacketCount; ++i)
         {
-            int audioPacketSize = reader.ReadInt32();
-            byte[] audioPacket = reader.ReadBytes(audioPacketSize);
+            var audioPacketSize = reader.ReadInt32();
+            var audioPacket = reader.ReadBytes(audioPacketSize);
             audioPackets.Add(audioPacket);
         }
 
@@ -94,34 +82,31 @@ public class OvrAvatarPacket
 
     public void Write(Stream stream)
     {
-        BinaryWriter writer = new BinaryWriter(stream);
+        var writer = new BinaryWriter(stream);
 
         // Write all of the frames
-        int frameCount = frameTimes.Count;
+        var frameCount = frameTimes.Count;
         writer.Write(frameCount);
-        for (int i = 0; i < frameCount; ++i)
+        for (var i = 0; i < frameCount; ++i) writer.Write(frameTimes[i]);
+        for (var i = 0; i < frameCount; ++i)
         {
-            writer.Write(frameTimes[i]);
-        }
-        for (int i = 0; i < frameCount; ++i)
-        {
-            OvrAvatarDriver.PoseFrame frame = frames[i];
+            var frame = frames[i];
             writer.Write(frame);
         }
 
         // Write all of the encoded audio packets
-        int audioPacketCount = encodedAudioPackets.Count;
+        var audioPacketCount = encodedAudioPackets.Count;
         writer.Write(audioPacketCount);
-        for (int i = 0; i < audioPacketCount; ++i)
+        for (var i = 0; i < audioPacketCount; ++i)
         {
-            byte[] packet = encodedAudioPackets[i];
+            var packet = encodedAudioPackets[i];
             writer.Write(packet.Length);
             writer.Write(packet);
         }
     }
 }
 
-static class BinaryWriterExtensions
+internal static class BinaryWriterExtensions
 {
     public static void Write(this BinaryWriter writer, OvrAvatarDriver.PoseFrame frame)
     {
@@ -157,6 +142,7 @@ static class BinaryWriterExtensions
         writer.Write(quat.z);
         writer.Write(quat.w);
     }
+
     public static void Write(this BinaryWriter writer, OvrAvatarDriver.ControllerPose pose)
     {
         writer.Write((uint)pose.buttons);
@@ -168,7 +154,7 @@ static class BinaryWriterExtensions
     }
 }
 
-static class BinaryReaderExtensions
+internal static class BinaryReaderExtensions
 {
     public static OvrAvatarDriver.PoseFrame ReadPoseFrame(this BinaryReader reader)
     {
@@ -183,7 +169,7 @@ static class BinaryReaderExtensions
             voiceAmplitude = reader.ReadSingle(),
 
             controllerLeftPose = reader.ReadControllerPose(),
-            controllerRightPose = reader.ReadControllerPose(),
+            controllerRightPose = reader.ReadControllerPose()
         };
     }
 
@@ -213,9 +199,10 @@ static class BinaryReaderExtensions
             x = reader.ReadSingle(),
             y = reader.ReadSingle(),
             z = reader.ReadSingle(),
-            w = reader.ReadSingle(),
+            w = reader.ReadSingle()
         };
     }
+
     public static OvrAvatarDriver.ControllerPose ReadControllerPose(this BinaryReader reader)
     {
         return new OvrAvatarDriver.ControllerPose
@@ -225,7 +212,7 @@ static class BinaryReaderExtensions
             joystickPosition = reader.ReadVector2(),
             indexTrigger = reader.ReadSingle(),
             handTrigger = reader.ReadSingle(),
-            isActive = reader.ReadBoolean(),
+            isActive = reader.ReadBoolean()
         };
     }
 }

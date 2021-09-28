@@ -5,12 +5,10 @@ using Normal.Realtime;
 
 public class SoundChange : MonoBehaviour
 {
-    [SerializeField]
-    private float _gain;
+    [SerializeField] private float _gain;
     private float _previousGain;
 
-    [SerializeField]
-    private double _frequency;
+    [SerializeField] private double _frequency;
     private double _previousFrequency;
 
     private double freqL;
@@ -33,9 +31,7 @@ public class SoundChange : MonoBehaviour
 
     private float volume = 0.1f;
 
-    
 
-    
     private void Awake()
     {
         _soundSync = GetComponent<SoundSync>();
@@ -49,19 +45,12 @@ public class SoundChange : MonoBehaviour
     }
 
 
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == leftHand || other.gameObject == rightHand)
         {
-            if (other.gameObject == leftHand)
-            {
-                left = true;
-            }
-            if (other.gameObject == rightHand)
-            {
-                right = true;
-            }
+            if (other.gameObject == leftHand) left = true;
+            if (other.gameObject == rightHand) right = true;
             myView.RequestOwnership();
             _gain = volume;
         }
@@ -72,14 +61,8 @@ public class SoundChange : MonoBehaviour
         if (other.gameObject == leftHand || other.gameObject == rightHand)
         {
             _gain = 0;
-            if (other.gameObject == leftHand)
-            {
-                left = false;
-            }
-            if (other.gameObject == rightHand)
-            {
-                right = false;
-            }
+            if (other.gameObject == leftHand) left = false;
+            if (other.gameObject == rightHand) right = false;
             myView.ClearOwnership();
         }
     }
@@ -88,16 +71,10 @@ public class SoundChange : MonoBehaviour
     {
         leftHandY = leftHandPosition.position[1];
         rightHandY = rightHandPosition.position[1];
-        freqL = 440 + (leftHandY) * 100;
-        freqR = 440 + (rightHandY) * 100;
-        if (_gain > 0 && left == true)
-        {
-            _frequency = freqL;
-        }
-        if (_gain > 0 && right == true)
-        {
-            _frequency = freqR;
-        }
+        freqL = 440 + leftHandY * 100;
+        freqR = 440 + rightHandY * 100;
+        if (_gain > 0 && left == true) _frequency = freqL;
+        if (_gain > 0 && right == true) _frequency = freqR;
 
 
         if (_frequency != _previousFrequency)
@@ -112,5 +89,4 @@ public class SoundChange : MonoBehaviour
             _previousGain = _gain;
         }
     }
-
 }

@@ -2,14 +2,11 @@ using Oculus.Avatar;
 
 public class OvrAvatarBase : OvrAvatarComponent
 {
-    ovrAvatarBaseComponent component = new ovrAvatarBaseComponent();
+    private ovrAvatarBaseComponent component = new ovrAvatarBaseComponent();
 
-    void Update()
+    private void Update()
     {
-        if (owner == null)
-        {
-            return;
-        }
+        if (owner == null) return;
 
         if (CAPI.ovrAvatarPose_GetBaseComponent(owner.sdkAvatar, ref component))
         {

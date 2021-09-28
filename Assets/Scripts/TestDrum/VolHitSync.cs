@@ -55,6 +55,7 @@ public class VolHitSync : RealtimeComponent<DrumModel>
     {
         UpdateVolume();
     }
+
     private void HitDidChange(DrumModel model, bool value)
     {
         UpdateHit();
@@ -65,6 +66,7 @@ public class VolHitSync : RealtimeComponent<DrumModel>
     {
         model.volume = volume;
     }
+
     public void SetHit(bool hit)
     {
         model.hit = hit;

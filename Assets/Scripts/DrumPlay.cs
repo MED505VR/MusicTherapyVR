@@ -1,21 +1,20 @@
-﻿using System.Collections;
+﻿/*using System.Collections;
 using System.Collections.Generic;
+using Drum;
 using UnityEngine;
 using Normal.Realtime;
 
 public class DrumPlay : MonoBehaviour
 {
-    [SerializeField]
-    private DrumSync _drumSync;
+    [SerializeField] private DrumSync _drumSync;
     private GameObject leftHand, rightHand;
     private GameObject myObject, DrumSkin;
     private RealtimeView myView;
 
-    Color DrumSkinOriginal = new Color(204, 204, 169, 255);
-    Color DrumSkinHit = new Color(89, 89, 89, 255);
+    private Color DrumSkinOriginal = new Color(204, 204, 169, 255);
+    private Color DrumSkinHit = new Color(89, 89, 89, 255);
 
-    [SerializeField]
-    public bool _play;
+    [SerializeField] public bool _play;
     private bool _prevPlay;
     private Color _color;
     private Color _prevColor;
@@ -40,10 +39,8 @@ public class DrumPlay : MonoBehaviour
     {
         myView.RequestOwnership();
         if (other.gameObject == leftHand || other.gameObject == rightHand)
-        {
             _play = !_play;
-            //color();
-        }
+        //color();
     }
 
     /*private void color()
@@ -56,7 +53,7 @@ public class DrumPlay : MonoBehaviour
         {
             _color = DrumSkinHit;
         }
-    }*/
+    }#1#
 
     private void OnTriggerExit(Collider other)
     {
@@ -69,7 +66,7 @@ public class DrumPlay : MonoBehaviour
         {
             _drumSync.SetColor(_color);
             _prevColor = _color;
-        }*/
+        }#1#
 
         if (_play != _prevPlay)
         {
@@ -77,4 +74,4 @@ public class DrumPlay : MonoBehaviour
             _prevPlay = _play;
         }
     }
-}
+}*/

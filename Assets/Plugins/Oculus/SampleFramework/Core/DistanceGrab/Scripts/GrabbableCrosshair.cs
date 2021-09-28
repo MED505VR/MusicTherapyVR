@@ -3,11 +3,12 @@
 Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.  
 
 See SampleFramework license.txt for license terms.  Unless required by applicable law 
-or agreed to in writing, the sample code is provided ìAS ISî WITHOUT WARRANTIES OR 
+or agreed to in writing, the sample code is provided ‚ÄúAS IS‚Äù WITHOUT WARRANTIES OR 
 CONDITIONS OF ANY KIND, either express or implied.  See the license for specific 
 language governing permissions and limitations under the license.
 
 ************************************************************************************/
+
 using UnityEngine;
 using System.Collections;
 
@@ -15,15 +16,18 @@ namespace OculusSampleFramework
 {
     public class GrabbableCrosshair : MonoBehaviour
     {
-        public enum CrosshairState { Disabled, Enabled, Targeted }
+        public enum CrosshairState
+        {
+            Disabled,
+            Enabled,
+            Targeted
+        }
 
-        CrosshairState m_state = CrosshairState.Disabled;
-        Transform m_centerEyeAnchor;
+        private CrosshairState m_state = CrosshairState.Disabled;
+        private Transform m_centerEyeAnchor;
 
-        [SerializeField]
-        GameObject m_targetedCrosshair = null;
-        [SerializeField]
-        GameObject m_enabledCrosshair = null;
+        [SerializeField] private GameObject m_targetedCrosshair = null;
+        [SerializeField] private GameObject m_enabledCrosshair = null;
 
         private void Start()
         {
@@ -52,10 +56,7 @@ namespace OculusSampleFramework
 
         private void Update()
         {
-            if (m_state != CrosshairState.Disabled)
-            {
-                transform.LookAt(m_centerEyeAnchor);
-            }
+            if (m_state != CrosshairState.Disabled) transform.LookAt(m_centerEyeAnchor);
         }
     }
 }

@@ -33,7 +33,7 @@ public class SocialPlatformManager : MonoBehaviour
     private float voiceCurrent = 0.0f;
 
     // Local player
-    private UInt32 packetSequence = 0;
+    private uint packetSequence = 0;
 
     public OvrAvatar localAvatarPrefab;
     public OvrAvatar remoteAvatarPrefab;
@@ -79,30 +79,25 @@ public class SocialPlatformManager : MonoBehaviour
         p2pManager.GetRemotePackets();
 
         // update avatar mouths to match voip volume
-        foreach (KeyValuePair<ulong, RemotePlayer> kvp in remoteUsers)
+        foreach (var kvp in remoteUsers)
         {
             if (kvp.Value.voipSource == null)
-            {
                 if (kvp.Value.RemoteAvatar.MouthAnchor != null)
                 {
                     kvp.Value.voipSource = kvp.Value.RemoteAvatar.MouthAnchor.AddComponent<VoipAudioSourceHiLevel>();
                     kvp.Value.voipSource.senderID = kvp.Value.remoteUserID;
                 }
-            }
 
             if (kvp.Value.voipSource != null)
             {
-                float remoteVoiceCurrent = Mathf.Clamp(kvp.Value.voipSource.peakAmplitude * VOIP_SCALE, 0f, 1f);
+                var remoteVoiceCurrent = Mathf.Clamp(kvp.Value.voipSource.peakAmplitude * VOIP_SCALE, 0f, 1f);
                 kvp.Value.RemoteAvatar.VoiceAmplitude = remoteVoiceCurrent;
             }
         }
 
-        if (localAvatar != null)
-        {
-            localAvatar.VoiceAmplitude = Mathf.Clamp(voiceCurrent * VOIP_SCALE, 0f, 1f);
-        }
+        if (localAvatar != null) localAvatar.VoiceAmplitude = Mathf.Clamp(voiceCurrent * VOIP_SCALE, 0f, 1f);
 
-        Oculus.Platform.Request.RunCallbacks();
+        Request.RunCallbacks();
     }
 
     #region Initialization and Shutdown
@@ -117,8 +112,8 @@ public class SocialPlatformManager : MonoBehaviour
         floorMesh = roomFloor.GetComponent<MeshRenderer>();
 
         // Set up the local player
-        localTrackingSpace = this.transform.Find("OVRCameraRig/TrackingSpace").gameObject;
-        localPlayerHead = this.transform.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor").gameObject;
+        localTrackingSpace = transform.Find("OVRCameraRig/TrackingSpace").gameObject;
+        localPlayerHead = transform.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor").gameObject;
 
         // make sure only one instance of this manager ever exists
         if (s_instance != null)
@@ -139,7 +134,7 @@ public class SocialPlatformManager : MonoBehaviour
         voipManager = new VoipManager();
     }
 
-    void InitCallback(Message<PlatformInitialize> msg)
+    private void InitCallback(Message<PlatformInitialize> msg)
     {
         if (msg.IsError)
         {
@@ -147,8 +142,8 @@ public class SocialPlatformManager : MonoBehaviour
             return;
         }
 
-        LaunchDetails launchDetails = ApplicationLifecycle.GetLaunchDetails();
-        SocialPlatformManager.LogOutput("App launched with LaunchType " + launchDetails.LaunchType);
+        var launchDetails = ApplicationLifecycle.GetLaunchDetails();
+        LogOutput("App launched with LaunchType " + launchDetails.LaunchType);
 
         // First thing we should do is perform an entitlement check to make sure
         // we successfully connected to the Oculus Platform Service.
@@ -160,7 +155,7 @@ public class SocialPlatformManager : MonoBehaviour
         // noop here, but is being overridden in PlayerController
     }
 
-    void IsEntitledCallback(Message msg)
+    private void IsEntitledCallback(Message msg)
     {
         if (msg.IsError)
         {
@@ -172,7 +167,7 @@ public class SocialPlatformManager : MonoBehaviour
         Users.GetLoggedInUser().OnComplete(GetLoggedInUserCallback);
     }
 
-    void GetLoggedInUserCallback(Message<User> msg)
+    private void GetLoggedInUserCallback(Message<User> msg)
     {
         if (msg.IsError)
         {
@@ -185,7 +180,7 @@ public class SocialPlatformManager : MonoBehaviour
 
         localAvatar = Instantiate(localAvatarPrefab);
         localAvatar.CanOwnMicrophone = false;
-        localTrackingSpace = this.transform.Find("OVRCameraRig/TrackingSpace").gameObject;
+        localTrackingSpace = transform.Find("OVRCameraRig/TrackingSpace").gameObject;
 
         localAvatar.transform.SetParent(localTrackingSpace.transform, false);
         localAvatar.transform.localPosition = new Vector3(0, 0, 0);
@@ -209,33 +204,33 @@ public class SocialPlatformManager : MonoBehaviour
         localAvatar.PacketRecorded += OnLocalAvatarPacketRecorded;
         localAvatar.EnableMouthVertexAnimation = true;
 
-        Quaternion rotation = Quaternion.identity;
+        var rotation = Quaternion.identity;
 
         switch (UnityEngine.Random.Range(0, 4))
         {
             case 0:
                 rotation.eulerAngles = START_ROTATION_ONE;
-                this.transform.localPosition = START_POSITION_ONE;
-                this.transform.localRotation = rotation;
+                transform.localPosition = START_POSITION_ONE;
+                transform.localRotation = rotation;
                 break;
 
             case 1:
                 rotation.eulerAngles = START_ROTATION_TWO;
-                this.transform.localPosition = START_POSITION_TWO;
-                this.transform.localRotation = rotation;
+                transform.localPosition = START_POSITION_TWO;
+                transform.localRotation = rotation;
                 break;
 
             case 2:
                 rotation.eulerAngles = START_ROTATION_THREE;
-                this.transform.localPosition = START_POSITION_THREE;
-                this.transform.localRotation = rotation;
+                transform.localPosition = START_POSITION_THREE;
+                transform.localRotation = rotation;
                 break;
 
             case 3:
             default:
                 rotation.eulerAngles = START_ROTATION_FOUR;
-                this.transform.localPosition = START_POSITION_FOUR;
-                this.transform.localRotation = rotation;
+                transform.localPosition = START_POSITION_FOUR;
+                transform.localRotation = rotation;
                 break;
         }
 
@@ -245,21 +240,19 @@ public class SocialPlatformManager : MonoBehaviour
         // join that room.  If not, try to find a friend's room to join
         if (!roomManager.CheckForInvite())
         {
-            SocialPlatformManager.LogOutput("No invite on launch, looking for a friend to join.");
+            LogOutput("No invite on launch, looking for a friend to join.");
             Users.GetLoggedInUserFriendsAndRooms()
                 .OnComplete(GetLoggedInUserFriendsAndRoomsCallback);
         }
+
         Voip.SetMicrophoneFilterCallback(MicFilter);
     }
 
-    void GetLoggedInUserFriendsAndRoomsCallback(Message<UserAndRoomList> msg)
+    private void GetLoggedInUserFriendsAndRoomsCallback(Message<UserAndRoomList> msg)
     {
-        if (msg.IsError)
-        {
-            return;
-        }
+        if (msg.IsError) return;
 
-        foreach (UserAndRoom el in msg.Data)
+        foreach (var el in msg.Data)
         {
             // see if any friends are in a joinable room
             if (el.User == null) continue;
@@ -268,12 +261,12 @@ public class SocialPlatformManager : MonoBehaviour
             if (el.RoomOptional.Joinability != RoomJoinability.CanJoin) continue;
             if (el.RoomOptional.JoinPolicy == RoomJoinPolicy.None) continue;
 
-            SocialPlatformManager.LogOutput("Trying to join room " + el.RoomOptional.ID + ", friend " + el.User.OculusID);
+            LogOutput("Trying to join room " + el.RoomOptional.ID + ", friend " + el.User.OculusID);
             roomManager.JoinExistingRoom(el.RoomOptional.ID);
             return;
         }
 
-        SocialPlatformManager.LogOutput("No friend to join. Creating my own room.");
+        LogOutput("No friend to join. Creating my own room.");
         // didn't find any open rooms, start a new room
         roomManager.CreateRoom();
         TransitionToState(State.CREATING_A_ROOM);
@@ -282,16 +275,14 @@ public class SocialPlatformManager : MonoBehaviour
     public void OnLocalAvatarPacketRecorded(object sender, OvrAvatar.PacketEventArgs args)
     {
         var size = Oculus.Avatar.CAPI.ovrAvatarPacket_GetSize(args.Packet.ovrNativePacket);
-        byte[] toSend = new byte[size];
+        var toSend = new byte[size];
 
         Oculus.Avatar.CAPI.ovrAvatarPacket_Write(args.Packet.ovrNativePacket, size, toSend);
 
-        foreach (KeyValuePair<ulong, RemotePlayer> kvp in remoteUsers)
-        {
+        foreach (var kvp in remoteUsers)
             //LogOutputLine("Sending avatar Packet to  " + kvp.Key);
             // Root is local tracking space transform
             p2pManager.SendAvatarUpdate(kvp.Key, localTrackingSpace.transform, packetSequence, toSend);
-        }
 
         packetSequence++;
     }
@@ -300,11 +291,12 @@ public class SocialPlatformManager : MonoBehaviour
     {
         roomManager.LeaveCurrentRoom();
 
-        foreach (KeyValuePair<ulong, RemotePlayer> kvp in remoteUsers)
+        foreach (var kvp in remoteUsers)
         {
             p2pManager.Disconnect(kvp.Key);
             voipManager.Disconnect(kvp.Key);
         }
+
         LogOutputLine("End Log.");
     }
 
@@ -330,26 +322,16 @@ public class SocialPlatformManager : MonoBehaviour
 
     #region Properties
 
-    public static State CurrentState
-    {
-        get
-        {
-            return s_instance.currentState;
-        }
-    }
+    public static State CurrentState => s_instance.currentState;
 
     public static ulong MyID
     {
         get
         {
             if (s_instance != null)
-            {
                 return s_instance.myID;
-            }
             else
-            {
                 return 0;
-            }
         }
     }
 
@@ -358,13 +340,9 @@ public class SocialPlatformManager : MonoBehaviour
         get
         {
             if (s_instance != null && s_instance.myOculusID != null)
-            {
                 return s_instance.myOculusID;
-            }
             else
-            {
                 return string.Empty;
-            }
         }
     }
 
@@ -398,15 +376,12 @@ public class SocialPlatformManager : MonoBehaviour
         LEAVING_A_ROOM,
 
         // shutdown any connections and leave the current room
-        SHUTDOWN,
+        SHUTDOWN
     };
 
     public static void TransitionToState(State newState)
     {
-        if (s_instance)
-        {
-            s_instance.LogOutputLine("State " + s_instance.currentState + " -> " + newState);
-        }
+        if (s_instance) s_instance.LogOutputLine("State " + s_instance.currentState + " -> " + newState);
 
         if (s_instance && s_instance.currentState != newState)
         {
@@ -452,49 +427,32 @@ public class SocialPlatformManager : MonoBehaviour
     public static void SetFloorColorForState(bool host)
     {
         if (host)
-        {
             s_instance.floorMesh.material.color = BLUE;
-        }
         else
-        {
             s_instance.floorMesh.material.color = GREEN;
-        }
     }
 
     public static void MarkAllRemoteUsersAsNotInRoom()
     {
-        foreach (KeyValuePair<ulong, RemotePlayer> kvp in s_instance.remoteUsers)
-        {
-            kvp.Value.stillInRoom = false;
-        }
+        foreach (var kvp in s_instance.remoteUsers) kvp.Value.stillInRoom = false;
     }
 
     public static void MarkRemoteUserInRoom(ulong userID)
     {
-        RemotePlayer remoteUser = new RemotePlayer();
+        var remoteUser = new RemotePlayer();
 
-        if (s_instance.remoteUsers.TryGetValue(userID, out remoteUser))
-        {
-            remoteUser.stillInRoom = true;
-        }
+        if (s_instance.remoteUsers.TryGetValue(userID, out remoteUser)) remoteUser.stillInRoom = true;
     }
 
     public static void ForgetRemoteUsersNotInRoom()
     {
-        List<ulong> toPurge = new List<ulong>();
+        var toPurge = new List<ulong>();
 
-        foreach (KeyValuePair<ulong, RemotePlayer> kvp in s_instance.remoteUsers)
-        {
+        foreach (var kvp in s_instance.remoteUsers)
             if (kvp.Value.stillInRoom == false)
-            {
                 toPurge.Add(kvp.Key);
-            }
-        }
 
-        foreach (ulong key in toPurge)
-        {
-            RemoveRemoteUser(key);
-        }
+        foreach (var key in toPurge) RemoveRemoteUser(key);
     }
 
     public static void LogOutput(string line)
@@ -509,7 +467,7 @@ public class SocialPlatformManager : MonoBehaviour
 
     public static void AddRemoteUser(ulong userID)
     {
-        RemotePlayer remoteUser = new RemotePlayer();
+        var remoteUser = new RemotePlayer();
 
         remoteUser.RemoteAvatar = Instantiate(s_instance.remoteAvatarPrefab);
         remoteUser.RemoteAvatar.oculusUserID = userID.ToString();
@@ -529,7 +487,7 @@ public class SocialPlatformManager : MonoBehaviour
 
     public static void RemoveRemoteUser(ulong userID)
     {
-        RemotePlayer remoteUser = new RemotePlayer();
+        var remoteUser = new RemotePlayer();
 
         if (s_instance.remoteUsers.TryGetValue(userID, out remoteUser))
         {
@@ -543,26 +501,21 @@ public class SocialPlatformManager : MonoBehaviour
 
     public void UpdateVoiceData(short[] pcmData, int numChannels)
     {
-        if (localAvatar != null)
+        if (localAvatar != null) localAvatar.UpdateVoiceData(pcmData, numChannels);
+
+        var voiceMax = 0.0f;
+        var floats = new float[pcmData.Length];
+        for (var n = 0; n < pcmData.Length; n++)
         {
-            localAvatar.UpdateVoiceData(pcmData, numChannels);
+            var cur = floats[n] = (float)pcmData[n] / (float)short.MaxValue;
+            if (cur > voiceMax) voiceMax = cur;
         }
 
-        float voiceMax = 0.0f;
-        float[] floats = new float[pcmData.Length];
-        for (int n = 0; n < pcmData.Length; n++)
-        {
-            float cur = floats[n] = (float)pcmData[n] / (float)short.MaxValue;
-            if (cur > voiceMax)
-            {
-                voiceMax = cur;
-            }
-        }
         voiceCurrent = voiceMax;
     }
 
     [MonoPInvokeCallback(typeof(Oculus.Platform.CAPI.FilterCallback))]
-    public static void MicFilter(short[] pcmData, System.UIntPtr pcmDataLength, int frequency, int numChannels)
+    public static void MicFilter(short[] pcmData, UIntPtr pcmDataLength, int frequency, int numChannels)
     {
         s_instance.UpdateVoiceData(pcmData, numChannels);
     }
@@ -570,18 +523,13 @@ public class SocialPlatformManager : MonoBehaviour
 
     public static RemotePlayer GetRemoteUser(ulong userID)
     {
-        RemotePlayer remoteUser = new RemotePlayer();
+        var remoteUser = new RemotePlayer();
 
         if (s_instance.remoteUsers.TryGetValue(userID, out remoteUser))
-        {
             return remoteUser;
-        }
         else
-        {
             return null;
-        }
     }
 
     #endregion
-
 }

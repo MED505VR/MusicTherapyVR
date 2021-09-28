@@ -49,63 +49,52 @@ public class OVRSceneSampleController : MonoBehaviour
 
     // We want to hold onto GridCube, for potential sharing
     // of the menu RenderTarget
-    OVRGridCube gridCube = null;
+    private OVRGridCube gridCube = null;
 
-#if	SHOW_DK2_VARIABLES
+#if SHOW_DK2_VARIABLES
 	private string strVisionMode = "Vision Enabled: ON";
 #endif
 
     #region MonoBehaviour Message Handlers
+
     /// <summary>
     /// Awake this instance.
     /// </summary>
-    void Awake()
+    private void Awake()
     {
         // Find camera controller
         OVRCameraRig[] cameraControllers;
         cameraControllers = gameObject.GetComponentsInChildren<OVRCameraRig>();
 
         if (cameraControllers.Length == 0)
-        {
             Debug.LogWarning("OVRMainMenu: No OVRCameraRig attached.");
-        }
         else if (cameraControllers.Length > 1)
-        {
             Debug.LogWarning("OVRMainMenu: More then 1 OVRCameraRig attached.");
-        }
         else
-        {
             cameraController = cameraControllers[0];
-        }
 
         // Find player controller
         OVRPlayerController[] playerControllers;
         playerControllers = gameObject.GetComponentsInChildren<OVRPlayerController>();
 
         if (playerControllers.Length == 0)
-        {
             Debug.LogWarning("OVRMainMenu: No OVRPlayerController attached.");
-        }
         else if (playerControllers.Length > 1)
-        {
             Debug.LogWarning("OVRMainMenu: More then 1 OVRPlayerController attached.");
-        }
         else
-        {
             playerController = playerControllers[0];
-        }
     }
 
     /// <summary>
     /// Start this instance.
     /// </summary>
-    void Start()
+    private void Start()
     {
         // Make sure to hide cursor
         if (Application.isEditor == false)
         {
-			Cursor.visible = false;
-			Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         // CameraController updates
@@ -121,7 +110,7 @@ public class OVRSceneSampleController : MonoBehaviour
     /// <summary>
     /// Update this instance.
     /// </summary>
-    void Update()
+    private void Update()
     {
         // Recenter pose
         UpdateRecenterPose();
@@ -138,7 +127,7 @@ public class OVRSceneSampleController : MonoBehaviour
             Screen.fullScreen = !Screen.fullScreen;
 
         if (Input.GetKeyDown(KeyCode.M))
-			UnityEngine.XR.XRSettings.showDeviceView = !UnityEngine.XR.XRSettings.showDeviceView;
+            UnityEngine.XR.XRSettings.showDeviceView = !UnityEngine.XR.XRSettings.showDeviceView;
 
 #if !UNITY_ANDROID || UNITY_EDITOR
         // Escape Application
@@ -146,12 +135,13 @@ public class OVRSceneSampleController : MonoBehaviour
             Application.Quit();
 #endif
     }
+
     #endregion
 
     /// <summary>
     /// Updates the vision mode.
     /// </summary>
-    void UpdateVisionMode()
+    private void UpdateVisionMode()
     {
         if (Input.GetKeyDown(KeyCode.F2))
         {
@@ -163,33 +153,23 @@ public class OVRSceneSampleController : MonoBehaviour
     /// <summary>
     /// Updates the speed and rotation scale multiplier.
     /// </summary>
-    void UpdateSpeedAndRotationScaleMultiplier()
+    private void UpdateSpeedAndRotationScaleMultiplier()
     {
-        float moveScaleMultiplier = 0.0f;
+        var moveScaleMultiplier = 0.0f;
         playerController.GetMoveScaleMultiplier(ref moveScaleMultiplier);
 
         if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
             moveScaleMultiplier -= speedRotationIncrement;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            moveScaleMultiplier += speedRotationIncrement;
-        }
+        else if (Input.GetKeyDown(KeyCode.Alpha8)) moveScaleMultiplier += speedRotationIncrement;
 
         playerController.SetMoveScaleMultiplier(moveScaleMultiplier);
 
-        float rotationScaleMultiplier = 0.0f;
+        var rotationScaleMultiplier = 0.0f;
         playerController.GetRotationScaleMultiplier(ref rotationScaleMultiplier);
 
         if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
             rotationScaleMultiplier -= speedRotationIncrement;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            rotationScaleMultiplier += speedRotationIncrement;
-        }
+        else if (Input.GetKeyDown(KeyCode.Alpha0)) rotationScaleMultiplier += speedRotationIncrement;
 
         playerController.SetRotationScaleMultiplier(rotationScaleMultiplier);
     }
@@ -197,7 +177,7 @@ public class OVRSceneSampleController : MonoBehaviour
     /// <summary>
     /// Recenter pose
     /// </summary>
-    void UpdateRecenterPose()
+    private void UpdateRecenterPose()
     {
         if (Input.GetKeyDown(KeyCode.R))
             OVRManager.display.RecenterPose();

@@ -18,6 +18,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ************************************************************************************/
+
 using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -51,20 +52,27 @@ namespace Oculus
             {
                 public UIntPtr indexOffset;
                 public UIntPtr faceCount;
-                [MarshalAs(UnmanagedType.U4)]
-                public FaceType faceType;
+                [MarshalAs(UnmanagedType.U4)] public FaceType faceType;
                 public IntPtr material;
             }
         }
     }
 }
 
-class ONSPPropagation
+internal class ONSPPropagation
 {
-    static PropagationInterface CachedInterface;
-    public static PropagationInterface Interface { get { if (CachedInterface == null) CachedInterface = FindInterface(); return CachedInterface; } }
+    private static PropagationInterface CachedInterface;
 
-    static PropagationInterface FindInterface()
+    public static PropagationInterface Interface
+    {
+        get
+        {
+            if (CachedInterface == null) CachedInterface = FindInterface();
+            return CachedInterface;
+        }
+    }
+
+    private static PropagationInterface FindInterface()
     {
         IntPtr temp;
         try
@@ -73,17 +81,18 @@ class ONSPPropagation
             Debug.Log("Propagation initialized with Wwise Oculus Spatializer plugin");
             return new WwisePluginInterface();
         }
-        catch(System.DllNotFoundException)
+        catch (DllNotFoundException)
         {
             // this is fine
         }
+
         try
         {
             FMODPluginInterface.ovrAudio_GetPluginContext(out temp, ClientType.OVRA_CLIENT_TYPE_FMOD);
             Debug.Log("Propagation initialized with FMOD Oculus Spatializer plugin");
             return new FMODPluginInterface();
         }
-        catch (System.DllNotFoundException)
+        catch (DllNotFoundException)
         {
             // this is fine
         }
@@ -132,16 +141,18 @@ class ONSPPropagation
         /***********************************************************************************/
         // Settings API
         int SetPropagationQuality(float quality);
-        int SetPropagationThreadAffinity(UInt64 cpuMask);
+        int SetPropagationThreadAffinity(ulong cpuMask);
 
         /***********************************************************************************/
         // Geometry API
         int CreateAudioGeometry(out IntPtr geometry);
         int DestroyAudioGeometry(IntPtr geometry);
+
         int AudioGeometryUploadMeshArrays(IntPtr geometry,
-                                                        float[] vertices, int vertexCount,
-                                                        int[] indices, int indexCount,
-                                                        MeshGroup[] groups, int groupCount);
+            float[] vertices, int vertexCount,
+            int[] indices, int indexCount,
+            MeshGroup[] groups, int groupCount);
+
         int AudioGeometrySetTransform(IntPtr geometry, float[] matrix4x4);
         int AudioGeometryGetTransform(IntPtr geometry, out float[] matrix4x4);
         int AudioGeometryWriteMeshFile(IntPtr geometry, string filePath);
@@ -167,8 +178,16 @@ class ONSPPropagation
 
         /***********************************************************************************/
         // Context API: Required to create internal context if it does not exist yet
-        IntPtr context_ = IntPtr.Zero;
-        IntPtr context { get { if (context_ == IntPtr.Zero) { ovrAudio_GetPluginContext(out context_, ClientType.OVRA_CLIENT_TYPE_UNITY); } return context_; } }
+        private IntPtr context_ = IntPtr.Zero;
+
+        private IntPtr context
+        {
+            get
+            {
+                if (context_ == IntPtr.Zero) ovrAudio_GetPluginContext(out context_, ClientType.OVRA_CLIENT_TYPE_UNITY);
+                return context_;
+            }
+        }
 
         [DllImport(strOSPS)]
         public static extern int ovrAudio_GetPluginContext(out IntPtr context, uint clientType);
@@ -177,14 +196,16 @@ class ONSPPropagation
         // Settings API
         [DllImport(strOSPS)]
         private static extern int ovrAudio_SetPropagationQuality(IntPtr context, float quality);
+
         public int SetPropagationQuality(float quality)
         {
             return ovrAudio_SetPropagationQuality(context, quality);
         }
 
         [DllImport(strOSPS)]
-        private static extern int ovrAudio_SetPropagationThreadAffinity(IntPtr context, UInt64 cpuMask);
-        public int SetPropagationThreadAffinity(UInt64 cpuMask)
+        private static extern int ovrAudio_SetPropagationThreadAffinity(IntPtr context, ulong cpuMask);
+
+        public int SetPropagationThreadAffinity(ulong cpuMask)
         {
             return ovrAudio_SetPropagationThreadAffinity(context, cpuMask);
         }
@@ -193,6 +214,7 @@ class ONSPPropagation
         // Geometry API
         [DllImport(strOSPS)]
         private static extern int ovrAudio_CreateAudioGeometry(IntPtr context, out IntPtr geometry);
+
         public int CreateAudioGeometry(out IntPtr geometry)
         {
             return ovrAudio_CreateAudioGeometry(context, out geometry);
@@ -200,6 +222,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_DestroyAudioGeometry(IntPtr geometry);
+
         public int DestroyAudioGeometry(IntPtr geometry)
         {
             return ovrAudio_DestroyAudioGeometry(geometry);
@@ -207,14 +230,15 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryUploadMeshArrays(IntPtr geometry,
-                                                                        float[] vertices, UIntPtr verticesBytesOffset, UIntPtr vertexCount, UIntPtr vertexStride, ovrAudioScalarType vertexType,
-                                                                        int[] indices, UIntPtr indicesByteOffset, UIntPtr indexCount, ovrAudioScalarType indexType,
-                                                                        MeshGroup[] groups, UIntPtr groupCount);
+            float[] vertices, UIntPtr verticesBytesOffset, UIntPtr vertexCount, UIntPtr vertexStride,
+            ovrAudioScalarType vertexType,
+            int[] indices, UIntPtr indicesByteOffset, UIntPtr indexCount, ovrAudioScalarType indexType,
+            MeshGroup[] groups, UIntPtr groupCount);
 
         public int AudioGeometryUploadMeshArrays(IntPtr geometry,
-                                                        float[] vertices, int vertexCount,
-                                                        int[] indices, int indexCount,
-                                                        MeshGroup[] groups, int groupCount)
+            float[] vertices, int vertexCount,
+            int[] indices, int indexCount,
+            MeshGroup[] groups, int groupCount)
         {
             return ovrAudio_AudioGeometryUploadMeshArrays(geometry,
                 vertices, UIntPtr.Zero, (UIntPtr)vertexCount, UIntPtr.Zero, ovrAudioScalarType.Float32,
@@ -224,6 +248,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometrySetTransform(IntPtr geometry, float[] matrix4x4);
+
         public int AudioGeometrySetTransform(IntPtr geometry, float[] matrix4x4)
         {
             return ovrAudio_AudioGeometrySetTransform(geometry, matrix4x4);
@@ -231,6 +256,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryGetTransform(IntPtr geometry, out float[] matrix4x4);
+
         public int AudioGeometryGetTransform(IntPtr geometry, out float[] matrix4x4)
         {
             return ovrAudio_AudioGeometryGetTransform(geometry, out matrix4x4);
@@ -238,6 +264,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryWriteMeshFile(IntPtr geometry, string filePath);
+
         public int AudioGeometryWriteMeshFile(IntPtr geometry, string filePath)
         {
             return ovrAudio_AudioGeometryWriteMeshFile(geometry, filePath);
@@ -245,6 +272,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryReadMeshFile(IntPtr geometry, string filePath);
+
         public int AudioGeometryReadMeshFile(IntPtr geometry, string filePath)
         {
             return ovrAudio_AudioGeometryReadMeshFile(geometry, filePath);
@@ -252,6 +280,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryWriteMeshFileObj(IntPtr geometry, string filePath);
+
         public int AudioGeometryWriteMeshFileObj(IntPtr geometry, string filePath)
         {
             return ovrAudio_AudioGeometryWriteMeshFileObj(geometry, filePath);
@@ -261,6 +290,7 @@ class ONSPPropagation
         // Material API
         [DllImport(strOSPS)]
         private static extern int ovrAudio_CreateAudioMaterial(IntPtr context, out IntPtr material);
+
         public int CreateAudioMaterial(out IntPtr material)
         {
             return ovrAudio_CreateAudioMaterial(context, out material);
@@ -268,27 +298,34 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_DestroyAudioMaterial(IntPtr material);
+
         public int DestroyAudioMaterial(IntPtr material)
         {
             return ovrAudio_DestroyAudioMaterial(material);
         }
 
         [DllImport(strOSPS)]
-        private static extern int ovrAudio_AudioMaterialSetFrequency(IntPtr material, MaterialProperty property, float frequency, float value);
+        private static extern int ovrAudio_AudioMaterialSetFrequency(IntPtr material, MaterialProperty property,
+            float frequency, float value);
+
         public int AudioMaterialSetFrequency(IntPtr material, MaterialProperty property, float frequency, float value)
         {
             return ovrAudio_AudioMaterialSetFrequency(material, property, frequency, value);
         }
 
         [DllImport(strOSPS)]
-        private static extern int ovrAudio_AudioMaterialGetFrequency(IntPtr material, MaterialProperty property, float frequency, out float value);
-        public int AudioMaterialGetFrequency(IntPtr material, MaterialProperty property, float frequency, out float value)
+        private static extern int ovrAudio_AudioMaterialGetFrequency(IntPtr material, MaterialProperty property,
+            float frequency, out float value);
+
+        public int AudioMaterialGetFrequency(IntPtr material, MaterialProperty property, float frequency,
+            out float value)
         {
             return ovrAudio_AudioMaterialGetFrequency(material, property, frequency, out value);
         }
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioMaterialReset(IntPtr material, MaterialProperty property);
+
         public int AudioMaterialReset(IntPtr material, MaterialProperty property)
         {
             return ovrAudio_AudioMaterialReset(material, property);
@@ -305,8 +342,17 @@ class ONSPPropagation
 
         /***********************************************************************************/
         // Context API: Required to create internal context if it does not exist yet
-        IntPtr context_ = IntPtr.Zero;
-        IntPtr context { get { if (context_ == IntPtr.Zero) { ovrAudio_GetPluginContext(out context_, ClientType.OVRA_CLIENT_TYPE_WWISE_UNKNOWN); } return context_; } }
+        private IntPtr context_ = IntPtr.Zero;
+
+        private IntPtr context
+        {
+            get
+            {
+                if (context_ == IntPtr.Zero)
+                    ovrAudio_GetPluginContext(out context_, ClientType.OVRA_CLIENT_TYPE_WWISE_UNKNOWN);
+                return context_;
+            }
+        }
 
         [DllImport(strOSPS)]
         public static extern int ovrAudio_GetPluginContext(out IntPtr context, uint clientType);
@@ -315,14 +361,16 @@ class ONSPPropagation
         // Settings API
         [DllImport(strOSPS)]
         private static extern int ovrAudio_SetPropagationQuality(IntPtr context, float quality);
+
         public int SetPropagationQuality(float quality)
         {
             return ovrAudio_SetPropagationQuality(context, quality);
         }
 
         [DllImport(strOSPS)]
-        private static extern int ovrAudio_SetPropagationThreadAffinity(IntPtr context, UInt64 cpuMask);
-        public int SetPropagationThreadAffinity(UInt64 cpuMask)
+        private static extern int ovrAudio_SetPropagationThreadAffinity(IntPtr context, ulong cpuMask);
+
+        public int SetPropagationThreadAffinity(ulong cpuMask)
         {
             return ovrAudio_SetPropagationThreadAffinity(context, cpuMask);
         }
@@ -331,6 +379,7 @@ class ONSPPropagation
         // Geometry API
         [DllImport(strOSPS)]
         private static extern int ovrAudio_CreateAudioGeometry(IntPtr context, out IntPtr geometry);
+
         public int CreateAudioGeometry(out IntPtr geometry)
         {
             return ovrAudio_CreateAudioGeometry(context, out geometry);
@@ -338,6 +387,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_DestroyAudioGeometry(IntPtr geometry);
+
         public int DestroyAudioGeometry(IntPtr geometry)
         {
             return ovrAudio_DestroyAudioGeometry(geometry);
@@ -345,14 +395,15 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryUploadMeshArrays(IntPtr geometry,
-                                                                        float[] vertices, UIntPtr verticesBytesOffset, UIntPtr vertexCount, UIntPtr vertexStride, ovrAudioScalarType vertexType,
-                                                                        int[] indices, UIntPtr indicesByteOffset, UIntPtr indexCount, ovrAudioScalarType indexType,
-                                                                        MeshGroup[] groups, UIntPtr groupCount);
+            float[] vertices, UIntPtr verticesBytesOffset, UIntPtr vertexCount, UIntPtr vertexStride,
+            ovrAudioScalarType vertexType,
+            int[] indices, UIntPtr indicesByteOffset, UIntPtr indexCount, ovrAudioScalarType indexType,
+            MeshGroup[] groups, UIntPtr groupCount);
 
         public int AudioGeometryUploadMeshArrays(IntPtr geometry,
-                                                        float[] vertices, int vertexCount,
-                                                        int[] indices, int indexCount,
-                                                        MeshGroup[] groups, int groupCount)
+            float[] vertices, int vertexCount,
+            int[] indices, int indexCount,
+            MeshGroup[] groups, int groupCount)
         {
             return ovrAudio_AudioGeometryUploadMeshArrays(geometry,
                 vertices, UIntPtr.Zero, (UIntPtr)vertexCount, UIntPtr.Zero, ovrAudioScalarType.Float32,
@@ -362,6 +413,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometrySetTransform(IntPtr geometry, float[] matrix4x4);
+
         public int AudioGeometrySetTransform(IntPtr geometry, float[] matrix4x4)
         {
             return ovrAudio_AudioGeometrySetTransform(geometry, matrix4x4);
@@ -369,6 +421,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryGetTransform(IntPtr geometry, out float[] matrix4x4);
+
         public int AudioGeometryGetTransform(IntPtr geometry, out float[] matrix4x4)
         {
             return ovrAudio_AudioGeometryGetTransform(geometry, out matrix4x4);
@@ -376,6 +429,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryWriteMeshFile(IntPtr geometry, string filePath);
+
         public int AudioGeometryWriteMeshFile(IntPtr geometry, string filePath)
         {
             return ovrAudio_AudioGeometryWriteMeshFile(geometry, filePath);
@@ -383,6 +437,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryReadMeshFile(IntPtr geometry, string filePath);
+
         public int AudioGeometryReadMeshFile(IntPtr geometry, string filePath)
         {
             return ovrAudio_AudioGeometryReadMeshFile(geometry, filePath);
@@ -390,6 +445,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryWriteMeshFileObj(IntPtr geometry, string filePath);
+
         public int AudioGeometryWriteMeshFileObj(IntPtr geometry, string filePath)
         {
             return ovrAudio_AudioGeometryWriteMeshFileObj(geometry, filePath);
@@ -399,6 +455,7 @@ class ONSPPropagation
         // Material API
         [DllImport(strOSPS)]
         private static extern int ovrAudio_CreateAudioMaterial(IntPtr context, out IntPtr material);
+
         public int CreateAudioMaterial(out IntPtr material)
         {
             return ovrAudio_CreateAudioMaterial(context, out material);
@@ -406,27 +463,34 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_DestroyAudioMaterial(IntPtr material);
+
         public int DestroyAudioMaterial(IntPtr material)
         {
             return ovrAudio_DestroyAudioMaterial(material);
         }
 
         [DllImport(strOSPS)]
-        private static extern int ovrAudio_AudioMaterialSetFrequency(IntPtr material, MaterialProperty property, float frequency, float value);
+        private static extern int ovrAudio_AudioMaterialSetFrequency(IntPtr material, MaterialProperty property,
+            float frequency, float value);
+
         public int AudioMaterialSetFrequency(IntPtr material, MaterialProperty property, float frequency, float value)
         {
             return ovrAudio_AudioMaterialSetFrequency(material, property, frequency, value);
         }
 
         [DllImport(strOSPS)]
-        private static extern int ovrAudio_AudioMaterialGetFrequency(IntPtr material, MaterialProperty property, float frequency, out float value);
-        public int AudioMaterialGetFrequency(IntPtr material, MaterialProperty property, float frequency, out float value)
+        private static extern int ovrAudio_AudioMaterialGetFrequency(IntPtr material, MaterialProperty property,
+            float frequency, out float value);
+
+        public int AudioMaterialGetFrequency(IntPtr material, MaterialProperty property, float frequency,
+            out float value)
         {
             return ovrAudio_AudioMaterialGetFrequency(material, property, frequency, out value);
         }
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioMaterialReset(IntPtr material, MaterialProperty property);
+
         public int AudioMaterialReset(IntPtr material, MaterialProperty property)
         {
             return ovrAudio_AudioMaterialReset(material, property);
@@ -443,8 +507,16 @@ class ONSPPropagation
 
         /***********************************************************************************/
         // Context API: Required to create internal context if it does not exist yet
-        IntPtr context_ = IntPtr.Zero;
-        IntPtr context { get { if (context_ == IntPtr.Zero) { ovrAudio_GetPluginContext(out context_, ClientType.OVRA_CLIENT_TYPE_FMOD); } return context_; } }
+        private IntPtr context_ = IntPtr.Zero;
+
+        private IntPtr context
+        {
+            get
+            {
+                if (context_ == IntPtr.Zero) ovrAudio_GetPluginContext(out context_, ClientType.OVRA_CLIENT_TYPE_FMOD);
+                return context_;
+            }
+        }
 
         [DllImport(strOSPS)]
         public static extern int ovrAudio_GetPluginContext(out IntPtr context, uint clientType);
@@ -453,14 +525,16 @@ class ONSPPropagation
         // Settings API
         [DllImport(strOSPS)]
         private static extern int ovrAudio_SetPropagationQuality(IntPtr context, float quality);
+
         public int SetPropagationQuality(float quality)
         {
             return ovrAudio_SetPropagationQuality(context, quality);
         }
 
         [DllImport(strOSPS)]
-        private static extern int ovrAudio_SetPropagationThreadAffinity(IntPtr context, UInt64 cpuMask);
-        public int SetPropagationThreadAffinity(UInt64 cpuMask)
+        private static extern int ovrAudio_SetPropagationThreadAffinity(IntPtr context, ulong cpuMask);
+
+        public int SetPropagationThreadAffinity(ulong cpuMask)
         {
             return ovrAudio_SetPropagationThreadAffinity(context, cpuMask);
         }
@@ -469,6 +543,7 @@ class ONSPPropagation
         // Geometry API
         [DllImport(strOSPS)]
         private static extern int ovrAudio_CreateAudioGeometry(IntPtr context, out IntPtr geometry);
+
         public int CreateAudioGeometry(out IntPtr geometry)
         {
             return ovrAudio_CreateAudioGeometry(context, out geometry);
@@ -476,6 +551,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_DestroyAudioGeometry(IntPtr geometry);
+
         public int DestroyAudioGeometry(IntPtr geometry)
         {
             return ovrAudio_DestroyAudioGeometry(geometry);
@@ -483,14 +559,15 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryUploadMeshArrays(IntPtr geometry,
-                                                                        float[] vertices, UIntPtr verticesBytesOffset, UIntPtr vertexCount, UIntPtr vertexStride, ovrAudioScalarType vertexType,
-                                                                        int[] indices, UIntPtr indicesByteOffset, UIntPtr indexCount, ovrAudioScalarType indexType,
-                                                                        MeshGroup[] groups, UIntPtr groupCount);
+            float[] vertices, UIntPtr verticesBytesOffset, UIntPtr vertexCount, UIntPtr vertexStride,
+            ovrAudioScalarType vertexType,
+            int[] indices, UIntPtr indicesByteOffset, UIntPtr indexCount, ovrAudioScalarType indexType,
+            MeshGroup[] groups, UIntPtr groupCount);
 
         public int AudioGeometryUploadMeshArrays(IntPtr geometry,
-                                                        float[] vertices, int vertexCount,
-                                                        int[] indices, int indexCount,
-                                                        MeshGroup[] groups, int groupCount)
+            float[] vertices, int vertexCount,
+            int[] indices, int indexCount,
+            MeshGroup[] groups, int groupCount)
         {
             return ovrAudio_AudioGeometryUploadMeshArrays(geometry,
                 vertices, UIntPtr.Zero, (UIntPtr)vertexCount, UIntPtr.Zero, ovrAudioScalarType.Float32,
@@ -500,6 +577,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometrySetTransform(IntPtr geometry, float[] matrix4x4);
+
         public int AudioGeometrySetTransform(IntPtr geometry, float[] matrix4x4)
         {
             return ovrAudio_AudioGeometrySetTransform(geometry, matrix4x4);
@@ -507,6 +585,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryGetTransform(IntPtr geometry, out float[] matrix4x4);
+
         public int AudioGeometryGetTransform(IntPtr geometry, out float[] matrix4x4)
         {
             return ovrAudio_AudioGeometryGetTransform(geometry, out matrix4x4);
@@ -514,6 +593,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryWriteMeshFile(IntPtr geometry, string filePath);
+
         public int AudioGeometryWriteMeshFile(IntPtr geometry, string filePath)
         {
             return ovrAudio_AudioGeometryWriteMeshFile(geometry, filePath);
@@ -521,6 +601,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryReadMeshFile(IntPtr geometry, string filePath);
+
         public int AudioGeometryReadMeshFile(IntPtr geometry, string filePath)
         {
             return ovrAudio_AudioGeometryReadMeshFile(geometry, filePath);
@@ -528,6 +609,7 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioGeometryWriteMeshFileObj(IntPtr geometry, string filePath);
+
         public int AudioGeometryWriteMeshFileObj(IntPtr geometry, string filePath)
         {
             return ovrAudio_AudioGeometryWriteMeshFileObj(geometry, filePath);
@@ -537,6 +619,7 @@ class ONSPPropagation
         // Material API
         [DllImport(strOSPS)]
         private static extern int ovrAudio_CreateAudioMaterial(IntPtr context, out IntPtr material);
+
         public int CreateAudioMaterial(out IntPtr material)
         {
             return ovrAudio_CreateAudioMaterial(context, out material);
@@ -544,27 +627,34 @@ class ONSPPropagation
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_DestroyAudioMaterial(IntPtr material);
+
         public int DestroyAudioMaterial(IntPtr material)
         {
             return ovrAudio_DestroyAudioMaterial(material);
         }
 
         [DllImport(strOSPS)]
-        private static extern int ovrAudio_AudioMaterialSetFrequency(IntPtr material, MaterialProperty property, float frequency, float value);
+        private static extern int ovrAudio_AudioMaterialSetFrequency(IntPtr material, MaterialProperty property,
+            float frequency, float value);
+
         public int AudioMaterialSetFrequency(IntPtr material, MaterialProperty property, float frequency, float value)
         {
             return ovrAudio_AudioMaterialSetFrequency(material, property, frequency, value);
         }
 
         [DllImport(strOSPS)]
-        private static extern int ovrAudio_AudioMaterialGetFrequency(IntPtr material, MaterialProperty property, float frequency, out float value);
-        public int AudioMaterialGetFrequency(IntPtr material, MaterialProperty property, float frequency, out float value)
+        private static extern int ovrAudio_AudioMaterialGetFrequency(IntPtr material, MaterialProperty property,
+            float frequency, out float value);
+
+        public int AudioMaterialGetFrequency(IntPtr material, MaterialProperty property, float frequency,
+            out float value)
         {
             return ovrAudio_AudioMaterialGetFrequency(material, property, frequency, out value);
         }
 
         [DllImport(strOSPS)]
         private static extern int ovrAudio_AudioMaterialReset(IntPtr material, MaterialProperty property);
+
         public int AudioMaterialReset(IntPtr material, MaterialProperty property)
         {
             return ovrAudio_AudioMaterialReset(material, property);

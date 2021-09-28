@@ -2,20 +2,15 @@
 
 namespace Oculus.Platform
 {
+    using Description = System.ComponentModel.DescriptionAttribute;
 
-  using Description = System.ComponentModel.DescriptionAttribute;
+    public enum PermissionType : int
+    {
+        [Description("UNKNOWN")] Unknown,
 
-  public enum PermissionType : int
-  {
-    [Description("UNKNOWN")]
-    Unknown,
+        [Description("MICROPHONE")] Microphone,
 
-    [Description("MICROPHONE")]
-    Microphone,
-
-    [Description("WRITE_EXTERNAL_STORAGE")]
-    WriteExternalStorage,
-
-  }
-
+        [Description("WRITE_EXTERNAL_STORAGE")]
+        WriteExternalStorage
+    }
 }

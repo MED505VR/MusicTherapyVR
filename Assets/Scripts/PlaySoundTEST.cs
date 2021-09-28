@@ -13,10 +13,6 @@ public class PlaySoundTEST : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "DrumStickHead")
-        {
-            source.Play();
-        }
-        
+        if (other.tag == "DrumStickHead") source.Play();
     }
 }

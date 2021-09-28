@@ -10,6 +10,7 @@ public class RemotePlayer
 
     // the result of the last connection state update message
     public PeerConnectionState p2pConnectionState;
+
     // the last reported state of the VOIP connection
     public PeerConnectionState voipConnectionState;
 

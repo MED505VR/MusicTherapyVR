@@ -28,7 +28,6 @@ using Debug = UnityEngine.Debug;
 using System.Threading;
 
 [RequireComponent(typeof(AudioSource))]
-
 public class OVRLipSyncMicInput : MonoBehaviour
 {
     public enum micActivation
@@ -40,34 +39,34 @@ public class OVRLipSyncMicInput : MonoBehaviour
 
     // PUBLIC MEMBERS
     [Tooltip("Manual specification of Audio Source - " +
-        "by default will use any attached to the same object.")]
+             "by default will use any attached to the same object.")]
     public AudioSource audioSource = null;
 
 
     [Tooltip("Enable a keypress to toggle the microphone device selection GUI.")]
     public bool enableMicSelectionGUI = false;
+
     [Tooltip("Key to toggle the microphone selection GUI if enabled.")]
     public KeyCode micSelectionGUIKey = KeyCode.M;
 
-    [SerializeField]
-    [Range(0.0f, 100.0f)]
-    [Tooltip("Microphone input volume control.")]
+    [SerializeField] [Range(0.0f, 100.0f)] [Tooltip("Microphone input volume control.")]
     private float micInputVolume = 100;
 
-    [SerializeField]
-    [Tooltip("Requested microphone input frequency")]
+    [SerializeField] [Tooltip("Requested microphone input frequency")]
     private int micFrequency = 48000;
+
     public float MicFrequency
     {
-        get { return micFrequency; }
-        set { micFrequency = (int)Mathf.Clamp((float)value, 0, 96000); }
+        get => micFrequency;
+        set => micFrequency = (int)Mathf.Clamp((float)value, 0, 96000);
     }
 
     [Tooltip("Microphone input control method. Hold To Speak and Push" +
-        " To Speak are driven with the Mic Activation Key.")]
+             " To Speak are driven with the Mic Activation Key.")]
     public micActivation micControl = micActivation.ConstantSpeak;
+
     [Tooltip("Key used to drive Hold To Speak and Push To Speak methods" +
-        " of microphone input control.")]
+             " of microphone input control.")]
     public KeyCode micActivationKey = KeyCode.Space;
 
     [Tooltip("Will contain the string name of the selected microphone device - read only.")]
@@ -86,7 +85,7 @@ public class OVRLipSyncMicInput : MonoBehaviour
     /// <summary>
     /// Awake this instance.
     /// </summary>
-    void Awake()
+    private void Awake()
     {
         // First thing to do, cache the unity audio source (can be managed by the
         // user if audio source can change)
@@ -97,9 +96,9 @@ public class OVRLipSyncMicInput : MonoBehaviour
     /// <summary>
     /// Start this instance.
     /// </summary>
-    void Start()
+    private void Start()
     {
-        audioSource.loop = true;     // Set the AudioClip to loop
+        audioSource.loop = true; // Set the AudioClip to loop
         audioSource.mute = false;
 
         InitializeMicrophone();
@@ -110,14 +109,8 @@ public class OVRLipSyncMicInput : MonoBehaviour
     /// </summary>
     private void InitializeMicrophone()
     {
-        if (initialized)
-        {
-            return;
-        }
-        if (Microphone.devices.Length == 0)
-        {
-            return;
-        }
+        if (initialized) return;
+        if (Microphone.devices.Length == 0) return;
         selectedDevice = Microphone.devices[0].ToString();
         micSelected = true;
         GetMicCaps();
@@ -128,14 +121,11 @@ public class OVRLipSyncMicInput : MonoBehaviour
     /// <summary>
     /// Update this instance.
     /// </summary>
-    void Update()
+    private void Update()
     {
         if (!focused)
         {
-            if (Microphone.IsRecording(selectedDevice))
-            {
-                StopMicrophone();
-            }
+            if (Microphone.IsRecording(selectedDevice)) StopMicrophone();
             return;
         }
 
@@ -146,66 +136,42 @@ public class OVRLipSyncMicInput : MonoBehaviour
         }
 
         // Lazy Microphone initialization (needed on Android)
-        if (!initialized)
-        {
-            InitializeMicrophone();
-        }
+        if (!initialized) InitializeMicrophone();
 
-        audioSource.volume = (micInputVolume / 100);
+        audioSource.volume = micInputVolume / 100;
 
         //Hold To Speak
         if (micControl == micActivation.HoldToSpeak)
         {
             if (Input.GetKey(micActivationKey))
             {
-                if (!Microphone.IsRecording(selectedDevice))
-                {
-                    StartMicrophone();
-                }
+                if (!Microphone.IsRecording(selectedDevice)) StartMicrophone();
             }
             else
             {
-                if (Microphone.IsRecording(selectedDevice))
-                {
-                    StopMicrophone();
-                }
+                if (Microphone.IsRecording(selectedDevice)) StopMicrophone();
             }
         }
 
         //Push To Talk
         if (micControl == micActivation.PushToSpeak)
-        {
             if (Input.GetKeyDown(micActivationKey))
             {
                 if (Microphone.IsRecording(selectedDevice))
-                {
                     StopMicrophone();
-                }
-                else if (!Microphone.IsRecording(selectedDevice))
-                {
-                    StartMicrophone();
-                }
+                else if (!Microphone.IsRecording(selectedDevice)) StartMicrophone();
             }
-        }
 
         //Constant Speak
         if (micControl == micActivation.ConstantSpeak)
-        {
             if (!Microphone.IsRecording(selectedDevice))
-            {
                 StartMicrophone();
-            }
-        }
 
 
         //Mic Selected = False
         if (enableMicSelectionGUI)
-        {
             if (Input.GetKeyDown(micSelectionGUIKey))
-            {
                 micSelected = false;
-            }
-        }
     }
 
 
@@ -213,7 +179,7 @@ public class OVRLipSyncMicInput : MonoBehaviour
     /// Raises the application focus event.
     /// </summary>
     /// <param name="focus">If set to <c>true</c>: focused.</param>
-    void OnApplicationFocus(bool focus)
+    private void OnApplicationFocus(bool focus)
     {
         focused = focus;
 
@@ -225,7 +191,7 @@ public class OVRLipSyncMicInput : MonoBehaviour
     /// Raises the application pause event.
     /// </summary>
     /// <param name="pauseStatus">If set to <c>true</c>: paused.</param>
-    void OnApplicationPause(bool pauseStatus)
+    private void OnApplicationPause(bool pauseStatus)
     {
         focused = !pauseStatus;
 
@@ -233,7 +199,7 @@ public class OVRLipSyncMicInput : MonoBehaviour
             StopMicrophone();
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         StopMicrophone();
     }
@@ -241,9 +207,9 @@ public class OVRLipSyncMicInput : MonoBehaviour
     /// <summary>
     /// Raises the GU event.
     /// </summary>
-    void OnGUI()
+    private void OnGUI()
     {
-        MicDeviceGUI((Screen.width / 2) - 150, (Screen.height / 2) - 75, 300, 50, 10, -300);
+        MicDeviceGUI(Screen.width / 2 - 150, Screen.height / 2 - 75, 300, 50, 10, -300);
     }
 
     //----------------------------------------------------
@@ -269,12 +235,10 @@ public class OVRLipSyncMicInput : MonoBehaviour
     {
         //If there is more than one device, choose one.
         if (Microphone.devices.Length >= 1 && enableMicSelectionGUI == true && micSelected == false)
-        {
-            for (int i = 0; i < Microphone.devices.Length; ++i)
-            {
-                if (GUI.Button(new Rect(left + ((width + buttonSpaceLeft) * i),
-                                        top + ((height + buttonSpaceTop) * i), width, height),
-                               Microphone.devices[i].ToString()))
+            for (var i = 0; i < Microphone.devices.Length; ++i)
+                if (GUI.Button(new Rect(left + (width + buttonSpaceLeft) * i,
+                        top + (height + buttonSpaceTop) * i, width, height),
+                    Microphone.devices[i].ToString()))
                 {
                     StopMicrophone();
                     selectedDevice = Microphone.devices[i].ToString();
@@ -282,8 +246,6 @@ public class OVRLipSyncMicInput : MonoBehaviour
                     GetMicCaps();
                     StartMicrophone();
                 }
-            }
-        }
     }
 
     /// <summary>
@@ -317,17 +279,14 @@ public class OVRLipSyncMicInput : MonoBehaviour
         //Starts recording
         audioSource.clip = Microphone.Start(selectedDevice, true, 1, micFrequency);
 
-        Stopwatch timer = Stopwatch.StartNew();
+        var timer = Stopwatch.StartNew();
 
         // Wait until the recording has started
-        while (!(Microphone.GetPosition(selectedDevice) > 0) && timer.Elapsed.TotalMilliseconds < 1000) {
+        while (!(Microphone.GetPosition(selectedDevice) > 0) && timer.Elapsed.TotalMilliseconds < 1000)
             Thread.Sleep(50);
-        }
 
         if (Microphone.GetPosition(selectedDevice) <= 0)
-        {
             throw new Exception("Timeout initializing microphone " + selectedDevice);
-        }
         // Play the audio source
         audioSource.Play();
     }
@@ -340,15 +299,13 @@ public class OVRLipSyncMicInput : MonoBehaviour
         if (micSelected == false) return;
 
         // Overriden with a clip to play? Don't stop the audio source
-        if ((audioSource != null) &&
-            (audioSource.clip != null) &&
-            (audioSource.clip.name == "Microphone"))
-        {
+        if (audioSource != null &&
+            audioSource.clip != null &&
+            audioSource.clip.name == "Microphone")
             audioSource.Stop();
-        }
 
         // Reset to stop mouth movement
-        OVRLipSyncContext context = GetComponent<OVRLipSyncContext>();
+        var context = GetComponent<OVRLipSyncContext>();
         context.ResetContext();
 
         Microphone.End(selectedDevice);
@@ -363,7 +320,7 @@ public class OVRLipSyncMicInput : MonoBehaviour
     /// Gets the averaged volume.
     /// </summary>
     /// <returns>The averaged volume.</returns>
-    float GetAveragedVolume()
+    private float GetAveragedVolume()
     {
         // We will use the SR to get average volume
         // return OVRSpeechRec.GetAverageVolume();

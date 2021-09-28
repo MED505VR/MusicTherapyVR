@@ -19,33 +19,35 @@ namespace OculusSampleFramework
     {
         public string m_materialColorField;
 
-        GrabbableCrosshair m_crosshair;
-        GrabManager m_crosshairManager;
-        Renderer m_renderer;
-        MaterialPropertyBlock m_mpb;
+        private GrabbableCrosshair m_crosshair;
+        private GrabManager m_crosshairManager;
+        private Renderer m_renderer;
+        private MaterialPropertyBlock m_mpb;
 
 
         public bool InRange
         {
-            get { return m_inRange; }
+            get => m_inRange;
             set
             {
                 m_inRange = value;
                 RefreshCrosshair();
             }
         }
-        bool m_inRange;
+
+        private bool m_inRange;
 
         public bool Targeted
         {
-            get { return m_targeted; }
+            get => m_targeted;
             set
             {
                 m_targeted = value;
                 RefreshCrosshair();
             }
         }
-        bool m_targeted;
+
+        private bool m_targeted;
 
         protected override void Start()
         {
@@ -58,18 +60,23 @@ namespace OculusSampleFramework
             m_renderer.SetPropertyBlock(m_mpb);
         }
 
-        void RefreshCrosshair()
+        private void RefreshCrosshair()
         {
             if (m_crosshair)
             {
                 if (isGrabbed) m_crosshair.SetState(GrabbableCrosshair.CrosshairState.Disabled);
                 else if (!InRange) m_crosshair.SetState(GrabbableCrosshair.CrosshairState.Disabled);
-                else m_crosshair.SetState(Targeted ? GrabbableCrosshair.CrosshairState.Targeted : GrabbableCrosshair.CrosshairState.Enabled);
+                else
+                    m_crosshair.SetState(Targeted
+                        ? GrabbableCrosshair.CrosshairState.Targeted
+                        : GrabbableCrosshair.CrosshairState.Enabled);
             }
+
             if (m_materialColorField != null)
             {
                 m_renderer.GetPropertyBlock(m_mpb);
-                if (isGrabbed || !InRange) m_mpb.SetColor(m_materialColorField, m_crosshairManager.OutlineColorOutOfRange);
+                if (isGrabbed || !InRange)
+                    m_mpb.SetColor(m_materialColorField, m_crosshairManager.OutlineColorOutOfRange);
                 else if (Targeted) m_mpb.SetColor(m_materialColorField, m_crosshairManager.OutlineColorHighlighted);
                 else m_mpb.SetColor(m_materialColorField, m_crosshairManager.OutlineColorInRange);
                 m_renderer.SetPropertyBlock(m_mpb);

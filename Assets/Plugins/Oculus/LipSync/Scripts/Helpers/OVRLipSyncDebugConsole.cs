@@ -20,6 +20,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ************************************************************************************/
+
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
@@ -27,15 +28,15 @@ using System.Collections;
 public class OVRLipSyncDebugConsole : MonoBehaviour
 {
     public ArrayList messages = new ArrayList();
-    public int       maxMessages = 15;             // The max number of messages displayed
-    public Text      textMsg;                      // text string to display
+    public int maxMessages = 15; // The max number of messages displayed
+    public Text textMsg; // text string to display
 
     // Our instance to allow this script to be called without a direct connection.
     private static OVRLipSyncDebugConsole s_Instance = null;
 
     // Clear timeout
-    private bool     clearTimeoutOn = false;
-    private float    clearTimeout   = 0.0f;
+    private bool clearTimeoutOn = false;
+    private float clearTimeout = 0.0f;
 
     /// <summary>
     /// Gets the instance.
@@ -51,7 +52,7 @@ public class OVRLipSyncDebugConsole : MonoBehaviour
 
                 if (s_Instance == null)
                 {
-                    GameObject console = new GameObject();
+                    var console = new GameObject();
                     console.AddComponent<OVRLipSyncDebugConsole>();
                     console.name = "OVRLipSyncDebugConsole";
                     s_Instance = FindObjectOfType(typeof(OVRLipSyncDebugConsole)) as OVRLipSyncDebugConsole;
@@ -62,25 +63,24 @@ public class OVRLipSyncDebugConsole : MonoBehaviour
         }
     }
 
-      /// <summary>
-      /// Awake this instance.
-      /// </summary>
-    void Awake()
+    /// <summary>
+    /// Awake this instance.
+    /// </summary>
+    private void Awake()
     {
         s_Instance = this;
         Init();
-
     }
 
     /// <summary>
     /// Update this instance.
     /// </summary>
-    void Update()
+    private void Update()
     {
-        if(clearTimeoutOn == true)
+        if (clearTimeoutOn == true)
         {
             clearTimeout -= Time.deltaTime;
-            if(clearTimeout < 0.0f)
+            if (clearTimeout < 0.0f)
             {
                 Clear();
                 clearTimeout = 0.0f;
@@ -94,10 +94,8 @@ public class OVRLipSyncDebugConsole : MonoBehaviour
     /// </summary>
     public void Init()
     {
-        if(textMsg == null)
-        {
+        if (textMsg == null)
             Debug.LogWarning("DebugConsole Init WARNING::UI text not set. Will not be able to display anything.");
-        }
 
         Clear();
     }
@@ -111,7 +109,7 @@ public class OVRLipSyncDebugConsole : MonoBehaviour
     /// <param name="message">Message.</param>
     public static void Log(string message)
     {
-        OVRLipSyncDebugConsole.instance.AddMessage(message, Color.white);
+        instance.AddMessage(message, Color.white);
     }
 
     /// <summary>
@@ -121,7 +119,7 @@ public class OVRLipSyncDebugConsole : MonoBehaviour
     /// <param name="color">Color.</param>
     public static void Log(string message, Color color)
     {
-        OVRLipSyncDebugConsole.instance.AddMessage(message, color);
+        instance.AddMessage(message, color);
     }
 
     /// <summary>
@@ -129,7 +127,7 @@ public class OVRLipSyncDebugConsole : MonoBehaviour
     /// </summary>
     public static void Clear()
     {
-        OVRLipSyncDebugConsole.instance.ClearMessages();
+        instance.ClearMessages();
     }
 
     /// <summary>
@@ -138,7 +136,7 @@ public class OVRLipSyncDebugConsole : MonoBehaviour
     /// <param name="timeToClear">Time to clear.</param>
     public static void ClearTimeout(float timeToClear)
     {
-        OVRLipSyncDebugConsole.instance.SetClearTimeout(timeToClear);
+        instance.SetClearTimeout(timeToClear);
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -153,7 +151,7 @@ public class OVRLipSyncDebugConsole : MonoBehaviour
     {
         messages.Add(message);
 
-        if(textMsg != null)
+        if (textMsg != null)
             textMsg.color = color;
 
         Display();
@@ -174,26 +172,22 @@ public class OVRLipSyncDebugConsole : MonoBehaviour
     /// <param name="timeout">Timeout.</param>
     public void SetClearTimeout(float timeout)
     {
-        clearTimeout   = timeout;
+        clearTimeout = timeout;
         clearTimeoutOn = true;
     }
 
     /// <summary>
     // Prunes the array to fit within the maxMessages limit
     /// </summary>
-    void Prune()
+    private void Prune()
     {
         int diff;
         if (messages.Count > maxMessages)
         {
             if (messages.Count <= 0)
-            {
                 diff = 0;
-            }
             else
-            {
                 diff = messages.Count - maxMessages;
-            }
             messages.RemoveRange(0, (int)diff);
         }
     }
@@ -201,23 +195,20 @@ public class OVRLipSyncDebugConsole : MonoBehaviour
     /// <summary>
     /// Display this instance.
     /// </summary>
-    void Display()
+    private void Display()
     {
-        if (messages.Count > maxMessages)
-        {
-            Prune();
-        }
+        if (messages.Count > maxMessages) Prune();
 
-        if(textMsg != null)
+        if (textMsg != null)
         {
             textMsg.text = ""; // Clear text out
-            int x = 0;
+            var x = 0;
 
             while (x < messages.Count)
             {
-                     textMsg.text += (string)messages[x];
-                    textMsg.text +='\n';
-                    x += 1;
+                textMsg.text += (string)messages[x];
+                textMsg.text += '\n';
+                x += 1;
             }
         }
     }

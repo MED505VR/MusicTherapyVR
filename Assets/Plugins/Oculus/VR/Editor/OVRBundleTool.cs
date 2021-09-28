@@ -137,7 +137,8 @@ public class OVRBundleTool : EditorWindow
 			string sceneErrorMessage;
 			if (invalidBuildableScene)
 			{
-				sceneErrorMessage = "Invalid scene selection. \nPlease remove OVRTransitionScene in the project's build settings.";
+				sceneErrorMessage =
+ "Invalid scene selection. \nPlease remove OVRTransitionScene in the project's build settings.";
 			}
 			else
 			{
@@ -145,7 +146,8 @@ public class OVRBundleTool : EditorWindow
 			}
 			GUILayout.Label(sceneErrorMessage);
 
-			var buildSettingBtnRt = GUILayoutUtility.GetRect(buildSettingsBtnTxt, GUI.skin.button, GUILayout.Width(150));
+			var buildSettingBtnRt =
+ GUILayoutUtility.GetRect(buildSettingsBtnTxt, GUI.skin.button, GUILayout.Width(150));
 			if (GUI.Button(buildSettingBtnRt, buildSettingsBtnTxt))
 			{
 				action = GuiAction.OpenBuildSettingsWindow;
@@ -178,14 +180,16 @@ public class OVRBundleTool : EditorWindow
 					action = GuiAction.BuildAndDeployScenes;
 				}
 
-				GUIContent forceRestartLabel = new GUIContent("Force Restart [?]", "Relaunch the application after scene bundles are finished deploying.");
+				GUIContent forceRestartLabel =
+ new GUIContent("Force Restart [?]", "Relaunch the application after scene bundles are finished deploying.");
 				forceRestart = GUILayout.Toggle(forceRestart, forceRestartLabel, GUILayout.ExpandWidth(true));
 			}
 			EditorGUILayout.EndHorizontal();
 		}
 
 		GUILayout.Space(10.0f);
-		GUIContent transitionContent = new GUIContent("Transition APK [?]", "Build and deploy an APK that will transition into the scene you are working on. This enables fast iteration on a specific scene.");
+		GUIContent transitionContent =
+ new GUIContent("Transition APK [?]", "Build and deploy an APK that will transition into the scene you are working on. This enables fast iteration on a specific scene.");
 		GUILayout.Label(transitionContent, EditorStyles.boldLabel);
 
 		EditorGUILayout.BeginHorizontal();
@@ -201,10 +205,12 @@ public class OVRBundleTool : EditorWindow
 					statusMesssage = "<color=green>APK installed. Ready to build and deploy scenes.</color>";
 					break;
 				case ApkStatus.NOT_INSTALLED:
-					statusMesssage = "<color=red>APK not installed. Press build and deploy to install the transition APK.</color>";
+					statusMesssage =
+ "<color=red>APK not installed. Press build and deploy to install the transition APK.</color>";
 					break;
 				case ApkStatus.DEVICE_NOT_CONNECTED:
-					statusMesssage = "<color=red>Device not connected via ADB. Please connect device and allow debugging.</color>";
+					statusMesssage =
+ "<color=red>Device not connected via ADB. Please connect device and allow debugging.</color>";
 					break;
 				case ApkStatus.UNKNOWN:
 				default:
@@ -235,14 +241,16 @@ public class OVRBundleTool : EditorWindow
 			EditorGUILayout.BeginHorizontal();
 			{
 				GUIContent clearDeviceBundlesTxt = new GUIContent("Delete Device Bundles");
-				var clearDeviceBundlesBtnRt = GUILayoutUtility.GetRect(clearDeviceBundlesTxt, GUI.skin.button, GUILayout.ExpandWidth(true));
+				var clearDeviceBundlesBtnRt =
+ GUILayoutUtility.GetRect(clearDeviceBundlesTxt, GUI.skin.button, GUILayout.ExpandWidth(true));
 				if (GUI.Button(clearDeviceBundlesBtnRt, clearDeviceBundlesTxt))
 				{
 					action = GuiAction.ClearDeviceBundles;
 				}
 
 				GUIContent clearLocalBundlesTxt = new GUIContent("Delete Local Bundles");
-				var clearLocalBundlesBtnRt = GUILayoutUtility.GetRect(clearLocalBundlesTxt, GUI.skin.button, GUILayout.ExpandWidth(true));
+				var clearLocalBundlesBtnRt =
+ GUILayoutUtility.GetRect(clearLocalBundlesTxt, GUI.skin.button, GUILayout.ExpandWidth(true));
 				if (GUI.Button(clearLocalBundlesBtnRt, clearLocalBundlesTxt))
 				{
 					action = GuiAction.ClearLocalBundles;
@@ -281,14 +289,16 @@ public class OVRBundleTool : EditorWindow
 					action = GuiAction.LaunchApp;
 				}
 
-				var buildSettingBtnRt = GUILayoutUtility.GetRect(buildSettingsBtnTxt, GUI.skin.button, GUILayout.ExpandWidth(true));
+				var buildSettingBtnRt =
+ GUILayoutUtility.GetRect(buildSettingsBtnTxt, GUI.skin.button, GUILayout.ExpandWidth(true));
 				if (GUI.Button(buildSettingBtnRt, buildSettingsBtnTxt))
 				{
 					action = GuiAction.OpenBuildSettingsWindow;
 				}
 
 				GUIContent uninstallTxt = new GUIContent("Uninstall APK");
-				var uninstallBtnRt = GUILayoutUtility.GetRect(uninstallTxt, GUI.skin.button, GUILayout.ExpandWidth(true));
+				var uninstallBtnRt =
+ GUILayoutUtility.GetRect(uninstallTxt, GUI.skin.button, GUILayout.ExpandWidth(true));
 				if (GUI.Button(uninstallBtnRt, uninstallTxt))
 				{
 					action = GuiAction.UninstallApk;
@@ -402,7 +412,8 @@ public class OVRBundleTool : EditorWindow
 			{
 				if (Path.GetFileNameWithoutExtension(scene.path) != "OVRTransitionScene")
 				{
-					EditorSceneInfo sceneInfo = new EditorSceneInfo(scene.path, Path.GetFileNameWithoutExtension(scene.path));
+					EditorSceneInfo sceneInfo =
+ new EditorSceneInfo(scene.path, Path.GetFileNameWithoutExtension(scene.path));
 					buildableScenes.Add(sceneInfo);
 				}
 				else
@@ -447,7 +458,8 @@ public class OVRBundleTool : EditorWindow
 						else
 						{
 							// get package info to check for TRANSITION_APK_VERSION_NAME
-							string[] dumpPackageInfoCommand = new string[] { "-d shell dumpsys package", transitionPackageName };
+							string[] dumpPackageInfoCommand =
+ new string[] { "-d shell dumpsys package", transitionPackageName };
 							string packageInfo;
 							if (adbTool.RunCommand(dumpPackageInfoCommand, null, out packageInfo, out error) == 0 &&
 									!string.IsNullOrEmpty(packageInfo) &&

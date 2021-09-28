@@ -20,6 +20,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ************************************************************************************/
+
 using UnityEngine;
 
 
@@ -41,83 +42,61 @@ public class OVRLipSyncContextBase : MonoBehaviour
 
     [Tooltip("Which lip sync provider to use for viseme computation.")]
     public OVRLipSync.ContextProviders provider = OVRLipSync.ContextProviders.Enhanced;
+
     [Tooltip("Enable DSP offload on supported Android devices.")]
     public bool enableAcceleration = true;
 
     // * * * * * * * * * * * * *
     // Private members
     private OVRLipSync.Frame frame = new OVRLipSync.Frame();
-    private uint context = 0;    // 0 is no context
+    private uint context = 0; // 0 is no context
 
     private int _smoothing;
+
     public int Smoothing
     {
         set
         {
-            OVRLipSync.Result result =
+            var result =
                 OVRLipSync.SendSignal(context, OVRLipSync.Signals.VisemeSmoothing, value, 0);
 
             if (result != OVRLipSync.Result.Success)
             {
                 if (result == OVRLipSync.Result.InvalidParam)
-                {
                     Debug.LogError("OVRLipSyncContextBase.SetSmoothing: A viseme smoothing" +
-                        " parameter is invalid, it should be between 1 and 100!");
-                }
+                                   " parameter is invalid, it should be between 1 and 100!");
                 else
-                {
                     Debug.LogError("OVRLipSyncContextBase.SetSmoothing: An unexpected" +
-                        " error occured.");
-                }
+                                   " error occured.");
             }
 
             _smoothing = value;
         }
-        get
-        {
-            return _smoothing;
-        }
+        get => _smoothing;
     }
 
-    public uint Context
-    {
-        get
-        {
-            return context;
-        }
-    }
+    public uint Context => context;
 
-    protected OVRLipSync.Frame Frame
-    {
-        get
-        {
-            return frame;
-        }
-    }
+    protected OVRLipSync.Frame Frame => frame;
 
     /// <summary>
     /// Awake this instance.
     /// </summary>
-    void Awake()
+    private void Awake()
     {
         // Cache the audio source we are going to be using to pump data to the SR
-        if (!audioSource)
-        {
-            audioSource = GetComponent<AudioSource>();
-        }
+        if (!audioSource) audioSource = GetComponent<AudioSource>();
 
         lock (this)
         {
             if (context == 0)
-            {
                 if (OVRLipSync.CreateContext(ref context, provider, 0, enableAcceleration)
                     != OVRLipSync.Result.Success)
                 {
                     Debug.LogError("OVRLipSyncContextBase.Start ERROR: Could not create" +
-                        " Phoneme context.");
+                                   " Phoneme context.");
                     return;
                 }
-            }
         }
     }
 
@@ -125,19 +104,15 @@ public class OVRLipSyncContextBase : MonoBehaviour
     /// <summary>
     /// Raises the destroy event.
     /// </summary>
-    void OnDestroy()
+    private void OnDestroy()
     {
         // Create the context that we will feed into the audio buffer
         lock (this)
         {
             if (context != 0)
-            {
                 if (OVRLipSync.DestroyContext(context) != OVRLipSync.Result.Success)
-                {
                     Debug.LogError("OVRLipSyncContextBase.OnDestroy ERROR: Could not delete" +
-                        " Phoneme context.");
-                }
-            }
+                                   " Phoneme context.");
         }
     }
 
@@ -161,20 +136,16 @@ public class OVRLipSyncContextBase : MonoBehaviour
     /// <param name="amount">Integer viseme amount</param>
     public void SetVisemeBlend(int viseme, int amount)
     {
-        OVRLipSync.Result result =
+        var result =
             OVRLipSync.SendSignal(context, OVRLipSync.Signals.VisemeAmount, viseme, amount);
 
         if (result != OVRLipSync.Result.Success)
         {
             if (result == OVRLipSync.Result.InvalidParam)
-            {
                 Debug.LogError("OVRLipSyncContextBase.SetVisemeBlend: Viseme ID is invalid.");
-            }
             else
-            {
                 Debug.LogError("OVRLipSyncContextBase.SetVisemeBlend: An unexpected" +
-                    " error occured.");
-            }
+                               " error occured.");
         }
     }
 
@@ -184,14 +155,12 @@ public class OVRLipSyncContextBase : MonoBehaviour
     /// <param name="amount">Integer viseme amount</param>
     public void SetLaughterBlend(int amount)
     {
-        OVRLipSync.Result result =
+        var result =
             OVRLipSync.SendSignal(context, OVRLipSync.Signals.LaughterAmount, amount, 0);
 
         if (result != OVRLipSync.Result.Success)
-        {
             Debug.LogError("OVRLipSyncContextBase.SetLaughterBlend: An unexpected" +
-                " error occured.");
-        }
+                           " error occured.");
     }
 
     /// <summary>

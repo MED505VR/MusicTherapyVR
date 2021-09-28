@@ -1,52 +1,51 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Normal.Realtime;
 using UnityEngine;
-using Normal.Realtime;
 
-public class EchoButton : MonoBehaviour
+namespace C_scale
 {
-    private GameObject myObject;
-    private RealtimeView myView;
-
-    private bool _echo = false;
-    private bool _previousEcho;
-
-    private EchoSync _echoSync;
-    
-
-    private GameObject leftHand, rightHand;
-    //private AudioEchoFilter echo;
-    private void Awake()
+    public class EchoButton : MonoBehaviour
     {
-        myObject = GameObject.Find("Table");
-        myView = myObject.GetComponent<RealtimeView>();
-        leftHand = GameObject.Find("LeftHandAnchor");
-        rightHand = GameObject.Find("RightHandAnchor");
+        private GameObject myObject;
+        private RealtimeView myView;
 
-        _echoSync = GetComponent<EchoSync>();
-    }
+        private bool _echo = false;
+        private bool _previousEcho;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        myView.RequestOwnership();
-        if (other.gameObject == leftHand || other.gameObject == rightHand)
+        private EchoSync _echoSync;
+
+
+        private GameObject leftHand, rightHand;
+
+        //private AudioEchoFilter echo;
+        private void Awake()
         {
-            _echo = !_echo;
+            myObject = GameObject.Find("Table");
+            myView = myObject.GetComponent<RealtimeView>();
+            leftHand = GameObject.Find("LeftHandAnchor");
+            rightHand = GameObject.Find("RightHandAnchor");
+
+            _echoSync = GetComponent<EchoSync>();
         }
-    }
 
-    private void OnTriggerExit(Collider other)
-    {
-        myView.ClearOwnership();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (_echo != _previousEcho)
+        private void OnTriggerEnter(Collider other)
         {
-            _echoSync.SetEcho(_echo);
-            _previousEcho = _echo;
+            myView.RequestOwnership();
+            if (other.gameObject == leftHand || other.gameObject == rightHand) _echo = !_echo;
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            myView.ClearOwnership();
+        }
+
+        // Update is called once per frame
+        private void Update()
+        {
+            if (_echo != _previousEcho)
+            {
+                _echoSync.SetEcho(_echo);
+                _previousEcho = _echo;
+            }
         }
     }
 }

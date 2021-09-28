@@ -1,55 +1,54 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Normal.Realtime;
+﻿using Normal.Realtime;
+using Sync;
 
-public class ScaleSync : RealtimeComponent<ScaleModel>
+namespace C_scale
 {
-    private Synth _synth;
-
-    private void Awake()
+    public class ScaleSync : RealtimeComponent<ScaleModel>
     {
-        _synth = GetComponent<Synth>();
-    }
+        private Synth synth;
 
-
-    private void UpdateGain()
-    {
-        _synth.gain = model.gain;
-    }
-
-
-    protected override void OnRealtimeModelReplaced(ScaleModel previousModel, ScaleModel currentModel)
-    {
-        if (previousModel != null)
+        private void Awake()
         {
-            // Unregister from events
-            previousModel.gainDidChange -= GainDidChange;
+            synth = GetComponent<Synth>();
         }
 
-        if (currentModel != null)
-        {
-            // If this is a model that has no data set on it, populate it with the current mesh renderer color.
-            if (currentModel.isFreshModel)
-            currentModel.gain = _synth.gain;
 
-            // Update the mesh render to match the new model
+        private void UpdateGain()
+        {
+            synth.gain = model.gain;
+        }
+
+
+        protected override void OnRealtimeModelReplaced(ScaleModel previousModel, ScaleModel currentModel)
+        {
+            if (previousModel != null)
+                // Unregister from events
+                previousModel.gainDidChange -= GainDidChange;
+
+            if (currentModel != null)
+            {
+                // If this is a model that has no data set on it, populate it with the current mesh renderer color.
+                if (currentModel.isFreshModel)
+                    currentModel.gain = synth.gain;
+
+                // Update the mesh render to match the new model
+                UpdateGain();
+
+                // Register for events so we'll know if the color changes later
+                currentModel.gainDidChange += GainDidChange;
+            }
+        }
+
+
+        private void GainDidChange(ScaleModel model, float value)
+        {
             UpdateGain();
-
-            // Register for events so we'll know if the color changes later
-            currentModel.gainDidChange += GainDidChange;
         }
-    }
 
 
-    private void GainDidChange(ScaleModel model, float value)
-    {
-        UpdateGain();
-    }
-
-
-    public void SetGain(float gain)
-    {
-        model.gain = gain;
+        public void SetGain(float gain)
+        {
+            model.gain = gain;
+        }
     }
 }

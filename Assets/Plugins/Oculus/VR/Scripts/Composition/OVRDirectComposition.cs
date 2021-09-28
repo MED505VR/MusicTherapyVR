@@ -19,163 +19,167 @@ using Object = UnityEngine.Object;
 
 public class OVRDirectComposition : OVRCameraComposition
 {
-	private GameObject previousMainCameraObject = null;
-	public GameObject directCompositionCameraGameObject = null;
-	public Camera directCompositionCamera = null;
-	public RenderTexture boundaryMeshMaskTexture = null;
+    private GameObject previousMainCameraObject = null;
+    public GameObject directCompositionCameraGameObject = null;
+    public Camera directCompositionCamera = null;
+    public RenderTexture boundaryMeshMaskTexture = null;
 
-	public override OVRManager.CompositionMethod CompositionMethod() { return OVRManager.CompositionMethod.Direct; }
+    public override OVRManager.CompositionMethod CompositionMethod()
+    {
+        return OVRManager.CompositionMethod.Direct;
+    }
 
-	public OVRDirectComposition(GameObject parentObject, Camera mainCamera, OVRMixedRealityCaptureConfiguration configuration)
-		: base(parentObject, mainCamera, configuration)
-	{
-		RefreshCameraObjects(parentObject, mainCamera, configuration);
-	}
+    public OVRDirectComposition(GameObject parentObject, Camera mainCamera,
+        OVRMixedRealityCaptureConfiguration configuration)
+        : base(parentObject, mainCamera, configuration)
+    {
+        RefreshCameraObjects(parentObject, mainCamera, configuration);
+    }
 
-	private void RefreshCameraObjects(GameObject parentObject, Camera mainCamera, OVRMixedRealityCaptureConfiguration configuration)
-	{
-		if (!hasCameraDeviceOpened)
-		{
-			Debug.LogWarning("[OVRDirectComposition] RefreshCameraObjects(): Unable to open camera device " + cameraDevice);
-			return;
-		}
+    private void RefreshCameraObjects(GameObject parentObject, Camera mainCamera,
+        OVRMixedRealityCaptureConfiguration configuration)
+    {
+        if (!hasCameraDeviceOpened)
+        {
+            Debug.LogWarning("[OVRDirectComposition] RefreshCameraObjects(): Unable to open camera device " +
+                             cameraDevice);
+            return;
+        }
 
-		if (mainCamera.gameObject != previousMainCameraObject)
-		{
-			Debug.LogFormat("[OVRDirectComposition] Camera refreshed. Rebind camera to {0}", mainCamera.gameObject.name);
+        if (mainCamera.gameObject != previousMainCameraObject)
+        {
+            Debug.LogFormat("[OVRDirectComposition] Camera refreshed. Rebind camera to {0}",
+                mainCamera.gameObject.name);
 
-			OVRCompositionUtil.SafeDestroy(ref directCompositionCameraGameObject);
-			directCompositionCamera = null;
+            OVRCompositionUtil.SafeDestroy(ref directCompositionCameraGameObject);
+            directCompositionCamera = null;
 
-			RefreshCameraRig(parentObject, mainCamera);
+            RefreshCameraRig(parentObject, mainCamera);
 
-			Debug.Assert(directCompositionCameraGameObject == null);
-			if (configuration.instantiateMixedRealityCameraGameObject != null) 
-			{
-				directCompositionCameraGameObject = configuration.instantiateMixedRealityCameraGameObject(mainCamera.gameObject, OVRManager.MrcCameraType.Normal);
-			}
-			else
-			{
-				directCompositionCameraGameObject = Object.Instantiate(mainCamera.gameObject);
-			}
-			directCompositionCameraGameObject.name = "OculusMRC_DirectCompositionCamera";
-			directCompositionCameraGameObject.transform.parent = cameraInTrackingSpace ? cameraRig.trackingSpace : parentObject.transform;
-			if (directCompositionCameraGameObject.GetComponent<AudioListener>())
-			{
-				Object.Destroy(directCompositionCameraGameObject.GetComponent<AudioListener>());
-			}
-			if (directCompositionCameraGameObject.GetComponent<OVRManager>())
-			{
-				Object.Destroy(directCompositionCameraGameObject.GetComponent<OVRManager>());
-			}
-			directCompositionCamera = directCompositionCameraGameObject.GetComponent<Camera>();
-			directCompositionCamera.stereoTargetEye = StereoTargetEyeMask.None;
-			directCompositionCamera.depth = float.MaxValue;
-			directCompositionCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
-			directCompositionCamera.cullingMask = (directCompositionCamera.cullingMask & ~configuration.extraHiddenLayers) | configuration.extraVisibleLayers;
-			
+            Debug.Assert(directCompositionCameraGameObject == null);
+            if (configuration.instantiateMixedRealityCameraGameObject != null)
+                directCompositionCameraGameObject =
+                    configuration.instantiateMixedRealityCameraGameObject(mainCamera.gameObject,
+                        OVRManager.MrcCameraType.Normal);
+            else
+                directCompositionCameraGameObject = Object.Instantiate(mainCamera.gameObject);
+            directCompositionCameraGameObject.name = "OculusMRC_DirectCompositionCamera";
+            directCompositionCameraGameObject.transform.parent =
+                cameraInTrackingSpace ? cameraRig.trackingSpace : parentObject.transform;
+            if (directCompositionCameraGameObject.GetComponent<AudioListener>())
+                Object.Destroy(directCompositionCameraGameObject.GetComponent<AudioListener>());
+            if (directCompositionCameraGameObject.GetComponent<OVRManager>())
+                Object.Destroy(directCompositionCameraGameObject.GetComponent<OVRManager>());
+            directCompositionCamera = directCompositionCameraGameObject.GetComponent<Camera>();
+            directCompositionCamera.stereoTargetEye = StereoTargetEyeMask.None;
+            directCompositionCamera.depth = float.MaxValue;
+            directCompositionCamera.rect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
+            directCompositionCamera.cullingMask =
+                (directCompositionCamera.cullingMask & ~configuration.extraHiddenLayers) |
+                configuration.extraVisibleLayers;
 
-			Debug.Log("DirectComposition activated : useDynamicLighting " + (configuration.useDynamicLighting ? "ON" : "OFF"));
-			RefreshCameraFramePlaneObject(parentObject, directCompositionCamera, configuration);
 
-			previousMainCameraObject = mainCamera.gameObject;
-		}
-	}
+            Debug.Log("DirectComposition activated : useDynamicLighting " +
+                      (configuration.useDynamicLighting ? "ON" : "OFF"));
+            RefreshCameraFramePlaneObject(parentObject, directCompositionCamera, configuration);
 
-	public override void Update(GameObject gameObject, Camera mainCamera, OVRMixedRealityCaptureConfiguration configuration, OVRManager.TrackingOrigin trackingOrigin)
-	{
-		if (!hasCameraDeviceOpened)
-		{
-			return;
-		}
+            previousMainCameraObject = mainCamera.gameObject;
+        }
+    }
 
-		RefreshCameraObjects(gameObject, mainCamera, configuration);
+    public override void Update(GameObject gameObject, Camera mainCamera,
+        OVRMixedRealityCaptureConfiguration configuration, OVRManager.TrackingOrigin trackingOrigin)
+    {
+        if (!hasCameraDeviceOpened) return;
 
-		if (!OVRPlugin.SetHandNodePoseStateLatency(configuration.handPoseStateLatency))
-		{
-			Debug.LogWarning("HandPoseStateLatency is invalid. Expect a value between 0.0 to 0.5, get " + configuration.handPoseStateLatency);
-		}
+        RefreshCameraObjects(gameObject, mainCamera, configuration);
 
-		directCompositionCamera.clearFlags = mainCamera.clearFlags;
-		directCompositionCamera.backgroundColor = mainCamera.backgroundColor;
-		if (configuration.dynamicCullingMask) 
-		{
-			directCompositionCamera.cullingMask = (mainCamera.cullingMask & ~configuration.extraHiddenLayers) | configuration.extraVisibleLayers;
-		}
+        if (!OVRPlugin.SetHandNodePoseStateLatency(configuration.handPoseStateLatency))
+            Debug.LogWarning("HandPoseStateLatency is invalid. Expect a value between 0.0 to 0.5, get " +
+                             configuration.handPoseStateLatency);
 
-		directCompositionCamera.nearClipPlane = mainCamera.nearClipPlane;
-		directCompositionCamera.farClipPlane = mainCamera.farClipPlane;
+        directCompositionCamera.clearFlags = mainCamera.clearFlags;
+        directCompositionCamera.backgroundColor = mainCamera.backgroundColor;
+        if (configuration.dynamicCullingMask)
+            directCompositionCamera.cullingMask = (mainCamera.cullingMask & ~configuration.extraHiddenLayers) |
+                                                  configuration.extraVisibleLayers;
 
-		if (OVRMixedReality.useFakeExternalCamera || OVRPlugin.GetExternalCameraCount() == 0)
-		{
-			OVRPose trackingSpacePose = new OVRPose();
-			trackingSpacePose.position = trackingOrigin == OVRManager.TrackingOrigin.EyeLevel ?
-				OVRMixedReality.fakeCameraEyeLevelPosition :
-				OVRMixedReality.fakeCameraFloorLevelPosition;
-			trackingSpacePose.orientation = OVRMixedReality.fakeCameraRotation;
-			directCompositionCamera.fieldOfView = OVRMixedReality.fakeCameraFov;
-			directCompositionCamera.aspect = OVRMixedReality.fakeCameraAspect;
-			if (cameraInTrackingSpace)
-			{
-				directCompositionCamera.transform.FromOVRPose(trackingSpacePose, true);
-			}
-			else
-			{
-				OVRPose worldSpacePose = new OVRPose();
-				worldSpacePose = OVRExtensions.ToWorldSpacePose(trackingSpacePose);
-				directCompositionCamera.transform.FromOVRPose(worldSpacePose);
-			}
-		}
-		else
-		{
-			OVRPlugin.CameraExtrinsics extrinsics;
-			OVRPlugin.CameraIntrinsics intrinsics;
+        directCompositionCamera.nearClipPlane = mainCamera.nearClipPlane;
+        directCompositionCamera.farClipPlane = mainCamera.farClipPlane;
 
-			// So far, only support 1 camera for MR and always use camera index 0
-			if (OVRPlugin.GetMixedRealityCameraInfo(0, out extrinsics, out intrinsics))
-			{
-				float fovY = Mathf.Atan(intrinsics.FOVPort.UpTan) * Mathf.Rad2Deg * 2;
-				float aspect = intrinsics.FOVPort.LeftTan / intrinsics.FOVPort.UpTan;
-				directCompositionCamera.fieldOfView = fovY;
-				directCompositionCamera.aspect = aspect;
-				if (cameraInTrackingSpace)
-				{
-					OVRPose trackingSpacePose = ComputeCameraTrackingSpacePose(extrinsics);
-					directCompositionCamera.transform.FromOVRPose(trackingSpacePose, true);
-				}
-				else
-				{
-					OVRPose worldSpacePose = ComputeCameraWorldSpacePose(extrinsics);
-					directCompositionCamera.transform.FromOVRPose(worldSpacePose);
-				}
-			}
-			else
-			{
-				Debug.LogWarning("Failed to get external camera information");
-			}
-		}
+        if (OVRMixedReality.useFakeExternalCamera || OVRPlugin.GetExternalCameraCount() == 0)
+        {
+            var trackingSpacePose = new OVRPose();
+            trackingSpacePose.position = trackingOrigin == OVRManager.TrackingOrigin.EyeLevel
+                ? OVRMixedReality.fakeCameraEyeLevelPosition
+                : OVRMixedReality.fakeCameraFloorLevelPosition;
+            trackingSpacePose.orientation = OVRMixedReality.fakeCameraRotation;
+            directCompositionCamera.fieldOfView = OVRMixedReality.fakeCameraFov;
+            directCompositionCamera.aspect = OVRMixedReality.fakeCameraAspect;
+            if (cameraInTrackingSpace)
+            {
+                directCompositionCamera.transform.FromOVRPose(trackingSpacePose, true);
+            }
+            else
+            {
+                var worldSpacePose = new OVRPose();
+                worldSpacePose = OVRExtensions.ToWorldSpacePose(trackingSpacePose);
+                directCompositionCamera.transform.FromOVRPose(worldSpacePose);
+            }
+        }
+        else
+        {
+            OVRPlugin.CameraExtrinsics extrinsics;
+            OVRPlugin.CameraIntrinsics intrinsics;
 
-		if (hasCameraDeviceOpened)
-		{
-			if (boundaryMeshMaskTexture == null || boundaryMeshMaskTexture.width != Screen.width || boundaryMeshMaskTexture.height != Screen.height)
-			{
-				boundaryMeshMaskTexture = new RenderTexture(Screen.width, Screen.height, 0, RenderTextureFormat.R8);
-				boundaryMeshMaskTexture.Create();
-			}
-			UpdateCameraFramePlaneObject(mainCamera, directCompositionCamera, configuration, boundaryMeshMaskTexture);
-			directCompositionCamera.GetComponent<OVRCameraFrameCompositionManager>().boundaryMeshMaskTexture = boundaryMeshMaskTexture;
-		}
-	}
+            // So far, only support 1 camera for MR and always use camera index 0
+            if (OVRPlugin.GetMixedRealityCameraInfo(0, out extrinsics, out intrinsics))
+            {
+                var fovY = Mathf.Atan(intrinsics.FOVPort.UpTan) * Mathf.Rad2Deg * 2;
+                var aspect = intrinsics.FOVPort.LeftTan / intrinsics.FOVPort.UpTan;
+                directCompositionCamera.fieldOfView = fovY;
+                directCompositionCamera.aspect = aspect;
+                if (cameraInTrackingSpace)
+                {
+                    var trackingSpacePose = ComputeCameraTrackingSpacePose(extrinsics);
+                    directCompositionCamera.transform.FromOVRPose(trackingSpacePose, true);
+                }
+                else
+                {
+                    var worldSpacePose = ComputeCameraWorldSpacePose(extrinsics);
+                    directCompositionCamera.transform.FromOVRPose(worldSpacePose);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Failed to get external camera information");
+            }
+        }
 
-	public override void Cleanup()
-	{
-		base.Cleanup();
+        if (hasCameraDeviceOpened)
+        {
+            if (boundaryMeshMaskTexture == null || boundaryMeshMaskTexture.width != Screen.width ||
+                boundaryMeshMaskTexture.height != Screen.height)
+            {
+                boundaryMeshMaskTexture = new RenderTexture(Screen.width, Screen.height, 0, RenderTextureFormat.R8);
+                boundaryMeshMaskTexture.Create();
+            }
 
-		OVRCompositionUtil.SafeDestroy(ref directCompositionCameraGameObject);
-		directCompositionCamera = null;
+            UpdateCameraFramePlaneObject(mainCamera, directCompositionCamera, configuration, boundaryMeshMaskTexture);
+            directCompositionCamera.GetComponent<OVRCameraFrameCompositionManager>().boundaryMeshMaskTexture =
+                boundaryMeshMaskTexture;
+        }
+    }
 
-		Debug.Log("DirectComposition deactivated");
-	}
+    public override void Cleanup()
+    {
+        base.Cleanup();
+
+        OVRCompositionUtil.SafeDestroy(ref directCompositionCameraGameObject);
+        directCompositionCamera = null;
+
+        Debug.Log("DirectComposition deactivated");
+    }
 }
 
 #endif

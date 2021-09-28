@@ -47,29 +47,22 @@ namespace OculusSampleFramework
 {
     public class GrabManager : MonoBehaviour
     {
-        Collider m_grabVolume;
+        private Collider m_grabVolume;
 
         public Color OutlineColorInRange;
         public Color OutlineColorHighlighted;
         public Color OutlineColorOutOfRange;
 
-        void OnTriggerEnter(Collider otherCollider)
+        private void OnTriggerEnter(Collider otherCollider)
         {
-            DistanceGrabbable dg = otherCollider.GetComponentInChildren<DistanceGrabbable>();
-            if(dg)
-            {
-                dg.InRange = true;
-            }
-
+            var dg = otherCollider.GetComponentInChildren<DistanceGrabbable>();
+            if (dg) dg.InRange = true;
         }
-        
-        void OnTriggerExit(Collider otherCollider)
+
+        private void OnTriggerExit(Collider otherCollider)
         {
-            DistanceGrabbable dg = otherCollider.GetComponentInChildren<DistanceGrabbable>();
-            if(dg)
-            {
-                dg.InRange = false;
-            }
+            var dg = otherCollider.GetComponentInChildren<DistanceGrabbable>();
+            if (dg) dg.InRange = false;
         }
     }
 }

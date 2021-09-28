@@ -18,6 +18,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ************************************************************************************/
+
 using UnityEngine;
 using UnityEngine.Audio;
 using System.Collections;
@@ -25,106 +26,100 @@ using System.Collections.Generic;
 
 public struct ReflectionSnapshot
 {
-    public  AudioMixerSnapshot mixerSnapshot;
-    public  float              fadeTime;
+    public AudioMixerSnapshot mixerSnapshot;
+    public float fadeTime;
 }
 
-public class ONSPReflectionZone : MonoBehaviour 
+public class ONSPReflectionZone : MonoBehaviour
 {
     public AudioMixerSnapshot mixerSnapshot = null;
-    public float fadeTime                   = 0.0f;
+    public float fadeTime = 0.0f;
 
-	// Push/pop list
-    private static Stack<ReflectionSnapshot> snapshotList        = new Stack<ReflectionSnapshot>();
-    private static ReflectionSnapshot        currentSnapshot     = new ReflectionSnapshot();
+    // Push/pop list
+    private static Stack<ReflectionSnapshot> snapshotList = new Stack<ReflectionSnapshot>();
+    private static ReflectionSnapshot currentSnapshot = new ReflectionSnapshot();
 
-	/// <summary>
-	/// Start this instance.
-	/// </summary>
-	void Start () 
-	{
-	}
+    /// <summary>
+    /// Start this instance.
+    /// </summary>
+    private void Start()
+    {
+    }
 
-	/// <summary>
-	/// Update this instance.
-	/// </summary>
-	void Update () 
-	{
-	}
+    /// <summary>
+    /// Update this instance.
+    /// </summary>
+    private void Update()
+    {
+    }
 
-	/// <summary>
-	/// Raises the trigger enter event.
-	/// </summary>
-	/// <param name="other">Other.</param>
-	void OnTriggerEnter(Collider other) 
-	{
-		if(CheckForAudioListener(other.gameObject) == true)
-		{
-            PushCurrentMixerShapshot();
-		}
-	}
+    /// <summary>
+    /// Raises the trigger enter event.
+    /// </summary>
+    /// <param name="other">Other.</param>
+    private void OnTriggerEnter(Collider other)
+    {
+        if (CheckForAudioListener(other.gameObject) == true) PushCurrentMixerShapshot();
+    }
 
-	/// <summary>
-	/// Raises the trigger exit event.
-	/// </summary>
-	/// <param name="other">Other.</param>
-	void OnTriggerExit(Collider other)
-	{
-		if(CheckForAudioListener(other.gameObject) == true)
-		{
-			PopCurrentMixerSnapshot();			
-		}
-	}
+    /// <summary>
+    /// Raises the trigger exit event.
+    /// </summary>
+    /// <param name="other">Other.</param>
+    private void OnTriggerExit(Collider other)
+    {
+        if (CheckForAudioListener(other.gameObject) == true) PopCurrentMixerSnapshot();
+    }
 
 
-	// * * * * * * * * * * * * *
-	// Private functions
+    // * * * * * * * * * * * * *
+    // Private functions
 
-	/// <summary>
-	/// Checks for audio listener.
-	/// </summary>
-	/// <returns><c>true</c>, if for audio listener was checked, <c>false</c> otherwise.</returns>
-	/// <param name="gameObject">Game object.</param>
-	bool CheckForAudioListener(GameObject gameObject)
-	{
-		AudioListener al = gameObject.GetComponentInChildren<AudioListener>();
-		if(al != null)
-			return true;
+    /// <summary>
+    /// Checks for audio listener.
+    /// </summary>
+    /// <returns><c>true</c>, if for audio listener was checked, <c>false</c> otherwise.</returns>
+    /// <param name="gameObject">Game object.</param>
+    private bool CheckForAudioListener(GameObject gameObject)
+    {
+        var al = gameObject.GetComponentInChildren<AudioListener>();
+        if (al != null)
+            return true;
 
-		return false;
-	}
-	
-	/// <summary>
-	/// Pushs the current mixer snapshot onto the snapshot stack
-	/// </summary>
-	void PushCurrentMixerShapshot()
-	{
-        ReflectionSnapshot css = currentSnapshot;
-        snapshotList.Push(css);	
+        return false;
+    }
 
-		// Set the zone reflection values
-		// NOTE: There will be conditions that might need resolution when dealing with volumes that 
-		// overlap. Best practice is to never have volumes half-way inside other volumes; larger
-		// volumes should completely contain smaller volumes
-		SetReflectionValues();
-	}
+    /// <summary>
+    /// Pushs the current mixer snapshot onto the snapshot stack
+    /// </summary>
+    private void PushCurrentMixerShapshot()
+    {
+        var css = currentSnapshot;
+        snapshotList.Push(css);
 
-    	/// <summary>
-	/// Pops the current reflection values from reflectionsList stack.
-	/// </summary>
-	void PopCurrentMixerSnapshot()
-	{
-        ReflectionSnapshot snapshot = snapshotList.Pop();
+        // Set the zone reflection values
+        // NOTE: There will be conditions that might need resolution when dealing with volumes that 
+        // overlap. Best practice is to never have volumes half-way inside other volumes; larger
+        // volumes should completely contain smaller volumes
+        SetReflectionValues();
+    }
 
-		// Set the popped reflection values
+    /// <summary>
+    /// Pops the current reflection values from reflectionsList stack.
+    /// </summary>
+    private void PopCurrentMixerSnapshot()
+    {
+        var snapshot = snapshotList.Pop();
+
+        // Set the popped reflection values
         SetReflectionValues(ref snapshot);
-	}
+    }
 
-	/// <summary>
-	/// Sets the reflection values. This is done when entering a zone (use zone values).
-	/// </summary>
-	void SetReflectionValues()
-	{
+    /// <summary>
+    /// Sets the reflection values. This is done when entering a zone (use zone values).
+    /// </summary>
+    private void SetReflectionValues()
+    {
         if (mixerSnapshot != null)
         {
             Debug.Log("Setting off snapshot " + mixerSnapshot.name);
@@ -132,7 +127,7 @@ public class ONSPReflectionZone : MonoBehaviour
 
             // Set the current snapshot to be equal to this one
             currentSnapshot.mixerSnapshot = mixerSnapshot;
-            currentSnapshot.fadeTime      = fadeTime;
+            currentSnapshot.fadeTime = fadeTime;
         }
         else
         {
@@ -140,13 +135,13 @@ public class ONSPReflectionZone : MonoBehaviour
         }
     }
 
-	/// <summary>
-	/// Sets the reflection values. This is done when exiting a zone (use popped values).
-	/// </summary>
-	/// <param name="rm">Rm.</param>
-    void SetReflectionValues(ref ReflectionSnapshot mss)
-	{
-        if(mss.mixerSnapshot != null)
+    /// <summary>
+    /// Sets the reflection values. This is done when exiting a zone (use popped values).
+    /// </summary>
+    /// <param name="rm">Rm.</param>
+    private void SetReflectionValues(ref ReflectionSnapshot mss)
+    {
+        if (mss.mixerSnapshot != null)
         {
             Debug.Log("Setting off snapshot " + mss.mixerSnapshot.name);
             mss.mixerSnapshot.TransitionTo(mss.fadeTime);
@@ -154,7 +149,6 @@ public class ONSPReflectionZone : MonoBehaviour
             // Set the current snapshot to be equal to this one
             currentSnapshot.mixerSnapshot = mss.mixerSnapshot;
             currentSnapshot.fadeTime = mss.fadeTime;
-
         }
         else
         {

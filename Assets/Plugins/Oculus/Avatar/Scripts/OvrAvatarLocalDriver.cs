@@ -4,12 +4,12 @@ using System;
 using System.Collections.Generic;
 using Oculus.Avatar;
 
-public class OvrAvatarLocalDriver : OvrAvatarDriver {
+public class OvrAvatarLocalDriver : OvrAvatarDriver
+{
+    private Vector3 centerEyePosition = Vector3.zero;
+    private Quaternion centerEyeRotation = Quaternion.identity;
 
-    Vector3 centerEyePosition = Vector3.zero;
-    Quaternion centerEyeRotation = Quaternion.identity;
-
-    ControllerPose GetMalibuControllerPose(OVRInput.Controller controller)
+    private ControllerPose GetMalibuControllerPose(OVRInput.Controller controller)
     {
         ovrAvatarButton buttons = 0;
         if (OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controller)) buttons |= ovrAvatarButton.One;
@@ -21,12 +21,13 @@ public class OvrAvatarLocalDriver : OvrAvatarDriver {
             joystickPosition = OVRInput.Get(OVRInput.Axis2D.PrimaryTouchpad, controller),
             indexTrigger = 0f,
             handTrigger = 0f,
-            isActive = (OVRInput.GetActiveController() & controller) != 0,
+            isActive = (OVRInput.GetActiveController() & controller) != 0
         };
     }
 
-    float voiceAmplitude = 0.0f;
-    ControllerPose GetControllerPose(OVRInput.Controller controller)
+    private float voiceAmplitude = 0.0f;
+
+    private ControllerPose GetControllerPose(OVRInput.Controller controller)
     {
         ovrAvatarButton buttons = 0;
         if (OVRInput.Get(OVRInput.Button.One, controller)) buttons |= ovrAvatarButton.One;
@@ -50,16 +51,18 @@ public class OvrAvatarLocalDriver : OvrAvatarDriver {
             joystickPosition = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, controller),
             indexTrigger = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, controller),
             handTrigger = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, controller),
-            isActive = (OVRInput.GetActiveController() & controller) != 0,
+            isActive = (OVRInput.GetActiveController() & controller) != 0
         };
     }
 
     private void CalculateCurrentPose()
     {
         // Platform and device agnostic calls to return center eye pose, used to pass in head pose to sdk
-        OVRNodeStateProperties.GetNodeStatePropertyVector3(UnityEngine.XR.XRNode.CenterEye, NodeStatePropertyType.Position,
+        OVRNodeStateProperties.GetNodeStatePropertyVector3(UnityEngine.XR.XRNode.CenterEye,
+            NodeStatePropertyType.Position,
             OVRPlugin.Node.EyeCenter, OVRPlugin.Step.Render, out centerEyePosition);
-        OVRNodeStateProperties.GetNodeStatePropertyQuaternion(UnityEngine.XR.XRNode.CenterEye, NodeStatePropertyType.Orientation,
+        OVRNodeStateProperties.GetNodeStatePropertyQuaternion(UnityEngine.XR.XRNode.CenterEye,
+            NodeStatePropertyType.Orientation,
             OVRPlugin.Node.EyeCenter, OVRPlugin.Step.Render, out centerEyeRotation);
 
         CurrentPose = new PoseFrame
@@ -72,7 +75,7 @@ public class OvrAvatarLocalDriver : OvrAvatarDriver {
             handRightPosition = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch),
             handRightRotation = OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch),
             controllerLeftPose = GetControllerPose(OVRInput.Controller.LTouch),
-            controllerRightPose = GetControllerPose(OVRInput.Controller.RTouch),
+            controllerRightPose = GetControllerPose(OVRInput.Controller.RTouch)
         };
     }
 

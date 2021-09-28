@@ -21,8 +21,8 @@ public class OvrAvatarSkinnedMeshPBSV2RenderComponent : OvrAvatarRenderComponent
         IntPtr renderPart,
         ovrAvatarRenderPart_SkinnedMeshRenderPBS_V2 skinnedMeshRender,
         OvrAvatarMaterialManager materialManager,
-        int thirdPersonLayer, 
-        int firstPersonLayer, 
+        int thirdPersonLayer,
+        int firstPersonLayer,
         bool combinedMesh,
         ovrAvatarAssetLevelOfDetail lod,
         bool assignExpressiveParams,
@@ -33,8 +33,8 @@ public class OvrAvatarSkinnedMeshPBSV2RenderComponent : OvrAvatarRenderComponent
         isCombinedMaterial = combinedMesh;
 
         mesh = CreateSkinnedMesh(
-            skinnedMeshRender.meshAssetID, 
-            skinnedMeshRender.visibilityMask, 
+            skinnedMeshRender.meshAssetID,
+            skinnedMeshRender.visibilityMask,
             thirdPersonLayer,
             firstPersonLayer);
 
@@ -55,31 +55,25 @@ public class OvrAvatarSkinnedMeshPBSV2RenderComponent : OvrAvatarRenderComponent
 
         var mainShader = isCombinedMaterial ? combinedComponentShader : singleComponentShader;
 
-        if (isControllerModel)
-        {
-            mainShader = avatar.ControllerShader;
-        }
+        if (isControllerModel) mainShader = avatar.ControllerShader;
 
-       AvatarLogger.Log("OvrAvatarSkinnedMeshPBSV2RenderComponent Shader is: " + mainShader != null 
-           ? mainShader.name : "null");
+        AvatarLogger.Log("OvrAvatarSkinnedMeshPBSV2RenderComponent Shader is: " + mainShader != null
+            ? mainShader.name
+            : "null");
 
         if (EnableExpressive)
         {
             ExpressiveParameters = CAPI.ovrAvatar_GetExpressiveParameters(avatar.sdkAvatar);
             var eyeShader = avatar.EyeLens;
 
-            Material[] matArray = new Material[2];
+            var matArray = new Material[2];
             matArray[0] = CreateAvatarMaterial(gameObject.name + MAIN_MATERIAL_NAME, mainShader);
             matArray[1] = CreateAvatarMaterial(gameObject.name + EYE_MATERIAL_NAME, eyeShader);
 
             if (avatar.UseTransparentRenderQueue)
-            {
                 SetMaterialTransparent(matArray[0]);
-            }
             else
-            {
                 SetMaterialOpaque(matArray[0]);
-            }
             // Eye lens shader queue is transparent and set from shader
             matArray[1].renderQueue = -1;
             mesh.materials = matArray;
@@ -88,14 +82,11 @@ public class OvrAvatarSkinnedMeshPBSV2RenderComponent : OvrAvatarRenderComponent
         {
             mesh.sharedMaterial = CreateAvatarMaterial(gameObject.name + DEFAULT_MATERIAL_NAME, mainShader);
             if (avatar.UseTransparentRenderQueue && !isControllerModel)
-            {
                 SetMaterialTransparent(mesh.sharedMaterial);
-            }
             else
-            {
                 SetMaterialOpaque(mesh.sharedMaterial);
-            }
         }
+
         bones = mesh.bones;
 
         if (isCombinedMaterial)
@@ -113,27 +104,23 @@ public class OvrAvatarSkinnedMeshPBSV2RenderComponent : OvrAvatarRenderComponent
     }
 
     public void UpdateSkinnedMeshRender(
-        OvrAvatarComponent component, 
-        OvrAvatar avatar, 
+        OvrAvatarComponent component,
+        OvrAvatar avatar,
         IntPtr renderPart)
     {
-        ovrAvatarVisibilityFlags visibilityMask 
+        var visibilityMask
             = CAPI.ovrAvatarSkinnedMeshRenderPBSV2_GetVisibilityMask(renderPart);
 
-        ovrAvatarTransform localTransform 
+        var localTransform
             = CAPI.ovrAvatarSkinnedMeshRenderPBSV2_GetTransform(renderPart);
 
         UpdateSkinnedMesh(avatar, bones, localTransform, visibilityMask, renderPart);
 
-        bool isActive = gameObject.activeSelf;
+        var isActive = gameObject.activeSelf;
 
         if (mesh != null && !previouslyActive && isActive)
-        {
             if (!isCombinedMaterial)
-            {
                 InitializeSingleComponentMaterial(renderPart, (int)avatar.LevelOfDetail - 1);
-            }
-        }
 
         if (blendShapeCount > 0)
         {
@@ -141,7 +128,7 @@ public class OvrAvatarSkinnedMeshPBSV2RenderComponent : OvrAvatarRenderComponent
             CAPI.ovrAvatarSkinnedMeshRender_GetBlendShapeParams(renderPart, ref blendShapeParams);
             for (uint i = 0; i < blendShapeParams.blendShapeParamCount && i < blendShapeCount; i++)
             {
-                float value = blendShapeParams.blendShapeParams[i];
+                var value = blendShapeParams.blendShapeParams[i];
                 mesh.SetBlendShapeWeight((int)i, value * BLEND_MULTIPLIER);
             }
         }
@@ -151,41 +138,31 @@ public class OvrAvatarSkinnedMeshPBSV2RenderComponent : OvrAvatarRenderComponent
 
     private void InitializeSingleComponentMaterial(IntPtr renderPart, int lodIndex)
     {
-        ovrAvatarPBSMaterialState materialState =
+        var materialState =
             CAPI.ovrAvatarSkinnedMeshRenderPBSV2_GetPBSMaterialState(renderPart);
 
-        int componentType = (int)OvrAvatarMaterialManager.GetComponentType(gameObject.name);
+        var componentType = (int)OvrAvatarMaterialManager.GetComponentType(gameObject.name);
 
-        Texture2D diffuseTexture = OvrAvatarComponent.GetLoadedTexture(materialState.albedoTextureID);
-        Texture2D normalTexture = OvrAvatarComponent.GetLoadedTexture(materialState.normalTextureID);
-        Texture2D metallicTexture = OvrAvatarComponent.GetLoadedTexture(materialState.metallicnessTextureID);
-        
+        var diffuseTexture = OvrAvatarComponent.GetLoadedTexture(materialState.albedoTextureID);
+        var normalTexture = OvrAvatarComponent.GetLoadedTexture(materialState.normalTextureID);
+        var metallicTexture = OvrAvatarComponent.GetLoadedTexture(materialState.metallicnessTextureID);
+
         if (diffuseTexture != null)
-        {
             avatarMaterialManager.AddTextureIDToTextureManager(materialState.albedoTextureID, true);
-        }
         else
-        {
-            diffuseTexture = OvrAvatarSDKManager.Instance.GetTextureCopyManager().FallbackTextureSets[lodIndex].DiffuseRoughness;
-        }
+            diffuseTexture = OvrAvatarSDKManager.Instance.GetTextureCopyManager().FallbackTextureSets[lodIndex]
+                .DiffuseRoughness;
         diffuseTexture.anisoLevel = 4;
         if (normalTexture != null)
-        {
             avatarMaterialManager.AddTextureIDToTextureManager(materialState.normalTextureID, true);
-        }
         else
-        {
             normalTexture = OvrAvatarSDKManager.Instance.GetTextureCopyManager().FallbackTextureSets[lodIndex].Normal;
-        }
         normalTexture.anisoLevel = 4;
         if (metallicTexture != null)
-        {
             avatarMaterialManager.AddTextureIDToTextureManager(materialState.metallicnessTextureID, true);
-        }
         else
-        {
-            metallicTexture = OvrAvatarSDKManager.Instance.GetTextureCopyManager().FallbackTextureSets[lodIndex].DiffuseRoughness;
-        }
+            metallicTexture = OvrAvatarSDKManager.Instance.GetTextureCopyManager().FallbackTextureSets[lodIndex]
+                .DiffuseRoughness;
         metallicTexture.anisoLevel = 16;
 
         mesh.materials[0].SetTexture(OvrAvatarMaterialManager.AVATAR_SHADER_MAINTEX, diffuseTexture);
@@ -204,14 +181,12 @@ public class OvrAvatarSkinnedMeshPBSV2RenderComponent : OvrAvatarRenderComponent
         mesh.GetClosestReflectionProbes(avatarMaterialManager.ReflectionProbes);
         if (avatarMaterialManager.ReflectionProbes != null &&
             avatarMaterialManager.ReflectionProbes.Count > 0)
-        {
             mesh.materials[0].SetTexture(OvrAvatarMaterialManager.AVATAR_SHADER_CUBEMAP,
                 avatarMaterialManager.ReflectionProbes[0].probe.texture);
-        }
 
         if (EnableExpressive)
         {
-            mesh.materials[0].SetVector(OvrAvatarMaterialManager.AVATAR_SHADER_IRIS_COLOR, 
+            mesh.materials[0].SetVector(OvrAvatarMaterialManager.AVATAR_SHADER_IRIS_COLOR,
                 ExpressiveParameters.irisColor);
             mesh.materials[0].SetVector(OvrAvatarMaterialManager.AVATAR_SHADER_LIP_COLOR,
                 ExpressiveParameters.lipColor);
@@ -232,7 +207,7 @@ public class OvrAvatarSkinnedMeshPBSV2RenderComponent : OvrAvatarRenderComponent
 
     private void InitializeCombinedMaterial(IntPtr renderPart, int lodIndex)
     {
-        ovrAvatarPBSMaterialState[] materialStates = CAPI.ovrAvatar_GetBodyPBSMaterialStates(renderPart);
+        var materialStates = CAPI.ovrAvatar_GetBodyPBSMaterialStates(renderPart);
 
         if (materialStates.Length == (int)ovrAvatarBodyPartType.Count)
         {
@@ -241,18 +216,18 @@ public class OvrAvatarSkinnedMeshPBSV2RenderComponent : OvrAvatarRenderComponent
 
             AvatarLogger.Log("InitializeCombinedMaterial - Loading Material States");
 
-            for (int i = 0; i < materialStates.Length; i++)
+            for (var i = 0; i < materialStates.Length; i++)
             {
                 localProperties[i].TypeIndex = (ovrAvatarBodyPartType)i;
                 localProperties[i].Color = materialStates[i].albedoMultiplier;
                 localProperties[i].DiffuseIntensity = OvrAvatarMaterialManager.DiffuseIntensities[i];
                 localProperties[i].RimIntensity = OvrAvatarMaterialManager.RimIntensities[i];
                 localProperties[i].ReflectionIntensity = OvrAvatarMaterialManager.ReflectionIntensities[i];
-                
+
                 var diffuse = OvrAvatarComponent.GetLoadedTexture(materialStates[i].albedoTextureID);
                 var normal = OvrAvatarComponent.GetLoadedTexture(materialStates[i].normalTextureID);
                 var roughness = OvrAvatarComponent.GetLoadedTexture(materialStates[i].metallicnessTextureID);
-                
+
                 if (diffuse != null)
                 {
                     localProperties[i].Textures[(int)OvrAvatarMaterialManager.TextureType.DiffuseTextures] = diffuse;
@@ -261,8 +236,10 @@ public class OvrAvatarSkinnedMeshPBSV2RenderComponent : OvrAvatarRenderComponent
                 else
                 {
                     localProperties[i].Textures[(int)OvrAvatarMaterialManager.TextureType.DiffuseTextures] =
-                        OvrAvatarSDKManager.Instance.GetTextureCopyManager().FallbackTextureSets[lodIndex].DiffuseRoughness;
+                        OvrAvatarSDKManager.Instance.GetTextureCopyManager().FallbackTextureSets[lodIndex]
+                            .DiffuseRoughness;
                 }
+
                 localProperties[i].Textures[(int)OvrAvatarMaterialManager.TextureType.DiffuseTextures].anisoLevel = 4;
 
                 if (normal != null)
@@ -275,6 +252,7 @@ public class OvrAvatarSkinnedMeshPBSV2RenderComponent : OvrAvatarRenderComponent
                     localProperties[i].Textures[(int)OvrAvatarMaterialManager.TextureType.NormalMaps] =
                         OvrAvatarSDKManager.Instance.GetTextureCopyManager().FallbackTextureSets[lodIndex].Normal;
                 }
+
                 localProperties[i].Textures[(int)OvrAvatarMaterialManager.TextureType.NormalMaps].anisoLevel = 4;
 
                 if (roughness != null)
@@ -285,8 +263,10 @@ public class OvrAvatarSkinnedMeshPBSV2RenderComponent : OvrAvatarRenderComponent
                 else
                 {
                     localProperties[i].Textures[(int)OvrAvatarMaterialManager.TextureType.RoughnessMaps] =
-                        OvrAvatarSDKManager.Instance.GetTextureCopyManager().FallbackTextureSets[lodIndex].DiffuseRoughness;
+                        OvrAvatarSDKManager.Instance.GetTextureCopyManager().FallbackTextureSets[lodIndex]
+                            .DiffuseRoughness;
                 }
+
                 localProperties[i].Textures[(int)OvrAvatarMaterialManager.TextureType.RoughnessMaps].anisoLevel = 16;
 
                 AvatarLogger.Log(localProperties[i].TypeIndex.ToString());
@@ -316,7 +296,7 @@ public class OvrAvatarSkinnedMeshPBSV2RenderComponent : OvrAvatarRenderComponent
             }
 
             avatarMaterialManager.ValidateTextures(materialStates);
-        }   
+        }
     }
 
     private void SetMaterialTransparent(Material mat)

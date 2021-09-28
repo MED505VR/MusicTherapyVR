@@ -26,7 +26,6 @@ namespace UnityEngine.EventSystems
         public OVRPointerEventData(EventSystem eventSystem)
             : base(eventSystem)
         {
-
         }
 
         public Ray worldSpaceRay;
@@ -47,7 +46,6 @@ namespace UnityEngine.EventSystems
             sb.AppendLine("<b>Use Drag Threshold</b>: " + useDragThreshold);
             return sb.ToString();
         }
-
     }
 
 
@@ -56,35 +54,33 @@ namespace UnityEngine.EventSystems
     /// </summary>
     public static class PointerEventDataExtension
     {
-
         public static bool IsVRPointer(this PointerEventData pointerEventData)
         {
-            return (pointerEventData is OVRPointerEventData);
+            return pointerEventData is OVRPointerEventData;
         }
+
         public static Ray GetRay(this PointerEventData pointerEventData)
         {
-            OVRPointerEventData vrPointerEventData = pointerEventData as OVRPointerEventData;
+            var vrPointerEventData = pointerEventData as OVRPointerEventData;
             Assert.IsNotNull(vrPointerEventData);
 
             return vrPointerEventData.worldSpaceRay;
         }
+
         public static Vector2 GetSwipeStart(this PointerEventData pointerEventData)
         {
-            OVRPointerEventData vrPointerEventData = pointerEventData as OVRPointerEventData;
+            var vrPointerEventData = pointerEventData as OVRPointerEventData;
             Assert.IsNotNull(vrPointerEventData);
 
             return vrPointerEventData.swipeStart;
         }
+
         public static void SetSwipeStart(this PointerEventData pointerEventData, Vector2 start)
         {
-            OVRPointerEventData vrPointerEventData = pointerEventData as OVRPointerEventData;
+            var vrPointerEventData = pointerEventData as OVRPointerEventData;
             Assert.IsNotNull(vrPointerEventData);
 
             vrPointerEventData.swipeStart = start;
         }
-
-
-
-
     }
 }

@@ -31,31 +31,29 @@ public class OVRManifestPreprocessor
     {
         var so = ScriptableObject.CreateInstance(typeof(OVRPluginUpdaterStub));
         var script = MonoScript.FromScriptableObject(so);
-        string assetPath = AssetDatabase.GetAssetPath(script);
-        string editorDir = Directory.GetParent(assetPath).FullName;
-        string srcFile = editorDir + "/AndroidManifest.OVRSubmission.xml";
+        var assetPath = AssetDatabase.GetAssetPath(script);
+        var editorDir = Directory.GetParent(assetPath).FullName;
+        var srcFile = editorDir + "/AndroidManifest.OVRSubmission.xml";
 
         if (!File.Exists(srcFile))
         {
             Debug.LogError("Cannot find Android manifest template for submission." +
-                " Please delete the OVR folder and reimport the Oculus Utilities.");
+                           " Please delete the OVR folder and reimport the Oculus Utilities.");
             return;
         }
 
-        string manifestFolder = Application.dataPath + "/Plugins/Android";
+        var manifestFolder = Application.dataPath + "/Plugins/Android";
 
         if (!Directory.Exists(manifestFolder))
             Directory.CreateDirectory(manifestFolder);
 
-        string dstFile = manifestFolder + "/AndroidManifest.xml";
+        var dstFile = manifestFolder + "/AndroidManifest.xml";
 
         if (File.Exists(dstFile))
-        {
-            if (!EditorUtility.DisplayDialog("AndroidManifest.xml Already Exists!", "Would you like to replace the existing manifest with a new one? All modifications will be lost.", "Replace", "Cancel"))
-            {
+            if (!EditorUtility.DisplayDialog("AndroidManifest.xml Already Exists!",
+                "Would you like to replace the existing manifest with a new one? All modifications will be lost.",
+                "Replace", "Cancel"))
                 return;
-            }
-        }
 
         PatchAndroidManifest(srcFile, dstFile, false);
 
@@ -65,18 +63,18 @@ public class OVRManifestPreprocessor
     [MenuItem("Oculus/Tools/Update AndroidManifest.xml")]
     public static void UpdateAndroidManifest()
     {
-        string manifestFile = "Assets/Plugins/Android/AndroidManifest.xml";
+        var manifestFile = "Assets/Plugins/Android/AndroidManifest.xml";
 
         if (!File.Exists(manifestFile))
         {
-            Debug.LogError("Unable to update manifest because it does not exist! Run \"Create store-compatible AndroidManifest.xml\" first");
+            Debug.LogError(
+                "Unable to update manifest because it does not exist! Run \"Create store-compatible AndroidManifest.xml\" first");
             return;
         }
 
-        if (!EditorUtility.DisplayDialog("Update AndroidManifest.xml", "This will overwrite all Oculus specific AndroidManifest Settings. Continue?", "Overwrite", "Cancel"))
-        {
-            return;
-        }
+        if (!EditorUtility.DisplayDialog("Update AndroidManifest.xml",
+            "This will overwrite all Oculus specific AndroidManifest Settings. Continue?", "Overwrite",
+            "Cancel")) return;
 
         PatchAndroidManifest(manifestFile, skipExistingAttributes: false);
         AssetDatabase.Refresh();
@@ -89,18 +87,17 @@ public class OVRManifestPreprocessor
         AssetDatabase.Refresh();
     }
 
-    private static void AddOrRemoveTag(XmlDocument doc, string @namespace, string path, string elementName, string name, bool required, bool modifyIfFound, params string[] attrs) // name, value pairs	
+    private static void AddOrRemoveTag(XmlDocument doc, string @namespace, string path, string elementName, string name,
+        bool required, bool modifyIfFound, params string[] attrs) // name, value pairs	
     {
         var nodes = doc.SelectNodes(path + "/" + elementName);
         XmlElement element = null;
         foreach (XmlElement e in nodes)
-        {
             if (name == null || name == e.GetAttribute("name", @namespace))
             {
                 element = e;
                 break;
             }
-        }
 
         if (required)
         {
@@ -112,52 +109,41 @@ public class OVRManifestPreprocessor
                 parent.AppendChild(element);
             }
 
-            for (int i = 0; i < attrs.Length; i += 2)
-            {
+            for (var i = 0; i < attrs.Length; i += 2)
                 if (modifyIfFound || string.IsNullOrEmpty(element.GetAttribute(attrs[i], @namespace)))
                 {
                     if (attrs[i + 1] != null)
-                    {
                         element.SetAttribute(attrs[i], @namespace, attrs[i + 1]);
-                    }
                     else
-                    {
                         element.RemoveAttribute(attrs[i], @namespace);
-                    }
                 }
-            }
         }
         else
         {
-            if (element != null && modifyIfFound)
-            {
-                element.ParentNode.RemoveChild(element);
-            }
+            if (element != null && modifyIfFound) element.ParentNode.RemoveChild(element);
         }
     }
 
-    public static void PatchAndroidManifest(string sourceFile, string destinationFile = null, bool skipExistingAttributes = true, bool enableSecurity = false)
+    public static void PatchAndroidManifest(string sourceFile, string destinationFile = null,
+        bool skipExistingAttributes = true, bool enableSecurity = false)
     {
-        if (destinationFile == null)
-        {
-            destinationFile = sourceFile;
-        }
+        if (destinationFile == null) destinationFile = sourceFile;
 
-        bool modifyIfFound = !skipExistingAttributes;
+        var modifyIfFound = !skipExistingAttributes;
 
         try
         {
-            OVRProjectConfig projectConfig = OVRProjectConfig.GetProjectConfig();
+            var projectConfig = OVRProjectConfig.GetProjectConfig();
 
             // Load android manfiest file
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.Load(sourceFile);
 
             string androidNamepsaceURI;
-            XmlElement element = (XmlElement)doc.SelectSingleNode("/manifest");
+            var element = (XmlElement)doc.SelectSingleNode("/manifest");
             if (element == null)
             {
-                UnityEngine.Debug.LogError("Could not find manifest tag in android manifest.");
+                Debug.LogError("Could not find manifest tag in android manifest.");
                 return;
             }
 
@@ -165,7 +151,7 @@ public class OVRManifestPreprocessor
             androidNamepsaceURI = element.GetAttribute("xmlns:android");
             if (string.IsNullOrEmpty(androidNamepsaceURI))
             {
-                UnityEngine.Debug.LogError("Could not find Android Namespace in manifest.");
+                Debug.LogError("Could not find Android Namespace in manifest.");
                 return;
             }
 
@@ -175,23 +161,23 @@ public class OVRManifestPreprocessor
                 "/manifest/application/activity/intent-filter",
                 "category",
                 "android.intent.category.LAUNCHER",
-                required: false,
-                modifyIfFound: true); // always remove launcher
+                false,
+                true); // always remove launcher
             AddOrRemoveTag(doc,
                 androidNamepsaceURI,
                 "/manifest/application/activity/intent-filter",
                 "category",
                 "android.intent.category.LEANBACK_LAUNCHER",
-                required: false,
-                modifyIfFound: true); // always remove leanback launcher
+                false,
+                true); // always remove leanback launcher
             // add info category
             AddOrRemoveTag(doc,
                 androidNamepsaceURI,
                 "/manifest/application/activity/intent-filter",
                 "category",
                 "android.intent.category.INFO",
-                required: true,
-                modifyIfFound: true); // always add info launcher
+                true,
+                true); // always add info launcher
 
             // First add or remove headtracking flag if targeting Quest
             AddOrRemoveTag(doc,
@@ -209,8 +195,10 @@ public class OVRManifestPreprocessor
             // OVRProjectConfig.HandTrackingSupport.ControllersOnly => manifest entry not present
             // OVRProjectConfig.HandTrackingSupport.ControllersAndHands => manifest entry present and required=false
             // OVRProjectConfig.HandTrackingSupport.HandsOnly => manifest entry present and required=true
-            OVRProjectConfig.HandTrackingSupport targetHandTrackingSupport = OVRProjectConfig.GetProjectConfig().handTrackingSupport;
-            bool handTrackingEntryNeeded = OVRDeviceSelector.isTargetDeviceQuestFamily && (targetHandTrackingSupport != OVRProjectConfig.HandTrackingSupport.ControllersOnly);
+            var targetHandTrackingSupport = OVRProjectConfig.GetProjectConfig().handTrackingSupport;
+            var handTrackingEntryNeeded = OVRDeviceSelector.isTargetDeviceQuestFamily &&
+                                          targetHandTrackingSupport !=
+                                          OVRProjectConfig.HandTrackingSupport.ControllersOnly;
 
             AddOrRemoveTag(doc,
                 androidNamepsaceURI,
@@ -219,7 +207,8 @@ public class OVRManifestPreprocessor
                 "oculus.software.handtracking",
                 handTrackingEntryNeeded,
                 modifyIfFound,
-                "required", (targetHandTrackingSupport == OVRProjectConfig.HandTrackingSupport.HandsOnly) ? "true" : "false");
+                "required",
+                targetHandTrackingSupport == OVRProjectConfig.HandTrackingSupport.HandsOnly ? "true" : "false");
             AddOrRemoveTag(doc,
                 androidNamepsaceURI,
                 "/manifest",
@@ -242,23 +231,15 @@ public class OVRManifestPreprocessor
             // Add support devices manifest according to the target devices
             if (OVRDeviceSelector.isTargetDeviceQuestFamily)
             {
-                string targetDeviceValue = "quest";
+                var targetDeviceValue = "quest";
                 if (OVRDeviceSelector.isTargetDeviceQuest && OVRDeviceSelector.isTargetDeviceQuest2)
-                {
                     targetDeviceValue = "quest|quest2";
-                }
                 else if (OVRDeviceSelector.isTargetDeviceQuest2)
-                {
                     targetDeviceValue = "quest2";
-                }
                 else if (OVRDeviceSelector.isTargetDeviceQuest)
-                {
                     targetDeviceValue = "quest";
-                }
                 else
-                {
                     Debug.LogError("Unexpected target devices");
-                }
                 AddOrRemoveTag(doc,
                     androidNamepsaceURI,
                     "/manifest/application",
@@ -289,17 +270,17 @@ public class OVRManifestPreprocessor
                 modifyIfFound,
                 "value", "vr_only");
 
-			// Add VR intent filter tag in the manifest
-			AddOrRemoveTag(doc,
-				androidNamepsaceURI,
-				"/manifest/application/activity/intent-filter",
-				"category",
-				"com.oculus.intent.category.VR",
-				required: true,
-				modifyIfFound: true);
+            // Add VR intent filter tag in the manifest
+            AddOrRemoveTag(doc,
+                androidNamepsaceURI,
+                "/manifest/application/activity/intent-filter",
+                "category",
+                "com.oculus.intent.category.VR",
+                true,
+                true);
 
-			// make sure android label and icon are set in the manifest
-			AddOrRemoveTag(doc,
+            // make sure android label and icon are set in the manifest
+            AddOrRemoveTag(doc,
                 androidNamepsaceURI,
                 "/manifest",
                 "application",
@@ -310,14 +291,15 @@ public class OVRManifestPreprocessor
                 "icon", "@mipmap/app_icon",
                 // Disable allowBackup in manifest and add Android NSC XML file				
                 "allowBackup", projectConfig.disableBackups ? "false" : "true",
-                "networkSecurityConfig", projectConfig.enableNSCConfig && enableSecurity ? "@xml/network_sec_config" : null
-                );
+                "networkSecurityConfig",
+                projectConfig.enableNSCConfig && enableSecurity ? "@xml/network_sec_config" : null
+            );
 
             doc.Save(destinationFile);
         }
         catch (System.Exception e)
         {
-            UnityEngine.Debug.LogException(e);
+            Debug.LogException(e);
         }
     }
 }

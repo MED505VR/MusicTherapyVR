@@ -20,6 +20,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ************************************************************************************/
+
 using UnityEngine;
 
 
@@ -34,18 +35,19 @@ using UnityEngine;
 /// </summary>
 public class OVRLipSyncContextCanned : OVRLipSyncContextBase
 {
-    [Tooltip("Pre-computed viseme sequence asset. Compute from audio in Unity with Tools -> Oculus -> Generate Lip Sync Assets.")]
+    [Tooltip(
+        "Pre-computed viseme sequence asset. Compute from audio in Unity with Tools -> Oculus -> Generate Lip Sync Assets.")]
     public OVRLipSyncSequence currentSequence;
 
     /// <summary>
     /// Run processes that need to be updated in game thread
     /// </summary>
-    void Update()
+    private void Update()
     {
         if (audioSource.isPlaying && currentSequence != null)
         {
-            OVRLipSync.Frame currentFrame = currentSequence.GetFrameAtTime(audioSource.time);
-            this.Frame.CopyInput(currentFrame);
+            var currentFrame = currentSequence.GetFrameAtTime(audioSource.time);
+            Frame.CopyInput(currentFrame);
         }
     }
 }

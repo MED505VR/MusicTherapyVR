@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 
 public delegate void specificationCallback(IntPtr specification);
+
 public delegate void assetLoadedCallback(OvrAvatarAsset asset);
+
 public delegate void combinedMeshLoadedCallback(IntPtr asset);
 
 public class OvrAvatarSDKManager : MonoBehaviour
@@ -14,7 +16,7 @@ public class OvrAvatarSDKManager : MonoBehaviour
     private Dictionary<ulong, HashSet<specificationCallback>> specificationCallbacks;
     private Dictionary<ulong, HashSet<assetLoadedCallback>> assetLoadedCallbacks;
     private Dictionary<IntPtr, combinedMeshLoadedCallback> combinedMeshLoadedCallbacks;
-    private Dictionary<UInt64, OvrAvatarAsset> assetCache;
+    private Dictionary<ulong, OvrAvatarAsset> assetCache;
     private OvrAvatarTextureCopyManager textureCopyManager;
 
     public ovrAvatarLogLevel LoggingLevel = ovrAvatarLogLevel.Info;
@@ -30,7 +32,7 @@ public class OvrAvatarSDKManager : MonoBehaviour
 
     public struct AvatarSpecRequestParams
     {
-        public UInt64 _userId;
+        public ulong _userId;
         public specificationCallback _callback;
         public bool _useCombinedMesh;
         public ovrAvatarAssetLevelOfDetail _lod;
@@ -40,7 +42,7 @@ public class OvrAvatarSDKManager : MonoBehaviour
         public bool _enableExpressive;
 
         public AvatarSpecRequestParams(
-            UInt64 userId,
+            ulong userId,
             specificationCallback callback,
             bool useCombinedMesh,
             ovrAvatarAssetLevelOfDetail lod,
@@ -66,15 +68,16 @@ public class OvrAvatarSDKManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<OvrAvatarSDKManager>();
+                _instance = FindObjectOfType<OvrAvatarSDKManager>();
                 if (_instance == null)
                 {
-                    GameObject manager = new GameObject("OvrAvatarSDKManager");
+                    var manager = new GameObject("OvrAvatarSDKManager");
                     _instance = manager.AddComponent<OvrAvatarSDKManager>();
                     _instance.textureCopyManager = manager.AddComponent<OvrAvatarTextureCopyManager>();
                     _instance.initialized = _instance.Initialize();
                 }
             }
+
             return _instance.initialized ? _instance : null;
         }
     }
@@ -83,12 +86,12 @@ public class OvrAvatarSDKManager : MonoBehaviour
     {
         CAPI.Initialize();
 
-        string appId = GetAppId();
+        var appId = GetAppId();
 
         if (appId == "")
         {
             AvatarLogger.LogError("No Oculus App ID has been provided for target platform. " +
-                "Go to Oculus Avatar > Edit Configuration to supply one", OvrAvatarSettings.Instance);
+                                  "Go to Oculus Avatar > Edit Configuration to supply one", OvrAvatarSettings.Instance);
             appId = "0";
         }
 
@@ -102,8 +105,8 @@ public class OvrAvatarSDKManager : MonoBehaviour
         CAPI.ovrAvatar_Initialize(appId);
         CAPI.SendEvent("initialize", appId);
 #endif
-        specificationCallbacks = new Dictionary<UInt64, HashSet<specificationCallback>>();
-        assetLoadedCallbacks = new Dictionary<UInt64, HashSet<assetLoadedCallback>>();
+        specificationCallbacks = new Dictionary<ulong, HashSet<specificationCallback>>();
+        assetLoadedCallbacks = new Dictionary<ulong, HashSet<assetLoadedCallback>>();
         combinedMeshLoadedCallbacks = new Dictionary<IntPtr, combinedMeshLoadedCallback>();
         assetCache = new Dictionary<ulong, OvrAvatarAsset>();
         avatarSpecificationQueue = new Queue<AvatarSpecRequestParams>();
@@ -118,19 +121,16 @@ public class OvrAvatarSDKManager : MonoBehaviour
         return true;
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         CAPI.Shutdown();
         CAPI.ovrAvatar_RegisterLoggingCallback(null);
         CAPI.ovrAvatar_Shutdown();
     }
 
-	void Update()
-	{
-	    if (Instance == null)
-	    {
-	        return;
-	    }
+    private void Update()
+    {
+        if (Instance == null) return;
 #if AVATAR_DEBUG
         // Call before ovrAvatarMessage_Pop which flushes the state
         CAPI.ovrAvatar_DrawDebugLines();
@@ -138,114 +138,108 @@ public class OvrAvatarSDKManager : MonoBehaviour
 
         // Dispatch waiting avatar spec request
         if (avatarSpecificationQueue.Count > 0 &&
-	        (avatarSpecRequestAvailable ||
-	        Time.time - lastDispatchedAvatarSpecRequestTime >= AVATAR_SPEC_REQUEST_TIMEOUT))
-	    {
-	        avatarSpecRequestAvailable = false;
-	        AvatarSpecRequestParams avatarSpec = avatarSpecificationQueue.Dequeue();
-	        DispatchAvatarSpecificationRequest(avatarSpec);
+            (avatarSpecRequestAvailable ||
+             Time.time - lastDispatchedAvatarSpecRequestTime >= AVATAR_SPEC_REQUEST_TIMEOUT))
+        {
+            avatarSpecRequestAvailable = false;
+            var avatarSpec = avatarSpecificationQueue.Dequeue();
+            DispatchAvatarSpecificationRequest(avatarSpec);
             lastDispatchedAvatarSpecRequestTime = Time.time;
             AvatarLogger.Log("Avatar spec request dispatched: " + avatarSpec._userId);
         }
 
-        IntPtr message = CAPI.ovrAvatarMessage_Pop();
-        if (message == IntPtr.Zero)
-        {
-            return;
-        }
+        var message = CAPI.ovrAvatarMessage_Pop();
+        if (message == IntPtr.Zero) return;
 
-        ovrAvatarMessageType messageType = CAPI.ovrAvatarMessage_GetType(message);
+        var messageType = CAPI.ovrAvatarMessage_GetType(message);
         switch (messageType)
         {
             case ovrAvatarMessageType.AssetLoaded:
+            {
+                var assetMessage = CAPI.ovrAvatarMessage_GetAssetLoaded(message);
+                var asset = assetMessage.asset;
+                var assetID = assetMessage.assetID;
+                var assetType = CAPI.ovrAvatarAsset_GetType(asset);
+                OvrAvatarAsset assetData = null;
+                var avatarOwner = IntPtr.Zero;
+
+                switch (assetType)
                 {
-                    ovrAvatarMessage_AssetLoaded assetMessage = CAPI.ovrAvatarMessage_GetAssetLoaded(message);
-                    IntPtr asset = assetMessage.asset;
-                    UInt64 assetID = assetMessage.assetID;
-                    ovrAvatarAssetType assetType = CAPI.ovrAvatarAsset_GetType(asset);
-                    OvrAvatarAsset assetData = null;
-                    IntPtr avatarOwner = IntPtr.Zero;
+                    case ovrAvatarAssetType.Mesh:
+                        assetData = new OvrAvatarAssetMesh(assetID, asset, ovrAvatarAssetType.Mesh);
+                        break;
+                    case ovrAvatarAssetType.Texture:
+                        assetData = new OvrAvatarAssetTexture(assetID, asset);
+                        break;
+                    case ovrAvatarAssetType.Material:
+                        assetData = new OvrAvatarAssetMaterial(assetID, asset);
+                        break;
+                    case ovrAvatarAssetType.CombinedMesh:
+                        avatarOwner = CAPI.ovrAvatarAsset_GetAvatar(asset);
+                        assetData = new OvrAvatarAssetMesh(assetID, asset, ovrAvatarAssetType.CombinedMesh);
+                        break;
+                    case ovrAvatarAssetType.FailedLoad:
+                        AvatarLogger.LogWarning("Asset failed to load from SDK " + assetID);
+                        break;
+                    default:
+                        throw new NotImplementedException(string.Format("Unsupported asset type format {0}",
+                            assetType.ToString()));
+                }
 
-                    switch (assetType)
+                HashSet<assetLoadedCallback> callbackSet;
+                if (assetType == ovrAvatarAssetType.CombinedMesh)
+                {
+                    if (!assetCache.ContainsKey(assetID)) assetCache.Add(assetID, assetData);
+
+                    combinedMeshLoadedCallback callback;
+                    if (combinedMeshLoadedCallbacks.TryGetValue(avatarOwner, out callback))
                     {
-                        case ovrAvatarAssetType.Mesh:
-                            assetData = new OvrAvatarAssetMesh(assetID, asset, ovrAvatarAssetType.Mesh);
-                            break;
-                        case ovrAvatarAssetType.Texture:
-                            assetData = new OvrAvatarAssetTexture(assetID, asset);
-                            break;
-                        case ovrAvatarAssetType.Material:
-                            assetData = new OvrAvatarAssetMaterial(assetID, asset);
-                            break;
-                        case ovrAvatarAssetType.CombinedMesh:
-                            avatarOwner = CAPI.ovrAvatarAsset_GetAvatar(asset);
-                            assetData = new OvrAvatarAssetMesh(assetID, asset, ovrAvatarAssetType.CombinedMesh);
-                            break;
-                        case ovrAvatarAssetType.FailedLoad:
-                            AvatarLogger.LogWarning("Asset failed to load from SDK " + assetID);
-                            break;
-                        default:
-                            throw new NotImplementedException(string.Format("Unsupported asset type format {0}", assetType.ToString()));
-                    }
-
-                    HashSet<assetLoadedCallback> callbackSet;
-                    if (assetType == ovrAvatarAssetType.CombinedMesh)
-                    {
-                        if (!assetCache.ContainsKey(assetID))
-                        {
-                            assetCache.Add(assetID, assetData);
-                        }
-
-                        combinedMeshLoadedCallback callback;
-                        if (combinedMeshLoadedCallbacks.TryGetValue(avatarOwner, out callback))
-                        {
-                            callback(asset);
-                            combinedMeshLoadedCallbacks.Remove(avatarOwner);
-                        }
-                        else
-                        {
-                            AvatarLogger.LogWarning("Loaded a combined mesh with no owner: " + assetMessage.assetID);
-                        }
+                        callback(asset);
+                        combinedMeshLoadedCallbacks.Remove(avatarOwner);
                     }
                     else
                     {
-                        if (assetData != null && assetLoadedCallbacks.TryGetValue(assetMessage.assetID, out callbackSet))
-                        {
-                            assetCache.Add(assetID, assetData);
-
-                            foreach (var callback in callbackSet)
-                            {
-                                callback(assetData);
-                            }
-
-                            assetLoadedCallbacks.Remove(assetMessage.assetID);
-                        }
+                        AvatarLogger.LogWarning("Loaded a combined mesh with no owner: " + assetMessage.assetID);
                     }
-                    break;
                 }
+                else
+                {
+                    if (assetData != null && assetLoadedCallbacks.TryGetValue(assetMessage.assetID, out callbackSet))
+                    {
+                        assetCache.Add(assetID, assetData);
+
+                        foreach (var callback in callbackSet) callback(assetData);
+
+                        assetLoadedCallbacks.Remove(assetMessage.assetID);
+                    }
+                }
+
+                break;
+            }
             case ovrAvatarMessageType.AvatarSpecification:
             {
-                    avatarSpecRequestAvailable = true;
-                    ovrAvatarMessage_AvatarSpecification spec = CAPI.ovrAvatarMessage_GetAvatarSpecification(message);
-                    HashSet<specificationCallback> callbackSet;
-                    if (specificationCallbacks.TryGetValue(spec.oculusUserID, out callbackSet))
-                    {
-                        foreach (var callback in callbackSet)
-                        {
-                            callback(spec.avatarSpec);
-                        }
+                avatarSpecRequestAvailable = true;
+                var spec = CAPI.ovrAvatarMessage_GetAvatarSpecification(message);
+                HashSet<specificationCallback> callbackSet;
+                if (specificationCallbacks.TryGetValue(spec.oculusUserID, out callbackSet))
+                {
+                    foreach (var callback in callbackSet) callback(spec.avatarSpec);
 
-                        specificationCallbacks.Remove(spec.oculusUserID);
-                    }
-                    else
-                    {
-                        AvatarLogger.LogWarning("Error, got an avatar specification callback from a user id we don't have a record for: " + spec.oculusUserID);
-                    }
-                    break;
+                    specificationCallbacks.Remove(spec.oculusUserID);
                 }
+                else
+                {
+                    AvatarLogger.LogWarning(
+                        "Error, got an avatar specification callback from a user id we don't have a record for: " +
+                        spec.oculusUserID);
+                }
+
+                break;
+            }
             default:
                 throw new NotImplementedException("Unhandled ovrAvatarMessageType: " + messageType);
         }
+
         CAPI.ovrAvatarMessage_Free(message);
     }
 
@@ -290,9 +284,10 @@ public class OvrAvatarSDKManager : MonoBehaviour
             callbackSet = new HashSet<specificationCallback>();
             specificationCallbacks.Add(avatarSpecRequest._userId, callbackSet);
 
-            IntPtr specRequest = CAPI.ovrAvatarSpecificationRequest_Create(avatarSpecRequest._userId);
+            var specRequest = CAPI.ovrAvatarSpecificationRequest_Create(avatarSpecRequest._userId);
             CAPI.ovrAvatarSpecificationRequest_SetLookAndFeelVersion(specRequest, avatarSpecRequest._lookVersion);
-            CAPI.ovrAvatarSpecificationRequest_SetFallbackLookAndFeelVersion(specRequest, avatarSpecRequest._fallbackVersion);
+            CAPI.ovrAvatarSpecificationRequest_SetFallbackLookAndFeelVersion(specRequest,
+                avatarSpecRequest._fallbackVersion);
             CAPI.ovrAvatarSpecificationRequest_SetLevelOfDetail(specRequest, avatarSpecRequest._lod);
             CAPI.ovrAvatarSpecificationRequest_SetCombineMeshes(specRequest, avatarSpecRequest._useCombinedMesh);
             CAPI.ovrAvatarSpecificationRequest_SetExpressiveFlag(specRequest, avatarSpecRequest._enableExpressive);
@@ -304,7 +299,7 @@ public class OvrAvatarSDKManager : MonoBehaviour
     }
 
     public void BeginLoadingAsset(
-        UInt64 assetId,
+        ulong assetId,
         ovrAvatarAssetLevelOfDetail lod,
         assetLoadedCallback callback)
     {
@@ -314,6 +309,7 @@ public class OvrAvatarSDKManager : MonoBehaviour
             callbackSet = new HashSet<assetLoadedCallback>();
             assetLoadedCallbacks.Add(assetId, callbackSet);
         }
+
         AvatarLogger.Log("Loading Asset ID: " + assetId);
         CAPI.ovrAvatarAsset_BeginLoadingLOD(assetId, lod);
         callbackSet.Add(callback);
@@ -325,51 +321,37 @@ public class OvrAvatarSDKManager : MonoBehaviour
     {
         combinedMeshLoadedCallback currentCallback;
         if (!combinedMeshLoadedCallbacks.TryGetValue(sdkAvatar, out currentCallback))
-        {
             combinedMeshLoadedCallbacks.Add(sdkAvatar, callback);
-        }
         else
-        {
             throw new Exception("Adding second combind mesh callback for same avatar");
-        }
     }
 
-    public OvrAvatarAsset GetAsset(UInt64 assetId)
+    public OvrAvatarAsset GetAsset(ulong assetId)
     {
         OvrAvatarAsset asset;
         if (assetCache.TryGetValue(assetId, out asset))
-        {
             return asset;
-        }
         else
-        {
             return null;
-        }
     }
 
-    public void DeleteAssetFromCache(UInt64 assetId)
+    public void DeleteAssetFromCache(ulong assetId)
     {
-        if (assetCache.ContainsKey(assetId))
-        {
-            assetCache.Remove(assetId);
-        }
+        if (assetCache.ContainsKey(assetId)) assetCache.Remove(assetId);
     }
 
     public string GetAppId()
     {
-        return UnityEngine.Application.platform == RuntimePlatform.Android ?
-                OvrAvatarSettings.MobileAppID : OvrAvatarSettings.AppID;
+        return Application.platform == RuntimePlatform.Android
+            ? OvrAvatarSettings.MobileAppID
+            : OvrAvatarSettings.AppID;
     }
 
     public OvrAvatarTextureCopyManager GetTextureCopyManager()
     {
         if (textureCopyManager != null)
-        {
             return textureCopyManager;
-        }
         else
-        {
             return null;
-        }
     }
 }

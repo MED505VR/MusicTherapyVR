@@ -20,26 +20,28 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ************************************************************************************/
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 // Sequence - holds ordered entries for playback
-[System.Serializable]
+[Serializable]
 public class OVRLipSyncSequence : ScriptableObject
 {
     public List<OVRLipSync.Frame> entries = new List<OVRLipSync.Frame>();
-    public float length;    // in seconds
+    public float length; // in seconds
 
     public OVRLipSync.Frame GetFrameAtTime(float time)
     {
         OVRLipSync.Frame frame = null;
         if (time < length && entries.Count > 0)
         {
-            float percentComplete = time / length;
+            var percentComplete = time / length;
             frame = entries[(int)(entries.Count * percentComplete)];
         }
+
         return frame;
     }
 
@@ -55,16 +57,16 @@ public class OVRLipSyncSequence : ScriptableObject
         if (clip.channels > 2)
         {
             Debug.LogError(clip.name +
-                ": Cannot process phonemes from an audio clip with " +
-                "more than 2 channels");
+                           ": Cannot process phonemes from an audio clip with " +
+                           "more than 2 channels");
             return null;
         }
 
         if (clip.loadType != AudioClipLoadType.DecompressOnLoad)
         {
             Debug.LogError(clip.name +
-                ": Cannot process phonemes from an audio clip unless " +
-                "its load type is set to DecompressOnLoad.");
+                           ": Cannot process phonemes from an audio clip unless " +
+                           "its load type is set to DecompressOnLoad.");
             return null;
         }
 
@@ -82,7 +84,7 @@ public class OVRLipSyncSequence : ScriptableObject
 
         uint context = 0;
 
-        OVRLipSync.Result result = useOfflineModel
+        var result = useOfflineModel
             ? OVRLipSync.CreateContextWithModelFile(
                 ref context,
                 OVRLipSync.ContextProviders.Enhanced,
@@ -96,63 +98,61 @@ public class OVRLipSyncSequence : ScriptableObject
             return null;
         }
 
-        List<OVRLipSync.Frame> frames = new List<OVRLipSync.Frame>();
-        float[] samples = new float[sSampleSize * clip.channels];
+        var frames = new List<OVRLipSync.Frame>();
+        var samples = new float[sSampleSize * clip.channels];
 
-        OVRLipSync.Frame dummyFrame = new OVRLipSync.Frame();
+        var dummyFrame = new OVRLipSync.Frame();
         OVRLipSync.ProcessFrame(
             context,
             samples,
             dummyFrame,
-            (clip.channels == 2) ? true : false
+            clip.channels == 2 ? true : false
         );
         // frame delay in ms
         float frameDelayInMs = dummyFrame.frameDelay;
 
-        int frameOffset = (int)(frameDelayInMs * clip.frequency / 1000);
+        var frameOffset = (int)(frameDelayInMs * clip.frequency / 1000);
 
-        int totalSamples = clip.samples;
-        for (int x = 0; x < totalSamples + frameOffset; x += sSampleSize)
+        var totalSamples = clip.samples;
+        for (var x = 0; x < totalSamples + frameOffset; x += sSampleSize)
         {
-            int remainingSamples = totalSamples - x;
-            if (remainingSamples >= sSampleSize) {
-              clip.GetData(samples, x);
-            } else if (remainingSamples > 0) {
-              float[] samples_clip = new float[remainingSamples * clip.channels];
-              clip.GetData(samples_clip, x);
-              Array.Copy(samples_clip, samples, samples_clip.Length);
-              Array.Clear(samples, samples_clip.Length, samples.Length - samples_clip.Length);
-            } else {
-              Array.Clear(samples, 0, samples.Length);
-            }
-
-            OVRLipSync.Frame frame = new OVRLipSync.Frame();
-            if (clip.channels == 2)
+            var remainingSamples = totalSamples - x;
+            if (remainingSamples >= sSampleSize)
             {
-                // interleaved = stereo data, alternating floats
-                OVRLipSync.ProcessFrame(context, samples, frame);
+                clip.GetData(samples, x);
+            }
+            else if (remainingSamples > 0)
+            {
+                var samples_clip = new float[remainingSamples * clip.channels];
+                clip.GetData(samples_clip, x);
+                Array.Copy(samples_clip, samples, samples_clip.Length);
+                Array.Clear(samples, samples_clip.Length, samples.Length - samples_clip.Length);
             }
             else
             {
-                // mono
-                OVRLipSync.ProcessFrame(context, samples, frame, false);
+                Array.Clear(samples, 0, samples.Length);
             }
 
-            if (x < frameOffset)
-            {
-                continue;
-            }
+            var frame = new OVRLipSync.Frame();
+            if (clip.channels == 2)
+                // interleaved = stereo data, alternating floats
+                OVRLipSync.ProcessFrame(context, samples, frame);
+            else
+                // mono
+                OVRLipSync.ProcessFrame(context, samples, frame, false);
+
+            if (x < frameOffset) continue;
 
             frames.Add(frame);
         }
 
         Debug.Log(clip.name + " produced " + frames.Count +
-            " viseme frames, playback rate is " + (frames.Count / clip.length) +
-            " fps");
+                  " viseme frames, playback rate is " + frames.Count / clip.length +
+                  " fps");
         OVRLipSync.DestroyContext(context);
         OVRLipSync.Shutdown();
 
-        sequence = ScriptableObject.CreateInstance<OVRLipSyncSequence>();
+        sequence = CreateInstance<OVRLipSyncSequence>();
         sequence.entries = frames;
         sequence.length = clip.length;
 

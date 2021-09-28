@@ -18,6 +18,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ************************************************************************************/
+
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEngine;
@@ -32,13 +33,15 @@ public enum PlayModeState
     Paused
 }
 
-class ONSPPropagationSerializationManager
+internal class ONSPPropagationSerializationManager
 {
     static ONSPPropagationSerializationManager()
     {
         EditorSceneManager.sceneSaving += OnSceneSaving;
     }
-    public int callbackOrder { get { return 0; } }
+
+    public int callbackOrder => 0;
+
     public void OnPreprocessBuild(BuildTarget target, string path)
     {
         Debug.Log("ONSPPropagationSerializationManager.OnPreprocessBuild for target " + target + " at path " + path);
@@ -47,7 +50,7 @@ class ONSPPropagationSerializationManager
     [MenuItem("Oculus/Spatializer/Build audio geometry for current scene")]
     public static void BuildAudioGeometryForCurrentScene()
     {
-        BuildAudioGeometryForScene(EditorSceneManager.GetActiveScene());
+        BuildAudioGeometryForScene(SceneManager.GetActiveScene());
     }
 
     [MenuItem("Oculus/Spatializer/Rebuild audio geometry all scenes")]
@@ -57,10 +60,7 @@ class ONSPPropagationSerializationManager
 
         System.IO.Directory.Delete(ONSPPropagationGeometry.GeometryAssetPath, true);
 
-        for (int i = 0; i < EditorSceneManager.sceneCount; ++i)
-        {
-            BuildAudioGeometryForScene(EditorSceneManager.GetSceneAt(i));
-        }
+        for (var i = 0; i < SceneManager.sceneCount; ++i) BuildAudioGeometryForScene(SceneManager.GetSceneAt(i));
     }
 
     public static void OnSceneSaving(Scene scene, string path)
@@ -72,15 +72,14 @@ class ONSPPropagationSerializationManager
     {
         Debug.Log("Building audio geometry for scene " + scene.name);
 
-        List<GameObject> rootObjects = new List<GameObject>();
+        var rootObjects = new List<GameObject>();
         scene.GetRootGameObjects(rootObjects);
 
-        HashSet<string> fileNames = new HashSet<string>();
-        foreach (GameObject go in rootObjects)
+        var fileNames = new HashSet<string>();
+        foreach (var go in rootObjects)
         {
             var geometryComponents = go.GetComponentsInChildren<ONSPPropagationGeometry>();
-            foreach (ONSPPropagationGeometry geo in geometryComponents)
-            {
+            foreach (var geo in geometryComponents)
                 if (geo.fileEnabled)
                 {
                     if (!geo.WriteFile())
@@ -90,12 +89,9 @@ class ONSPPropagationSerializationManager
                     else
                     {
                         if (!fileNames.Add(geo.filePathRelative))
-                        {
                             Debug.LogWarning("Duplicate file name detected: " + geo.filePathRelative);
-                        }
                     }
                 }
-            }
         }
 
         Debug.Log("Successfully built " + fileNames.Count + " geometry objects");

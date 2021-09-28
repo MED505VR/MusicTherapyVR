@@ -12,13 +12,12 @@ public class SoundSync : RealtimeComponent<SoundSyncModel>
         _oscillator = GetComponent<Oscillator1>();
     }
 
-        private void UpdateFrequency()
+    private void UpdateFrequency()
     {
         _oscillator.frequency = model.frequency;
-
     }
 
-        private void UpdateGain()
+    private void UpdateGain()
     {
         _oscillator.gain = model.gain;
     }

@@ -3,6 +3,7 @@
 Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.  
 
 ************************************************************************************/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -50,7 +51,7 @@ public class MoviePlayerSampleControls : MonoBehaviour
     private PlaybackState _state = PlaybackState.Playing;
 
 
-    void Start()
+    private void Start()
     {
         PlayPause.onButtonDown += OnPlayPauseClicked;
         FastForward.onButtonDown += OnFastForwardClicked;
@@ -63,9 +64,9 @@ public class MoviePlayerSampleControls : MonoBehaviour
         SetVisible(false);
     }
 
-    void OnPlayPauseClicked()
+    private void OnPlayPauseClicked()
     {
-        switch(_state)
+        switch (_state)
         {
             case PlaybackState.Paused:
                 Player.Play();
@@ -94,9 +95,9 @@ public class MoviePlayerSampleControls : MonoBehaviour
         }
     }
 
-    void OnFastForwardClicked()
+    private void OnFastForwardClicked()
     {
-        switch(_state)
+        switch (_state)
         {
             case PlaybackState.FastForwarding:
                 Player.SetPlaybackSpeed(1);
@@ -120,7 +121,7 @@ public class MoviePlayerSampleControls : MonoBehaviour
         }
     }
 
-    void OnRewindClicked()
+    private void OnRewindClicked()
     {
         switch (_state)
         {
@@ -146,15 +147,12 @@ public class MoviePlayerSampleControls : MonoBehaviour
         }
     }
 
-    void OnSeekBarMoved(float value)
+    private void OnSeekBarMoved(float value)
     {
-        long newPos = (long)(value * Player.Duration);
+        var newPos = (long)(value * Player.Duration);
 
         // only seek if the position changed more than 200ms
-        if (Mathf.Abs(newPos - Player.PlaybackPosition) > 200)
-        {            
-            Seek(newPos);
-        }
+        if (Mathf.Abs(newPos - Player.PlaybackPosition) > 200) Seek(newPos);
     }
 
     private void Seek(long pos)
@@ -166,13 +164,11 @@ public class MoviePlayerSampleControls : MonoBehaviour
 
     private void Update()
     {
-        if(OVRInput.Get(OVRInput.Button.One) || OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger) || OVRInput.Get(OVRInput.Button.SecondaryIndexTrigger))
+        if (OVRInput.Get(OVRInput.Button.One) || OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger) ||
+            OVRInput.Get(OVRInput.Button.SecondaryIndexTrigger))
         {
             _lastButtonTime = Time.time;
-            if (!_isVisible)
-            {
-                SetVisible(true);
-            }
+            if (!_isVisible) SetVisible(true);
         }
 
         if (OVRInput.GetActiveController() == OVRInput.Controller.LTouch)
@@ -188,42 +184,29 @@ public class MoviePlayerSampleControls : MonoBehaviour
 
         // if back is pressed, hide controls immediately
         if (OVRInput.Get(OVRInput.Button.Back))
-        {
             if (_isVisible)
-            {
                 SetVisible(false);
-            }
-        }
 
         if (_state == PlaybackState.Rewinding)
-        {
             // smoothly update our seekbar
-            ProgressBar.value = Mathf.Clamp01((_rewindStartPosition - 1000L * (Time.time - _rewindStartTime)) / Player.Duration);
-        }
+            ProgressBar.value =
+                Mathf.Clamp01((_rewindStartPosition - 1000L * (Time.time - _rewindStartTime)) / Player.Duration);
 
         // if we are playing, hide the controls after 15 seconds
         if (_isVisible && _state == PlaybackState.Playing && Time.time - _lastButtonTime > TimeoutTime)
-        {
             SetVisible(false);
-        }
 
         if (_isVisible)
-        {
             if (!_didSeek || Mathf.Abs(_seekPreviousPosition - Player.PlaybackPosition) > 50)
             {
                 _didSeek = false;
 
                 if (Player.Duration > 0)
-                {
                     // update our progress bar
                     ProgressBar.value = (float)(Player.PlaybackPosition / (double)Player.Duration);
-                }
                 else
-                {
                     ProgressBar.value = 0;
-                }
             }
-        }
     }
 
     private void SetVisible(bool visible)

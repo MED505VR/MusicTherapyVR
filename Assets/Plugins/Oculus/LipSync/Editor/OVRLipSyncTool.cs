@@ -20,13 +20,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ************************************************************************************/
+
 using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
-class OVRLipSyncToolLoader
+internal class OVRLipSyncToolLoader
 {
     public static List<AudioClip> clipQueue;
     public static IEnumerator processor;
@@ -37,44 +38,37 @@ class OVRLipSyncToolLoader
 
     public static IEnumerator ProcessClips(bool useOfflineModel)
     {
-        if (clipQueue == null || clipQueue.Count == 0)
-        {
-            yield break;
-        }
+        if (clipQueue == null || clipQueue.Count == 0) yield break;
 
         while (clipQueue.Count > 0)
         {
             // Pop a clip off the list
-            AudioClip clip = clipQueue[0];
+            var clip = clipQueue[0];
             clipQueue.RemoveAt(0);
 
             if (clip.loadType != AudioClipLoadType.DecompressOnLoad)
             {
                 Debug.LogError(clip.name +
-                    ": Cannot process phonemes from an audio clip unless " +
-                    "its load type is set to DecompressOnLoad.");
+                               ": Cannot process phonemes from an audio clip unless " +
+                               "its load type is set to DecompressOnLoad.");
                 continue;
             }
 
             // Update progress
             if (totalLengthOfClips > 0.0f)
-            {
-                EditorUtility.DisplayProgressBar("Generating Lip Sync Assets...", "Processing clip " + clip.name + "...",
+                EditorUtility.DisplayProgressBar("Generating Lip Sync Assets...",
+                    "Processing clip " + clip.name + "...",
                     totalLengthOfClipsProcessed / totalLengthOfClips);
-            }
 
             if (!clip.preloadAudioData)
             {
                 clip.LoadAudioData();
 
                 Debug.LogWarning(clip.name +
-                    ": Audio data is not pre-loaded. Data will be loaded then" +
-                    "unloaded on completion.");
+                                 ": Audio data is not pre-loaded. Data will be loaded then" +
+                                 "unloaded on completion.");
 
-                while (clip.loadState != AudioDataLoadState.Loaded)
-                {
-                    yield return new WaitForSeconds(0.1f);
-                }
+                while (clip.loadState != AudioDataLoadState.Loaded) yield return new WaitForSeconds(0.1f);
             }
 
             var sequence =
@@ -92,15 +86,12 @@ class OVRLipSyncToolLoader
                 else
                 {
                     AssetDatabase.CreateAsset(sequence, newPath);
-
                 }
             }
+
             AssetDatabase.Refresh();
 
-            if (!clip.preloadAudioData)
-            {
-                clip.UnloadAudioData();
-            }
+            if (!clip.preloadAudioData) clip.UnloadAudioData();
 
             totalLengthOfClipsProcessed += clip.length;
         }
@@ -113,25 +104,23 @@ class OVRLipSyncToolLoader
         processor = null;
         EditorApplication.update += Update;
     }
-    static void Update()
+
+    private static void Update()
     {
-        if (processor != null)
-        {
-            processor.MoveNext();
-        }
+        if (processor != null) processor.MoveNext();
     }
 }
 
-class OVRLipSyncTool
+internal class OVRLipSyncTool
 {
     [MenuItem("Oculus/Lip Sync/Generate Lip Sync Assets", false, 2000000)]
-    static void GenerateLipSyncAssets()
+    private static void GenerateLipSyncAssets()
     {
         GenerateLipSyncAssetsInternal(false);
     }
 
     [MenuItem("Oculus/Lip Sync/Generate Lip Sync Assets With Offline Model", false, 2500000)]
-    static void GenerateLipSyncAssetsOffline()
+    private static void GenerateLipSyncAssetsOffline()
     {
         GenerateLipSyncAssetsInternal(true);
     }
@@ -139,21 +128,17 @@ class OVRLipSyncTool
     private static void GenerateLipSyncAssetsInternal(bool useOfflineModel)
 
     {
-
-        if (OVRLipSyncToolLoader.clipQueue == null)
-        {
-            OVRLipSyncToolLoader.clipQueue = new List<AudioClip>();
-        }
+        if (OVRLipSyncToolLoader.clipQueue == null) OVRLipSyncToolLoader.clipQueue = new List<AudioClip>();
 
         OVRLipSyncToolLoader.totalLengthOfClips = 0.0f;
         OVRLipSyncToolLoader.totalLengthOfClipsProcessed = 0.0f;
 
-        for (int i = 0; i < Selection.objects.Length; ++i)
+        for (var i = 0; i < Selection.objects.Length; ++i)
         {
-            Object obj = Selection.objects[i];
+            var obj = Selection.objects[i];
             if (obj is AudioClip)
             {
-                AudioClip clip = (AudioClip)obj;
+                var clip = (AudioClip)obj;
 
                 OVRLipSyncToolLoader.clipQueue.Add(clip);
 

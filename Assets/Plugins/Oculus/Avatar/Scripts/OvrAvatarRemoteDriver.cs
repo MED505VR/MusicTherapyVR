@@ -6,19 +6,19 @@ using Oculus.Avatar;
 
 public class OvrAvatarRemoteDriver : OvrAvatarDriver
 {
-    Queue<OvrAvatarPacket> packetQueue = new Queue<OvrAvatarPacket>();
+    private Queue<OvrAvatarPacket> packetQueue = new Queue<OvrAvatarPacket>();
 
-    IntPtr CurrentSDKPacket = IntPtr.Zero;
-    float CurrentPacketTime = 0f;
+    private IntPtr CurrentSDKPacket = IntPtr.Zero;
+    private float CurrentPacketTime = 0f;
 
-    const int MinPacketQueue = 1;
-    const int MaxPacketQueue = 4;
+    private const int MinPacketQueue = 1;
+    private const int MaxPacketQueue = 4;
 
-    int CurrentSequence = -1;
+    private int CurrentSequence = -1;
 
     // Used for legacy Unity only packet blending
-    bool isStreaming = false;
-    OvrAvatarPacket currentPacket = null;
+    private bool isStreaming = false;
+    private OvrAvatarPacket currentPacket = null;
 
     public void QueuePacket(int sequence, OvrAvatarPacket packet)
     {
@@ -31,7 +31,7 @@ public class OvrAvatarRemoteDriver : OvrAvatarDriver
 
     public override void UpdateTransforms(IntPtr sdkAvatar)
     {
-        switch(Mode)
+        switch (Mode)
         {
             case PacketMode.SDK:
                 UpdateFromSDKPacket(sdkAvatar);
@@ -46,16 +46,14 @@ public class OvrAvatarRemoteDriver : OvrAvatarDriver
 
     private void UpdateFromSDKPacket(IntPtr sdkAvatar)
     {
-
         if (CurrentSDKPacket == IntPtr.Zero && packetQueue.Count >= MinPacketQueue)
-        {
             CurrentSDKPacket = packetQueue.Dequeue().ovrNativePacket;
-        }
 
         if (CurrentSDKPacket != IntPtr.Zero)
         {
-            float PacketDuration = CAPI.ovrAvatarPacket_GetDurationSeconds(CurrentSDKPacket);
-            CAPI.ovrAvatar_UpdatePoseFromPacket(sdkAvatar, CurrentSDKPacket, Mathf.Min(PacketDuration, CurrentPacketTime));
+            var PacketDuration = CAPI.ovrAvatarPacket_GetDurationSeconds(CurrentSDKPacket);
+            CAPI.ovrAvatar_UpdatePoseFromPacket(sdkAvatar, CurrentSDKPacket,
+                Mathf.Min(PacketDuration, CurrentPacketTime));
             CurrentPacketTime += Time.deltaTime;
 
             if (CurrentPacketTime > PacketDuration)
@@ -65,10 +63,7 @@ public class OvrAvatarRemoteDriver : OvrAvatarDriver
                 CurrentPacketTime = CurrentPacketTime - PacketDuration;
 
                 //Throw away packets deemed too old.
-                while (packetQueue.Count > MaxPacketQueue)
-                {
-                    packetQueue.Dequeue();
-                }
+                while (packetQueue.Count > MaxPacketQueue) packetQueue.Dequeue();
             }
         }
     }
@@ -90,7 +85,6 @@ public class OvrAvatarRemoteDriver : OvrAvatarDriver
             // If we've elapsed past our current packet, advance
             while (CurrentPacketTime > currentPacket.Duration)
             {
-
                 // If we're out of packets, stop streaming and
                 // lock to the final frame
                 if (packetQueue.Count == 0)
@@ -102,10 +96,7 @@ public class OvrAvatarRemoteDriver : OvrAvatarDriver
                     return;
                 }
 
-                while (packetQueue.Count > MaxPacketQueue)
-                {
-                    packetQueue.Dequeue();
-                }
+                while (packetQueue.Count > MaxPacketQueue) packetQueue.Dequeue();
 
                 // Otherwise, dequeue the next packet
                 CurrentPacketTime -= currentPacket.Duration;

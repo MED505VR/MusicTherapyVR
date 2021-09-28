@@ -1,72 +1,73 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Normal.Realtime;
 using UnityEngine;
-using Normal.Realtime;
 
-public class DrumSync : RealtimeComponent<DrumSyncModel>
+namespace Drum
 {
-    private PlaySound _play;
-    private MeshRenderer _meshRenderer;
-
-    private void Awake()
+    public class DrumSync : RealtimeComponent<DrumSyncModel>
     {
-        _play = GetComponent<PlaySound>();
-        _meshRenderer = GetComponent<MeshRenderer>();
-    }
+        private PlaySound _play;
+        private MeshRenderer _meshRenderer;
 
-    private void UpdateLoopPlay()
-    {
-        _play.play = model.play;
-    }
-
-    private void UpdateMeshRendererColor()
-    {
-        _meshRenderer.material.color = model.color;
-    }
-
-    protected override void OnRealtimeModelReplaced(DrumSyncModel previousModel, DrumSyncModel currentModel)
-    {
-        if (previousModel != null)
+        private void Awake()
         {
-            // Unregister from events
-            previousModel.playDidChange -= PlayDidChange;
-            previousModel.colorDidChange -= ColorDidChange;
+            _play = GetComponent<PlaySound>();
+            _meshRenderer = GetComponent<MeshRenderer>();
         }
 
-        if (currentModel != null)
+        private void UpdateLoopPlay()
         {
-            // If this is a model that has no data set on it, populate it with the current mesh renderer color.
-            if (currentModel.isFreshModel)
-                currentModel.play = _play.play;
+            _play.play = model.play;
+        }
+
+        private void UpdateMeshRendererColor()
+        {
+            _meshRenderer.material.color = model.color;
+        }
+
+        protected override void OnRealtimeModelReplaced(DrumSyncModel previousModel, DrumSyncModel currentModel)
+        {
+            if (previousModel != null)
+            {
+                // Unregister from events
+                previousModel.playDidChange -= PlayDidChange;
+                previousModel.colorDidChange -= ColorDidChange;
+            }
+
+            if (currentModel != null)
+            {
+                // If this is a model that has no data set on it, populate it with the current mesh renderer color.
+                if (currentModel.isFreshModel)
+                    currentModel.play = _play.play;
                 currentModel.color = _meshRenderer.material.color;
 
 
-            UpdateLoopPlay();
-            UpdateMeshRendererColor();
+                UpdateLoopPlay();
+                UpdateMeshRendererColor();
 
-            currentModel.playDidChange += PlayDidChange;
-            currentModel.colorDidChange += ColorDidChange;
+                currentModel.playDidChange += PlayDidChange;
+                currentModel.colorDidChange += ColorDidChange;
+            }
         }
-    }
 
-    private void PlayDidChange(DrumSyncModel model, bool value)
-    {
-        UpdateLoopPlay();
-    }
+        private void PlayDidChange(DrumSyncModel model, bool value)
+        {
+            UpdateLoopPlay();
+        }
 
-    private void ColorDidChange(DrumSyncModel model, Color value)
-    {
-        // Update the mesh renderer
-        UpdateMeshRendererColor();
-    }
+        private void ColorDidChange(DrumSyncModel model, Color value)
+        {
+            // Update the mesh renderer
+            UpdateMeshRendererColor();
+        }
 
-    public void SetPlay(bool play)
-    {
-        model.play = play;
-    }
+        public void SetPlay(bool play)
+        {
+            model.play = play;
+        }
 
-    public void SetColor(Color color)
-    {
-        model.color = color;
+        public void SetColor(Color color)
+        {
+            model.color = color;
+        }
     }
 }

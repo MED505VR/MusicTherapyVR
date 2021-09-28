@@ -8,15 +8,15 @@ public class HandOwnership : MonoBehaviour
     private RealtimeView _RealtimeView;
     private RealtimeTransform _RealtimeTransform;
 
-    void Awake()
+    private void Awake()
     {
         _RealtimeView = GetComponent<RealtimeView>();
-        _RealtimeTransform = GetComponent <RealtimeTransform>();
+        _RealtimeTransform = GetComponent<RealtimeTransform>();
     }
 
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (_RealtimeView.isOwnedLocallyInHierarchy)
         {

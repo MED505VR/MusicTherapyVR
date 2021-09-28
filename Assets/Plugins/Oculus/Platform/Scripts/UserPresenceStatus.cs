@@ -2,20 +2,14 @@
 
 namespace Oculus.Platform
 {
+    using Description = System.ComponentModel.DescriptionAttribute;
 
-  using Description = System.ComponentModel.DescriptionAttribute;
+    public enum UserPresenceStatus : int
+    {
+        [Description("UNKNOWN")] Unknown,
 
-  public enum UserPresenceStatus : int
-  {
-    [Description("UNKNOWN")]
-    Unknown,
+        [Description("ONLINE")] Online,
 
-    [Description("ONLINE")]
-    Online,
-
-    [Description("OFFLINE")]
-    Offline,
-
-  }
-
+        [Description("OFFLINE")] Offline
+    }
 }

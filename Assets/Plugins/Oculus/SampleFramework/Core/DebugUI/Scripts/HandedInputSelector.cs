@@ -3,11 +3,12 @@
 Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.  
 
 See SampleFramework license.txt for license terms.  Unless required by applicable law 
-or agreed to in writing, the sample code is provided ìAS ISî WITHOUT WARRANTIES OR 
+or agreed to in writing, the sample code is provided ‚ÄúAS IS‚Äù WITHOUT WARRANTIES OR 
 CONDITIONS OF ANY KIND, either express or implied.  See the license for specific 
 language governing permissions and limitations under the license.
 
 ************************************************************************************/
+
 using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
@@ -16,39 +17,30 @@ using System;
 
 public class HandedInputSelector : MonoBehaviour
 {
-    OVRCameraRig m_CameraRig;
-    OVRInputModule m_InputModule;
+    private OVRCameraRig m_CameraRig;
+    private OVRInputModule m_InputModule;
 
-    void Start()
+    private void Start()
     {
         m_CameraRig = FindObjectOfType<OVRCameraRig>();
         m_InputModule = FindObjectOfType<OVRInputModule>();
     }
 
-    void Update()
+    private void Update()
     {
-        if(OVRInput.GetActiveController() == OVRInput.Controller.LTouch)
-        {
+        if (OVRInput.GetActiveController() == OVRInput.Controller.LTouch)
             SetActiveController(OVRInput.Controller.LTouch);
-        }
         else
-        {
             SetActiveController(OVRInput.Controller.RTouch);
-        }
-
     }
 
-    void SetActiveController(OVRInput.Controller c)
+    private void SetActiveController(OVRInput.Controller c)
     {
         Transform t;
-        if(c == OVRInput.Controller.LTouch)
-        {
+        if (c == OVRInput.Controller.LTouch)
             t = m_CameraRig.leftHandAnchor;
-        }
         else
-        {
             t = m_CameraRig.rightHandAnchor;
-        }
         m_InputModule.rayTransform = t;
     }
 }

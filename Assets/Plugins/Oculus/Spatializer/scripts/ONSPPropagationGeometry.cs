@@ -20,6 +20,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ************************************************************************************/
+
 #define INCLUDE_TERRAIN_TREES
 
 using UnityEngine;
@@ -30,13 +31,15 @@ using Oculus.Spatializer.Propagation;
 public class ONSPPropagationGeometry : MonoBehaviour
 {
     public static string GeometryAssetDirectory = "AudioGeometry";
-    public static string GeometryAssetPath { get { return Application.streamingAssetsPath + "/" + GeometryAssetDirectory; } }
+
+    public static string GeometryAssetPath => Application.streamingAssetsPath + "/" + GeometryAssetDirectory;
     //-------
     // PUBLIC 
 
     /// The path to the serialized mesh file that holds the preprocessed mesh geometry.
     public string filePathRelative = "";
-    public string filePath { get { return GeometryAssetPath + "/" + filePathRelative; } }
+
+    public string filePath => GeometryAssetPath + "/" + filePathRelative;
     public bool fileEnabled = false;
 
     public bool includeChildMeshes = true;
@@ -61,7 +64,7 @@ public class ONSPPropagationGeometry : MonoBehaviour
     /// <summary>
     /// If script is attached to a gameobject, it will try to create geometry
     /// </summary>
-    void Awake()
+    private void Awake()
     {
         CreatePropagationGeometry();
     }
@@ -69,13 +72,11 @@ public class ONSPPropagationGeometry : MonoBehaviour
     /// <summary>
     /// Call this function to create geometry handle
     /// </summary>
-    void CreatePropagationGeometry()
-    {        
+    private void CreatePropagationGeometry()
+    {
         // Create Geometry
         if (ONSPPropagation.Interface.CreateAudioGeometry(out geometryHandle) != OSPSuccess)
-        {
             throw new Exception("Unable to create geometry handle");
-        }
 
         // Upload Mesh
         if (filePath != null && filePath.Length != 0 && fileEnabled && Application.isPlaying)
@@ -102,12 +103,15 @@ public class ONSPPropagationGeometry : MonoBehaviour
         if (geometryHandle == IntPtr.Zero)
             return;
 
-        Matrix4x4 m = transform.localToWorldMatrix;
+        var m = transform.localToWorldMatrix;
         // Note: flip Z to convert from left-handed (+Z forward) to right-handed (+Z backward)
-        float[] matrix = { m[0,0], m[1,0], -m[2,0], m[3,0],
-                           m[0,1], m[1,1], -m[2,1], m[3,1],
-                           m[0,2], m[1,2], -m[2,2], m[3,2],
-                           m[0,3], m[1,3], -m[2,3], m[3,3] };
+        float[] matrix =
+        {
+            m[0, 0], m[1, 0], -m[2, 0], m[3, 0],
+            m[0, 1], m[1, 1], -m[2, 1], m[3, 1],
+            m[0, 2], m[1, 2], -m[2, 2], m[3, 2],
+            m[0, 3], m[1, 3], -m[2, 3], m[3, 3]
+        };
 
         ONSPPropagation.Interface.AudioGeometrySetTransform(geometryHandle, matrix);
     }
@@ -118,10 +122,9 @@ public class ONSPPropagationGeometry : MonoBehaviour
     private void OnDestroy()
     {
         // DESTROY GEOMETRY
-        if (geometryHandle != IntPtr.Zero && ONSPPropagation.Interface.DestroyAudioGeometry(geometryHandle) != OSPSuccess)
-        {
+        if (geometryHandle != IntPtr.Zero &&
+            ONSPPropagation.Interface.DestroyAudioGeometry(geometryHandle) != OSPSuccess)
             throw new Exception("Unable to destroy geometry");
-        }
 
         geometryHandle = IntPtr.Zero;
     }
@@ -130,7 +133,7 @@ public class ONSPPropagationGeometry : MonoBehaviour
     // FUNCTIONS FOR UPLOADING MESHES VIA GAME OBJECT 
     //
 
-    static int terrainDecimation = 4;
+    private static int terrainDecimation = 4;
 
     private struct MeshMaterial
     {
@@ -145,63 +148,64 @@ public class ONSPPropagationGeometry : MonoBehaviour
         public Mesh[] treePrototypeMeshes;
     }
 
-    private static void traverseMeshHierarchy(GameObject obj, ONSPPropagationMaterial[] currentMaterials, bool includeChildren,
-                                              List<MeshMaterial> meshMaterials, List<TerrainMaterial> terrainMaterials, bool ignoreStatic, ref int ignoredMeshCount)
+    private static void traverseMeshHierarchy(GameObject obj, ONSPPropagationMaterial[] currentMaterials,
+        bool includeChildren,
+        List<MeshMaterial> meshMaterials, List<TerrainMaterial> terrainMaterials, bool ignoreStatic,
+        ref int ignoredMeshCount)
     {
         if (!obj.activeInHierarchy)
             return;
 
-        MeshFilter[] meshes                 = obj.GetComponents<MeshFilter>();
-        Terrain[] terrains                  = obj.GetComponents<Terrain>();
-        ONSPPropagationMaterial[] materials = obj.GetComponents<ONSPPropagationMaterial>();
+        var meshes = obj.GetComponents<MeshFilter>();
+        var terrains = obj.GetComponents<Terrain>();
+        var materials = obj.GetComponents<ONSPPropagationMaterial>();
 
         // Initialize the current material array to a new array if there are any new materials.
         if (materials != null && materials.Length > 0)
         {
             // Determine the length of the material array.
-            int maxLength = materials.Length;
+            var maxLength = materials.Length;
             if (currentMaterials != null)
                 maxLength = Math.Max(maxLength, currentMaterials.Length);
 
-            ONSPPropagationMaterial[] newMaterials = new ONSPPropagationMaterial[maxLength];
+            var newMaterials = new ONSPPropagationMaterial[maxLength];
 
             // Copy the previous materials into the new array.
             if (currentMaterials != null)
-            {
-                for (int i = materials.Length; i < maxLength; i++)
+                for (var i = materials.Length; i < maxLength; i++)
                     newMaterials[i] = currentMaterials[i];
-            }
             currentMaterials = newMaterials;
 
             // Copy the current materials.
-            for (int i = 0; i < materials.Length; i++)
+            for (var i = 0; i < materials.Length; i++)
                 currentMaterials[i] = materials[i];
         }
 
         // Gather the meshes.
-        foreach (MeshFilter meshFilter in meshes)
+        foreach (var meshFilter in meshes)
         {
-            Mesh mesh = meshFilter.sharedMesh;
+            var mesh = meshFilter.sharedMesh;
             if (mesh == null)
                 continue;
 
             if (ignoreStatic && !mesh.isReadable)
             {
-                Debug.LogWarning("Mesh: " + meshFilter.gameObject.name + " not readable, cannot be static.", meshFilter.gameObject);
+                Debug.LogWarning("Mesh: " + meshFilter.gameObject.name + " not readable, cannot be static.",
+                    meshFilter.gameObject);
                 ++ignoredMeshCount;
                 continue;
             }
 
-            MeshMaterial m = new MeshMaterial();
+            var m = new MeshMaterial();
             m.meshFilter = meshFilter;
             m.materials = currentMaterials;
             meshMaterials.Add(m);
         }
 
         // Gather the terrains.
-        foreach (Terrain terrain in terrains)
+        foreach (var terrain in terrains)
         {
-            TerrainMaterial m = new TerrainMaterial();
+            var m = new TerrainMaterial();
             m.terrain = terrain;
             m.materials = currentMaterials;
             terrainMaterials.Add(m);
@@ -209,13 +213,11 @@ public class ONSPPropagationGeometry : MonoBehaviour
 
         // Traverse to the child objects.
         if (includeChildren)
-        {
             foreach (Transform child in obj.transform)
-            {
-                if (child.GetComponent<ONSPPropagationGeometry>() == null) // skip children which have their own component
-                    traverseMeshHierarchy(child.gameObject, currentMaterials, includeChildren, meshMaterials, terrainMaterials, ignoreStatic, ref ignoredMeshCount);
-            }
-        }
+                if (child.GetComponent<ONSPPropagationGeometry>() ==
+                    null) // skip children which have their own component
+                    traverseMeshHierarchy(child.gameObject, currentMaterials, includeChildren, meshMaterials,
+                        terrainMaterials, ignoreStatic, ref ignoredMeshCount);
     }
 
     //
@@ -223,20 +225,22 @@ public class ONSPPropagationGeometry : MonoBehaviour
     //
     private int uploadMesh(IntPtr geometryHandle, GameObject meshObject, Matrix4x4 worldToLocal)
     {
-        int unused = 0;
+        var unused = 0;
         return uploadMesh(geometryHandle, meshObject, worldToLocal, false, ref unused);
     }
 
-    private int uploadMesh(IntPtr geometryHandle, GameObject meshObject, Matrix4x4 worldToLocal, bool ignoreStatic, ref int ignoredMeshCount)
+    private int uploadMesh(IntPtr geometryHandle, GameObject meshObject, Matrix4x4 worldToLocal, bool ignoreStatic,
+        ref int ignoredMeshCount)
     {
         // Get the child mesh objects.
-        List<MeshMaterial> meshes = new List<MeshMaterial>();
-        List<TerrainMaterial> terrains = new List<TerrainMaterial>();
-        traverseMeshHierarchy(meshObject, null, includeChildMeshes, meshes, terrains, ignoreStatic, ref ignoredMeshCount);
+        var meshes = new List<MeshMaterial>();
+        var terrains = new List<TerrainMaterial>();
+        traverseMeshHierarchy(meshObject, null, includeChildMeshes, meshes, terrains, ignoreStatic,
+            ref ignoredMeshCount);
 
 #if INCLUDE_TERRAIN_TREES
         // TODO: expose tree material
-        ONSPPropagationMaterial[] treeMaterials = new ONSPPropagationMaterial[1];
+        var treeMaterials = new ONSPPropagationMaterial[1];
         treeMaterials[0] = gameObject.AddComponent<ONSPPropagationMaterial>();
 
 #if true
@@ -273,32 +277,31 @@ public class ONSPPropagationGeometry : MonoBehaviour
         //***********************************************************************
         // Count the number of vertices and indices.
 
-        int totalVertexCount = 0;
+        var totalVertexCount = 0;
         uint totalIndexCount = 0;
-        int totalFaceCount = 0;
-        int totalMaterialCount = 0;
+        var totalFaceCount = 0;
+        var totalMaterialCount = 0;
 
-        foreach (MeshMaterial m in meshes)
-        {
-            updateCountsForMesh(ref totalVertexCount, ref totalIndexCount, ref totalFaceCount, ref totalMaterialCount, m.meshFilter.sharedMesh);
-        }
+        foreach (var m in meshes)
+            updateCountsForMesh(ref totalVertexCount, ref totalIndexCount, ref totalFaceCount, ref totalMaterialCount,
+                m.meshFilter.sharedMesh);
 
-        for (int i = 0; i < terrains.Count; ++i)
+        for (var i = 0; i < terrains.Count; ++i)
         {
-            TerrainMaterial t = terrains[i];
-            TerrainData terrain = t.terrain.terrainData;
+            var t = terrains[i];
+            var terrain = t.terrain.terrainData;
 
 #if UNITY_2019_3_OR_NEWER
-            int w = terrain.heightmapResolution;
-            int h = terrain.heightmapResolution;
+            var w = terrain.heightmapResolution;
+            var h = terrain.heightmapResolution;
 #else
             int w = terrain.heightmapWidth;
             int h = terrain.heightmapHeight;
 #endif
-            int wRes = (w - 1) / terrainDecimation + 1;
-            int hRes = (h - 1) / terrainDecimation + 1;
-            int vertexCount = wRes * hRes;
-            int indexCount = (wRes - 1) * (hRes - 1) * 6;
+            var wRes = (w - 1) / terrainDecimation + 1;
+            var hRes = (h - 1) / terrainDecimation + 1;
+            var vertexCount = wRes * hRes;
+            var indexCount = (wRes - 1) * (hRes - 1) * 6;
 
             totalMaterialCount++;
             totalVertexCount += vertexCount;
@@ -306,19 +309,19 @@ public class ONSPPropagationGeometry : MonoBehaviour
             totalFaceCount += indexCount / 3;
 
 #if INCLUDE_TERRAIN_TREES
-            TreePrototype[] treePrototypes = terrain.treePrototypes;
+            var treePrototypes = terrain.treePrototypes;
             t.treePrototypeMeshes = new Mesh[treePrototypes.Length];
 
             // assume the sharedMesh with the lowest vertex is the lowest LOD
-            for (int j = 0; j < treePrototypes.Length; ++j)
+            for (var j = 0; j < treePrototypes.Length; ++j)
             {
-                GameObject prefab = treePrototypes[j].prefab;
-                MeshFilter[] meshFilters = prefab.GetComponentsInChildren<MeshFilter>();
-                int minVertexCount = int.MaxValue;
-                int index = -1;
-                for (int k = 0; k < meshFilters.Length; ++k)
+                var prefab = treePrototypes[j].prefab;
+                var meshFilters = prefab.GetComponentsInChildren<MeshFilter>();
+                var minVertexCount = int.MaxValue;
+                var index = -1;
+                for (var k = 0; k < meshFilters.Length; ++k)
                 {
-                    int count = meshFilters[k].sharedMesh.vertexCount;
+                    var count = meshFilters[k].sharedMesh.vertexCount;
                     if (count < minVertexCount)
                     {
                         minVertexCount = count;
@@ -329,11 +332,10 @@ public class ONSPPropagationGeometry : MonoBehaviour
                 t.treePrototypeMeshes[j] = meshFilters[index].sharedMesh;
             }
 
-            TreeInstance[] trees = terrain.treeInstances;
-            foreach (TreeInstance tree in trees)
-            {
-                updateCountsForMesh(ref totalVertexCount, ref totalIndexCount, ref totalFaceCount, ref totalMaterialCount, t.treePrototypeMeshes[tree.prototypeIndex]);
-            }
+            var trees = terrain.treeInstances;
+            foreach (var tree in trees)
+                updateCountsForMesh(ref totalVertexCount, ref totalIndexCount, ref totalFaceCount,
+                    ref totalMaterialCount, t.treePrototypeMeshes[tree.prototypeIndex]);
 
             terrains[i] = t;
 #endif
@@ -342,49 +344,51 @@ public class ONSPPropagationGeometry : MonoBehaviour
         //***********************************************************************
         // Copy the mesh data.
 
-        List<Vector3> tempVertices = new List<Vector3>();
-        List<int> tempIndices = new List<int>();
+        var tempVertices = new List<Vector3>();
+        var tempIndices = new List<int>();
 
-        MeshGroup[] groups = new MeshGroup[totalMaterialCount];
-        float[] vertices = new float[totalVertexCount * 3];
-        int[] indices = new int[totalIndexCount];
+        var groups = new MeshGroup[totalMaterialCount];
+        var vertices = new float[totalVertexCount * 3];
+        var indices = new int[totalIndexCount];
 
-        int vertexOffset = 0;
-        int indexOffset = 0;
-        int groupOffset = 0;
+        var vertexOffset = 0;
+        var indexOffset = 0;
+        var groupOffset = 0;
 
-        foreach (MeshMaterial m in meshes)
+        foreach (var m in meshes)
         {
-            MeshFilter meshFilter = m.meshFilter;
+            var meshFilter = m.meshFilter;
 
             // Compute the combined transform to go from mesh-local to geometry-local space.
-            Matrix4x4 matrix = worldToLocal * meshFilter.gameObject.transform.localToWorldMatrix;
+            var matrix = worldToLocal * meshFilter.gameObject.transform.localToWorldMatrix;
 
-            uploadMeshFilter(tempVertices, tempIndices, groups, vertices, indices, ref vertexOffset, ref indexOffset, ref groupOffset, meshFilter.sharedMesh, m.materials, matrix);
+            uploadMeshFilter(tempVertices, tempIndices, groups, vertices, indices, ref vertexOffset, ref indexOffset,
+                ref groupOffset, meshFilter.sharedMesh, m.materials, matrix);
         }
 
-        foreach (TerrainMaterial t in terrains)
+        foreach (var t in terrains)
         {
-            TerrainData terrain = t.terrain.terrainData;
+            var terrain = t.terrain.terrainData;
 
             // Compute the combined transform to go from mesh-local to geometry-local space.
-            Matrix4x4 matrix = worldToLocal * t.terrain.gameObject.transform.localToWorldMatrix;
+            var matrix = worldToLocal * t.terrain.gameObject.transform.localToWorldMatrix;
 
 #if UNITY_2019_3_OR_NEWER
-            int w = terrain.heightmapResolution;
-            int h = terrain.heightmapResolution;
+            var w = terrain.heightmapResolution;
+            var h = terrain.heightmapResolution;
 #else
             int w = terrain.heightmapWidth;
             int h = terrain.heightmapHeight;
 #endif
-            float[,] tData = terrain.GetHeights(0, 0, w, h);
+            var tData = terrain.GetHeights(0, 0, w, h);
 
-            Vector3 meshScale = terrain.size;
-            meshScale = new Vector3(meshScale.x / (w - 1) * terrainDecimation, meshScale.y, meshScale.z / (h - 1) * terrainDecimation);
-            int wRes = (w - 1) / terrainDecimation + 1;
-            int hRes = (h - 1) / terrainDecimation + 1;
-            int vertexCount = wRes * hRes;
-            int triangleCount = (wRes - 1) * (hRes - 1) * 2;
+            var meshScale = terrain.size;
+            meshScale = new Vector3(meshScale.x / (w - 1) * terrainDecimation, meshScale.y,
+                meshScale.z / (h - 1) * terrainDecimation);
+            var wRes = (w - 1) / terrainDecimation + 1;
+            var hRes = (h - 1) / terrainDecimation + 1;
+            var vertexCount = wRes * hRes;
+            var triangleCount = (wRes - 1) * (hRes - 1) * 2;
 
             // Initialize the group.
             groups[groupOffset].faceType = FaceType.TRIANGLES;
@@ -397,95 +401,99 @@ public class ONSPPropagationGeometry : MonoBehaviour
                 groups[groupOffset].material = t.materials[0].materialHandle;
             }
             else
+            {
                 groups[groupOffset].material = IntPtr.Zero;
+            }
 
             // Build vertices and UVs
-            for (int y = 0; y < hRes; y++)
+            for (var y = 0; y < hRes; y++)
+            for (var x = 0; x < wRes; x++)
             {
-                for (int x = 0; x < wRes; x++)
-                {
-                    int offset = (vertexOffset + y * wRes + x) * 3;
-                    Vector3 v = matrix.MultiplyPoint3x4(Vector3.Scale(meshScale, new Vector3(y, tData[x * terrainDecimation, y * terrainDecimation], x)));
-                    vertices[offset + 0] = v.x;
-                    vertices[offset + 1] = v.y;
-                    vertices[offset + 2] = v.z;
-                }
+                var offset = (vertexOffset + y * wRes + x) * 3;
+                var v = matrix.MultiplyPoint3x4(Vector3.Scale(meshScale,
+                    new Vector3(y, tData[x * terrainDecimation, y * terrainDecimation], x)));
+                vertices[offset + 0] = v.x;
+                vertices[offset + 1] = v.y;
+                vertices[offset + 2] = v.z;
             }
 
             // Build triangle indices: 3 indices into vertex array for each triangle
-            for (int y = 0; y < hRes - 1; y++)
+            for (var y = 0; y < hRes - 1; y++)
+            for (var x = 0; x < wRes - 1; x++)
             {
-                for (int x = 0; x < wRes - 1; x++)
-                {
-                    // For each grid cell output two triangles
-                    indices[indexOffset + 0] = (vertexOffset + (y * wRes) + x);
-                    indices[indexOffset + 1] = (vertexOffset + (y * wRes) + x + 1);
-                    indices[indexOffset + 2] = (vertexOffset + ((y + 1) * wRes) + x);
+                // For each grid cell output two triangles
+                indices[indexOffset + 0] = vertexOffset + y * wRes + x;
+                indices[indexOffset + 1] = vertexOffset + y * wRes + x + 1;
+                indices[indexOffset + 2] = vertexOffset + (y + 1) * wRes + x;
 
-                    indices[indexOffset + 3] = (vertexOffset + ((y + 1) * wRes) + x);
-                    indices[indexOffset + 4] = (vertexOffset + (y * wRes) + x + 1);
-                    indices[indexOffset + 5] = (vertexOffset + ((y + 1) * wRes) + x + 1);
-                    indexOffset += 6;
-                }
+                indices[indexOffset + 3] = vertexOffset + (y + 1) * wRes + x;
+                indices[indexOffset + 4] = vertexOffset + y * wRes + x + 1;
+                indices[indexOffset + 5] = vertexOffset + (y + 1) * wRes + x + 1;
+                indexOffset += 6;
             }
 
             vertexOffset += vertexCount;
             groupOffset++;
 
 #if INCLUDE_TERRAIN_TREES
-            TreeInstance[] trees = terrain.treeInstances;
-            foreach (TreeInstance tree in trees)
+            var trees = terrain.treeInstances;
+            foreach (var tree in trees)
             {
-                Vector3 pos = Vector3.Scale(tree.position, terrain.size);
-                Matrix4x4 treeLocalToWorldMatrix = t.terrain.gameObject.transform.localToWorldMatrix;
-                treeLocalToWorldMatrix.SetColumn(3, treeLocalToWorldMatrix.GetColumn(3) + new Vector4(pos.x, pos.y, pos.z, 0.0f));
+                var pos = Vector3.Scale(tree.position, terrain.size);
+                var treeLocalToWorldMatrix = t.terrain.gameObject.transform.localToWorldMatrix;
+                treeLocalToWorldMatrix.SetColumn(3,
+                    treeLocalToWorldMatrix.GetColumn(3) + new Vector4(pos.x, pos.y, pos.z, 0.0f));
                 // TODO: tree rotation
-                Matrix4x4 treeMatrix = worldToLocal * treeLocalToWorldMatrix;
-                uploadMeshFilter(tempVertices, tempIndices, groups, vertices, indices, ref vertexOffset, ref indexOffset, ref groupOffset, t.treePrototypeMeshes[tree.prototypeIndex], treeMaterials, treeMatrix);
+                var treeMatrix = worldToLocal * treeLocalToWorldMatrix;
+                uploadMeshFilter(tempVertices, tempIndices, groups, vertices, indices, ref vertexOffset,
+                    ref indexOffset, ref groupOffset, t.treePrototypeMeshes[tree.prototypeIndex], treeMaterials,
+                    treeMatrix);
             }
 #endif
         }
 
         // Upload mesh data
         return ONSPPropagation.Interface.AudioGeometryUploadMeshArrays(geometryHandle,
-                                                       vertices, totalVertexCount,
-                                                       indices, indices.Length,
-                                                       groups, groups.Length);
+            vertices, totalVertexCount,
+            indices, indices.Length,
+            groups, groups.Length);
     }
 
-    private static void uploadMeshFilter(List<Vector3> tempVertices, List<int> tempIndices, MeshGroup[] groups, float[] vertices, int[] indices,
-        ref int vertexOffset, ref int indexOffset, ref int groupOffset, Mesh mesh, ONSPPropagationMaterial[] materials, Matrix4x4 matrix)
+    private static void uploadMeshFilter(List<Vector3> tempVertices, List<int> tempIndices, MeshGroup[] groups,
+        float[] vertices, int[] indices,
+        ref int vertexOffset, ref int indexOffset, ref int groupOffset, Mesh mesh, ONSPPropagationMaterial[] materials,
+        Matrix4x4 matrix)
     {
         // Get the mesh vertices.
         tempVertices.Clear();
         mesh.GetVertices(tempVertices);
 
         // Copy the Vector3 vertices into a packed array of floats for the API.
-        int meshVertexCount = tempVertices.Count;
-        for (int i = 0; i < meshVertexCount; i++)
+        var meshVertexCount = tempVertices.Count;
+        for (var i = 0; i < meshVertexCount; i++)
         {
             // Transform into the parent space.
-            Vector3 v = matrix.MultiplyPoint3x4(tempVertices[i]);
-            int offset = (vertexOffset + i) * 3;
+            var v = matrix.MultiplyPoint3x4(tempVertices[i]);
+            var offset = (vertexOffset + i) * 3;
             vertices[offset + 0] = v.x;
             vertices[offset + 1] = v.y;
             vertices[offset + 2] = v.z;
         }
 
         // Copy the data for each submesh.
-        for (int i = 0; i < mesh.subMeshCount; i++)
+        for (var i = 0; i < mesh.subMeshCount; i++)
         {
-            MeshTopology topology = mesh.GetTopology(i);
+            var topology = mesh.GetTopology(i);
 
             if (topology == MeshTopology.Triangles || topology == MeshTopology.Quads)
             {
                 // Get the submesh indices.
                 tempIndices.Clear();
                 mesh.GetIndices(tempIndices, i);
-                int subMeshIndexCount = tempIndices.Count;
+                var subMeshIndexCount = tempIndices.Count;
 
                 // Copy and adjust the indices.
-                for (int j = 0; j < subMeshIndexCount; j++)
+                for (var j = 0; j < subMeshIndexCount; j++)
                     indices[indexOffset + j] = tempIndices[j] + vertexOffset;
 
                 // Initialize the group.
@@ -504,14 +512,16 @@ public class ONSPPropagationGeometry : MonoBehaviour
 
                 if (materials != null && materials.Length != 0)
                 {
-                    int matIndex = i;
+                    var matIndex = i;
                     if (matIndex >= materials.Length)
                         matIndex = materials.Length - 1;
                     materials[matIndex].StartInternal();
                     groups[groupOffset + i].material = materials[matIndex].materialHandle;
                 }
                 else
+                {
                     groups[groupOffset + i].material = IntPtr.Zero;
+                }
 
                 indexOffset += subMeshIndexCount;
             }
@@ -521,17 +531,18 @@ public class ONSPPropagationGeometry : MonoBehaviour
         groupOffset += mesh.subMeshCount;
     }
 
-    private static void updateCountsForMesh(ref int totalVertexCount, ref uint totalIndexCount, ref int totalFaceCount, ref int totalMaterialCount, Mesh mesh)
+    private static void updateCountsForMesh(ref int totalVertexCount, ref uint totalIndexCount, ref int totalFaceCount,
+        ref int totalMaterialCount, Mesh mesh)
     {
         totalMaterialCount += mesh.subMeshCount;
         totalVertexCount += mesh.vertexCount;
 
-        for (int i = 0; i < mesh.subMeshCount; i++)
+        for (var i = 0; i < mesh.subMeshCount; i++)
         {
-            MeshTopology topology = mesh.GetTopology(i);
+            var topology = mesh.GetTopology(i);
             if (topology == MeshTopology.Triangles || topology == MeshTopology.Quads)
             {
-                uint meshIndexCount = mesh.GetIndexCount(i);
+                var meshIndexCount = mesh.GetIndexCount(i);
                 totalIndexCount += meshIndexCount;
 
                 if (topology == MeshTopology.Triangles)
@@ -547,14 +558,15 @@ public class ONSPPropagationGeometry : MonoBehaviour
 
     public void UploadGeometry()
     {
-        int ignoredMeshCount = 0;
-        if (uploadMesh(geometryHandle, gameObject, gameObject.transform.worldToLocalMatrix, true, ref ignoredMeshCount) != OSPSuccess)
+        var ignoredMeshCount = 0;
+        if (uploadMesh(geometryHandle, gameObject, gameObject.transform.worldToLocalMatrix, true,
+            ref ignoredMeshCount) != OSPSuccess)
             throw new Exception("Unable to upload audio mesh geometry");
 
         if (ignoredMeshCount != 0)
-        {
-            Debug.LogError("Failed to upload meshes, " + ignoredMeshCount + " static meshes ignored. Turn on \"File Enabled\" to process static meshes offline", gameObject);
-        }
+            Debug.LogError(
+                "Failed to upload meshes, " + ignoredMeshCount +
+                " static meshes ignored. Turn on \"File Enabled\" to process static meshes offline", gameObject);
     }
 
 #if UNITY_EDITOR
@@ -566,18 +578,16 @@ public class ONSPPropagationGeometry : MonoBehaviour
         if (filePathRelative == "")
         {
             filePathRelative = GetPath(transform);
-            string modifier = "";
-            int counter = 0;
+            var modifier = "";
+            var counter = 0;
             while (System.IO.File.Exists(filePath + modifier))
             {
                 modifier = "-" + counter;
                 ++counter;
 
                 if (counter > 10000)
-                {
                     // sanity check to prevent hang
                     throw new Exception("Unable to find sutiable file name");
-                }
             }
 
             filePathRelative = filePathRelative + modifier;
@@ -585,15 +595,13 @@ public class ONSPPropagationGeometry : MonoBehaviour
         }
 
         // Create the directory
-        string directoryName = filePathRelative.Substring(0, filePathRelative.LastIndexOf('/'));
+        var directoryName = filePathRelative.Substring(0, filePathRelative.LastIndexOf('/'));
         System.IO.Directory.CreateDirectory(GeometryAssetPath + "/" + directoryName);
 
         // Create a temporary geometry.
-        IntPtr tempGeometryHandle = IntPtr.Zero;
+        var tempGeometryHandle = IntPtr.Zero;
         if (ONSPPropagation.Interface.CreateAudioGeometry(out tempGeometryHandle) != OSPSuccess)
-        {
             throw new Exception("Failed to create temp geometry handle");
-        }
 
         // Upload the mesh geometry.
         if (uploadMesh(tempGeometryHandle, gameObject, gameObject.transform.worldToLocalMatrix) != OSPSuccess)
@@ -611,9 +619,7 @@ public class ONSPPropagationGeometry : MonoBehaviour
 
         // Destroy the geometry.
         if (ONSPPropagation.Interface.DestroyAudioGeometry(tempGeometryHandle) != OSPSuccess)
-        {
             throw new Exception("Failed to destroy temp geometry handle");
-        }
 
         return true;
     }
@@ -642,11 +648,9 @@ public class ONSPPropagationGeometry : MonoBehaviour
     public bool WriteToObj()
     {
         // Create a temporary geometry.
-        IntPtr tempGeometryHandle = IntPtr.Zero;
+        var tempGeometryHandle = IntPtr.Zero;
         if (ONSPPropagation.Interface.CreateAudioGeometry(out tempGeometryHandle) != OSPSuccess)
-        {
             throw new Exception("Failed to create temp geometry handle");
-        }
 
         // Upload the mesh geometry.
         if (uploadMesh(tempGeometryHandle, gameObject, gameObject.transform.worldToLocalMatrix) != OSPSuccess)
@@ -656,7 +660,8 @@ public class ONSPPropagationGeometry : MonoBehaviour
         }
 
         // Write the mesh to a .obj file.
-        if (ONSPPropagation.Interface.AudioGeometryWriteMeshFileObj(tempGeometryHandle, filePath + ".obj") != OSPSuccess)
+        if (ONSPPropagation.Interface.AudioGeometryWriteMeshFileObj(tempGeometryHandle, filePath + ".obj") !=
+            OSPSuccess)
         {
             Debug.LogError("Error writing .obj file " + filePath + ".obj");
             return false;
@@ -664,11 +669,8 @@ public class ONSPPropagationGeometry : MonoBehaviour
 
         // Destroy the geometry.
         if (ONSPPropagation.Interface.DestroyAudioGeometry(tempGeometryHandle) != OSPSuccess)
-        {
             throw new Exception("Failed to destroy temp geometry handle");
-        }
 
         return true;
     }
 }
-

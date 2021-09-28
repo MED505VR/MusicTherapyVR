@@ -44,14 +44,12 @@ using System.Threading;
 /// <summary>
 /// Allows Oculus to build apps from the command line.
 /// </summary>
-partial class OculusBuildApp : EditorWindow
+internal partial class OculusBuildApp : EditorWindow
 {
-    static void SetPCTarget()
+    private static void SetPCTarget()
     {
         if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneWindows)
-        {
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows);
-        }
 #if !USING_XR_SDK && !REQUIRES_XR_SDK
         UnityEditorInternal.VR.VREditor.SetVREnabledOnTargetGroup(BuildTargetGroup.Standalone, true);
 #pragma warning disable 618
@@ -61,15 +59,13 @@ partial class OculusBuildApp : EditorWindow
         AssetDatabase.SaveAssets();
     }
 
-    static void SetAndroidTarget()
+    private static void SetAndroidTarget()
     {
         EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ASTC;
         EditorUserBuildSettings.androidBuildSystem = AndroidBuildSystem.Gradle;
 
         if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
-        {
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
-        }
 
 #if !USING_XR_SDK && !REQUIRES_XR_SDK
         UnityEditorInternal.VR.VREditor.SetVREnabledOnTargetGroup(BuildTargetGroup.Standalone, true);
@@ -554,7 +550,8 @@ partial class OculusBuildApp : EditorWindow
         if (adbTool.isReady)
         {
             string apkPathLocal;
-            string gradleExportFolder = Path.Combine(Path.Combine(gradleExport, productName), "build\\outputs\\apk\\debug");
+            string gradleExportFolder =
+ Path.Combine(Path.Combine(gradleExport, productName), "build\\outputs\\apk\\debug");
 
             // Check to see if gradle output directory exists
             gradleExportFolder = gradleExportFolder.Replace("/", "\\");
@@ -613,9 +610,11 @@ partial class OculusBuildApp : EditorWindow
 #if UNITY_2019_3_OR_NEWER
             string playerActivityName = "\"" + applicationIdentifier + "/com.unity3d.player.UnityPlayerActivity\"";
 #else
-			string playerActivityName = "\"" + applicationIdentifier + "/" + applicationIdentifier + ".UnityPlayerActivity\"";
+			string playerActivityName =
+ "\"" + applicationIdentifier + "/" + applicationIdentifier + ".UnityPlayerActivity\"";
 #endif
-            string[] appStartCommand = { "-d shell", "am start -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -S -f 0x10200000 -n", playerActivityName };
+            string[] appStartCommand =
+ { "-d shell", "am start -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -S -f 0x10200000 -n", playerActivityName };
             if (adbTool.RunCommand(appStartCommand, null, out output, out error) != 0) return false;
             UnityEngine.Debug.Log("OVRADBTool: Application Start Success");
 
@@ -632,7 +631,8 @@ partial class OculusBuildApp : EditorWindow
             // If the user is using a USB 2.0 cable, inform them about improved transfer speeds and estimate time saved
             if (informLog)
             {
-                float usb3Time = apkSize.Value / (USB_3_TRANSFER_SPEED * BYTES_TO_MEGABYTES); // `informLog` can't be true if `apkSize` is null.
+                float usb3Time =
+ apkSize.Value / (USB_3_TRANSFER_SPEED * BYTES_TO_MEGABYTES); // `informLog` can't be true if `apkSize` is null.
                 UnityEngine.Debug.Log(string.Format("OVRBuild has detected slow transfer speeds. A USB 3.0 cable is recommended to reduce the time it takes to deploy your project by approximatly {0:0.0} seconds", pushTime.TotalSeconds - usb3Time));
                 return true;
             }
@@ -702,4 +702,4 @@ partial class OculusBuildApp : EditorWindow
         UnityEngine.Debug.Log("OVRBuild: " + message);
     }
 #endif //UNITY_EDITOR_WIN && UNITY_ANDROID
-            }
+}

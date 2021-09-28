@@ -5,12 +5,9 @@ using Normal.Realtime;
 
 public class VibrationScripts : MonoBehaviour
 {
-    [SerializeField]
-    private float freq;
-    [SerializeField]
-    private float amp;
-    [SerializeField]
-    private float dura;
+    [SerializeField] private float freq;
+    [SerializeField] private float amp;
+    [SerializeField] private float dura;
 
 
     private GameObject leftHand, rightHand;
@@ -18,7 +15,7 @@ public class VibrationScripts : MonoBehaviour
     private RealtimeView myView;
 
 
-    IEnumerator Haptic (float frequency, float amplitude, float duration, bool rightHand, bool leftHand)
+    private IEnumerator Haptic(float frequency, float amplitude, float duration, bool rightHand, bool leftHand)
     {
         if (rightHand) OVRInput.SetControllerVibration(frequency, amplitude, OVRInput.Controller.RTouch);
         if (leftHand) OVRInput.SetControllerVibration(frequency, amplitude, OVRInput.Controller.LTouch);
@@ -48,7 +45,6 @@ public class VibrationScripts : MonoBehaviour
         {
             myView.RequestOwnership();
             StartCoroutine(Haptic(freq, amp, dura, true, false));
-
         }
     }
 }

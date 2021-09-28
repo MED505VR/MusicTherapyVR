@@ -1,70 +1,65 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Normal.Realtime;
 using UnityEngine;
-using Normal.Realtime;
 
-public class ScaleChange : MonoBehaviour
+namespace C_scale
 {
-    [SerializeField]
-    private float _gain;
-    private float _previousGain;
-
-
-    // Synchronization
-    private ScaleSync _scaleSync;
-
-    // Hand info
-    private GameObject leftHand, rightHand;
-
-
-    private GameObject myObject;
-    private RealtimeView myView;
-
-    private float volume = 0.1f;
-
-
-
-
-    private void Awake()
+    public class ScaleChange : MonoBehaviour
     {
-        _scaleSync = GetComponent<ScaleSync>();
-
-        leftHand = GameObject.Find("LeftHandAnchor");
-
-        rightHand = GameObject.Find("RightHandAnchor");
-
-        myObject = GameObject.Find("Table");
-        myView = myObject.GetComponent<RealtimeView>();
-    }
+        [SerializeField] private float gain;
+        private float previousGain;
 
 
+        // Synchronization
+        private ScaleSync scaleSync;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject == leftHand || other.gameObject == rightHand)
+        // Hand info
+        private GameObject leftHand, rightHand;
+
+
+        private GameObject myObject;
+        private RealtimeView myView;
+
+        private float volume = 0.1f;
+
+
+        private void Awake()
         {
-            myView.RequestOwnership();
-            _gain = volume;
+            scaleSync = GetComponent<ScaleSync>();
+
+            leftHand = GameObject.Find("LeftHandAnchor");
+
+            rightHand = GameObject.Find("RightHandAnchor");
+
+            myObject = GameObject.Find("Table");
+            myView = myObject.GetComponent<RealtimeView>();
+        }
+
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject == leftHand || other.gameObject == rightHand)
+            {
+                myView.RequestOwnership();
+                gain = volume;
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.gameObject == leftHand || other.gameObject == rightHand)
+            {
+                gain = 0;
+                myView.ClearOwnership();
+            }
+        }
+
+        private void Update()
+        {
+            if (gain != previousGain)
+            {
+                scaleSync.SetGain(gain);
+                previousGain = gain;
+            }
         }
     }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject == leftHand || other.gameObject == rightHand)
-        {
-            _gain = 0;
-            myView.ClearOwnership();
-        }
-    }
-
-    private void Update()
-    {
-
-        if (_gain != _previousGain)
-        {
-            _scaleSync.SetGain(_gain);
-            _previousGain = _gain;
-        }
-    }
-
 }

@@ -9,7 +9,7 @@ public class OvrAvatarAssetMesh : OvrAvatarAsset
     private ovrAvatarSkinnedMeshPose skinnedBindPose;
     public string[] jointNames;
 
-    public OvrAvatarAssetMesh(UInt64 _assetId, IntPtr asset, ovrAvatarAssetType meshType)
+    public OvrAvatarAssetMesh(ulong _assetId, IntPtr asset, ovrAvatarAssetType meshType)
     {
         assetID = _assetId;
         mesh = new Mesh();
@@ -18,78 +18,80 @@ public class OvrAvatarAssetMesh : OvrAvatarAsset
         SetSkinnedBindPose(asset, meshType);
 
         long vertexCount = 0;
-        IntPtr vertexBuffer = IntPtr.Zero;
+        var vertexBuffer = IntPtr.Zero;
         uint indexCount = 0;
-        IntPtr indexBuffer = IntPtr.Zero;
+        var indexBuffer = IntPtr.Zero;
 
         GetVertexAndIndexData(asset, meshType, out vertexCount, out vertexBuffer, out indexCount, out indexBuffer);
 
         AvatarLogger.Log("OvrAvatarAssetMesh: " + _assetId + " " + meshType.ToString() + " VertexCount:" + vertexCount);
 
-        Vector3[] vertices = new Vector3[vertexCount];
-        Vector3[] normals = new Vector3[vertexCount];
-        Vector4[] tangents = new Vector4[vertexCount];
-        Vector2[] uv = new Vector2[vertexCount];
-        Color[] colors = new Color[vertexCount];
-        BoneWeight[] boneWeights = new BoneWeight[vertexCount];
+        var vertices = new Vector3[vertexCount];
+        var normals = new Vector3[vertexCount];
+        var tangents = new Vector4[vertexCount];
+        var uv = new Vector2[vertexCount];
+        var colors = new Color[vertexCount];
+        var boneWeights = new BoneWeight[vertexCount];
 
-        long vertexBufferStart = vertexBuffer.ToInt64();
+        var vertexBufferStart = vertexBuffer.ToInt64();
 
         // We have different underlying vertex types to unpack, so switch on mesh type. 
         switch (meshType)
         {
             case ovrAvatarAssetType.Mesh:
+            {
+                var vertexSize = (long)Marshal.SizeOf(typeof(ovrAvatarMeshVertex));
+
+                for (long i = 0; i < vertexCount; i++)
                 {
-                    long vertexSize = (long)Marshal.SizeOf(typeof(ovrAvatarMeshVertex));
+                    var offset = vertexSize * i;
 
-                    for (long i = 0; i < vertexCount; i++)
-                    {
-                        long offset = vertexSize * i;
+                    var vertex = (ovrAvatarMeshVertex)Marshal.PtrToStructure(new IntPtr(vertexBufferStart + offset),
+                        typeof(ovrAvatarMeshVertex));
+                    vertices[i] = new Vector3(vertex.x, vertex.y, -vertex.z);
+                    normals[i] = new Vector3(vertex.nx, vertex.ny, -vertex.nz);
+                    tangents[i] = new Vector4(vertex.tx, vertex.ty, -vertex.tz, vertex.tw);
+                    uv[i] = new Vector2(vertex.u, vertex.v);
+                    colors[i] = new Color(0, 0, 0, 1);
 
-                        ovrAvatarMeshVertex vertex = (ovrAvatarMeshVertex)Marshal.PtrToStructure(new IntPtr(vertexBufferStart + offset), typeof(ovrAvatarMeshVertex));
-                        vertices[i] = new Vector3(vertex.x, vertex.y, -vertex.z);
-                        normals[i] = new Vector3(vertex.nx, vertex.ny, -vertex.nz);
-                        tangents[i] = new Vector4(vertex.tx, vertex.ty, -vertex.tz, vertex.tw);
-                        uv[i] = new Vector2(vertex.u, vertex.v);
-                        colors[i] = new Color(0, 0, 0, 1);
-
-                        boneWeights[i].boneIndex0 = vertex.blendIndices[0];
-                        boneWeights[i].boneIndex1 = vertex.blendIndices[1];
-                        boneWeights[i].boneIndex2 = vertex.blendIndices[2];
-                        boneWeights[i].boneIndex3 = vertex.blendIndices[3];
-                        boneWeights[i].weight0 = vertex.blendWeights[0];
-                        boneWeights[i].weight1 = vertex.blendWeights[1];
-                        boneWeights[i].weight2 = vertex.blendWeights[2];
-                        boneWeights[i].weight3 = vertex.blendWeights[3];
-                    }
+                    boneWeights[i].boneIndex0 = vertex.blendIndices[0];
+                    boneWeights[i].boneIndex1 = vertex.blendIndices[1];
+                    boneWeights[i].boneIndex2 = vertex.blendIndices[2];
+                    boneWeights[i].boneIndex3 = vertex.blendIndices[3];
+                    boneWeights[i].weight0 = vertex.blendWeights[0];
+                    boneWeights[i].weight1 = vertex.blendWeights[1];
+                    boneWeights[i].weight2 = vertex.blendWeights[2];
+                    boneWeights[i].weight3 = vertex.blendWeights[3];
                 }
+            }
                 break;
 
             case ovrAvatarAssetType.CombinedMesh:
+            {
+                var vertexSize = (long)Marshal.SizeOf(typeof(ovrAvatarMeshVertexV2));
+
+                for (long i = 0; i < vertexCount; i++)
                 {
-                    long vertexSize = (long)Marshal.SizeOf(typeof(ovrAvatarMeshVertexV2));
+                    var offset = vertexSize * i;
 
-                    for (long i = 0; i < vertexCount; i++)
-                    {
-                        long offset = vertexSize * i;
+                    var vertex = (ovrAvatarMeshVertexV2)Marshal.PtrToStructure(new IntPtr(vertexBufferStart + offset),
+                        typeof(ovrAvatarMeshVertexV2));
+                    vertices[i] = new Vector3(vertex.x, vertex.y, -vertex.z);
+                    normals[i] = new Vector3(vertex.nx, vertex.ny, -vertex.nz);
+                    tangents[i] = new Vector4(vertex.tx, vertex.ty, -vertex.tz, vertex.tw);
+                    uv[i] = new Vector2(vertex.u, vertex.v);
+                    colors[i] = new Color(vertex.r, vertex.g, vertex.b, vertex.a);
 
-                        ovrAvatarMeshVertexV2 vertex = (ovrAvatarMeshVertexV2)Marshal.PtrToStructure(new IntPtr(vertexBufferStart + offset), typeof(ovrAvatarMeshVertexV2));
-                        vertices[i] = new Vector3(vertex.x, vertex.y, -vertex.z);
-                        normals[i] = new Vector3(vertex.nx, vertex.ny, -vertex.nz);
-                        tangents[i] = new Vector4(vertex.tx, vertex.ty, -vertex.tz, vertex.tw);
-                        uv[i] = new Vector2(vertex.u, vertex.v);
-                        colors[i] = new Color(vertex.r, vertex.g, vertex.b, vertex.a);
-
-                        boneWeights[i].boneIndex0 = vertex.blendIndices[0];
-                        boneWeights[i].boneIndex1 = vertex.blendIndices[1];
-                        boneWeights[i].boneIndex2 = vertex.blendIndices[2];
-                        boneWeights[i].boneIndex3 = vertex.blendIndices[3];
-                        boneWeights[i].weight0 = vertex.blendWeights[0];
-                        boneWeights[i].weight1 = vertex.blendWeights[1];
-                        boneWeights[i].weight2 = vertex.blendWeights[2];
-                        boneWeights[i].weight3 = vertex.blendWeights[3];
-                    }
+                    boneWeights[i].boneIndex0 = vertex.blendIndices[0];
+                    boneWeights[i].boneIndex1 = vertex.blendIndices[1];
+                    boneWeights[i].boneIndex2 = vertex.blendIndices[2];
+                    boneWeights[i].boneIndex3 = vertex.blendIndices[3];
+                    boneWeights[i].weight0 = vertex.blendWeights[0];
+                    boneWeights[i].weight1 = vertex.blendWeights[1];
+                    boneWeights[i].weight2 = vertex.blendWeights[2];
+                    boneWeights[i].weight3 = vertex.blendWeights[3];
                 }
+            }
                 break;
             default:
                 throw new Exception("Bad Mesh Asset Type");
@@ -105,39 +107,36 @@ public class OvrAvatarAssetMesh : OvrAvatarAsset
         LoadBlendShapes(asset, vertexCount);
         LoadSubmeshes(asset, indexBuffer, indexCount);
 
-        UInt32 jointCount = skinnedBindPose.jointCount;
+        var jointCount = skinnedBindPose.jointCount;
         jointNames = new string[jointCount];
-        for (UInt32 i = 0; i < jointCount; i++)
-        {
-            jointNames[i] = Marshal.PtrToStringAnsi(skinnedBindPose.jointNames[i]);
-        }
+        for (uint i = 0; i < jointCount; i++) jointNames[i] = Marshal.PtrToStringAnsi(skinnedBindPose.jointNames[i]);
     }
 
     private void LoadSubmeshes(IntPtr asset, IntPtr indexBufferPtr, ulong indexCount)
     {
-        UInt32 subMeshCount = CAPI.ovrAvatarAsset_GetSubmeshCount(asset);
+        var subMeshCount = CAPI.ovrAvatarAsset_GetSubmeshCount(asset);
 
         AvatarLogger.Log("LoadSubmeshes: " + subMeshCount);
 
-        Int16[] indices = new Int16[indexCount];
+        var indices = new short[indexCount];
         Marshal.Copy(indexBufferPtr, indices, 0, (int)indexCount);
 
         mesh.subMeshCount = (int)subMeshCount;
         uint accumedOffset = 0;
-        for (UInt32 index = 0; index < subMeshCount; index++)
+        for (uint index = 0; index < subMeshCount; index++)
         {
             var submeshIndexCount = CAPI.ovrAvatarAsset_GetSubmeshLastIndex(asset, index);
             var currSpan = submeshIndexCount - accumedOffset;
 
-            Int32[] triangles = new Int32[currSpan];
+            var triangles = new int[currSpan];
 
-            int triangleOffset = 0;
+            var triangleOffset = 0;
             for (ulong i = accumedOffset; i < submeshIndexCount; i += 3)
             {
                 // NOTE: We are changing the order of each triangle to match unity expectations vs pipeline.
-                triangles[triangleOffset + 2] = (Int32)indices[i];
-                triangles[triangleOffset + 1] = (Int32)indices[i + 1];
-                triangles[triangleOffset] = (Int32)indices[i + 2];
+                triangles[triangleOffset + 2] = (int)indices[i];
+                triangles[triangleOffset + 1] = (int)indices[i + 1];
+                triangles[triangleOffset] = (int)indices[i + 2];
 
                 triangleOffset += 3;
             }
@@ -147,29 +146,31 @@ public class OvrAvatarAssetMesh : OvrAvatarAsset
             mesh.SetIndices(triangles, MeshTopology.Triangles, (int)index);
         }
     }
-   
+
     private void LoadBlendShapes(IntPtr asset, long vertexCount)
     {
-        UInt32 blendShapeCount = CAPI.ovrAvatarAsset_GetMeshBlendShapeCount(asset);
-        IntPtr blendShapeVerts = CAPI.ovrAvatarAsset_GetMeshBlendShapeVertices(asset);
+        var blendShapeCount = CAPI.ovrAvatarAsset_GetMeshBlendShapeCount(asset);
+        var blendShapeVerts = CAPI.ovrAvatarAsset_GetMeshBlendShapeVertices(asset);
 
         AvatarLogger.Log("LoadBlendShapes: " + blendShapeCount);
 
         if (blendShapeVerts != IntPtr.Zero)
         {
             long offset = 0;
-            long blendVertexSize = (long)Marshal.SizeOf(typeof(ovrAvatarBlendVertex));
-            long blendVertexBufferStart = blendShapeVerts.ToInt64();
+            var blendVertexSize = (long)Marshal.SizeOf(typeof(ovrAvatarBlendVertex));
+            var blendVertexBufferStart = blendShapeVerts.ToInt64();
 
-            for (UInt32 blendIndex = 0; blendIndex < blendShapeCount; blendIndex++)
+            for (uint blendIndex = 0; blendIndex < blendShapeCount; blendIndex++)
             {
-                Vector3[] blendVerts = new Vector3[vertexCount];
-                Vector3[] blendNormals = new Vector3[vertexCount];
-                Vector3[] blendTangents = new Vector3[vertexCount];
+                var blendVerts = new Vector3[vertexCount];
+                var blendNormals = new Vector3[vertexCount];
+                var blendTangents = new Vector3[vertexCount];
 
                 for (long i = 0; i < vertexCount; i++)
                 {
-                    ovrAvatarBlendVertex vertex = (ovrAvatarBlendVertex)Marshal.PtrToStructure(new IntPtr(blendVertexBufferStart + offset), typeof(ovrAvatarBlendVertex));
+                    var vertex =
+                        (ovrAvatarBlendVertex)Marshal.PtrToStructure(new IntPtr(blendVertexBufferStart + offset),
+                            typeof(ovrAvatarBlendVertex));
                     blendVerts[i] = new Vector3(vertex.x, vertex.y, -vertex.z);
                     blendNormals[i] = new Vector3(vertex.nx, vertex.ny, -vertex.nz);
                     blendTangents[i] = new Vector4(vertex.tx, vertex.ty, -vertex.tz);
@@ -177,8 +178,8 @@ public class OvrAvatarAssetMesh : OvrAvatarAsset
                     offset += blendVertexSize;
                 }
 
-                IntPtr namePtr = CAPI.ovrAvatarAsset_GetMeshBlendShapeName(asset, blendIndex);
-                string name = Marshal.PtrToStringAnsi(namePtr);
+                var namePtr = CAPI.ovrAvatarAsset_GetMeshBlendShapeName(asset, blendIndex);
+                var name = Marshal.PtrToStringAnsi(namePtr);
                 const float frameWeight = 100f;
                 mesh.AddBlendShapeFrame(name, frameWeight, blendVerts, blendNormals, blendTangents);
             }
@@ -197,7 +198,6 @@ public class OvrAvatarAssetMesh : OvrAvatarAsset
                 break;
             default:
                 break;
-
         }
     }
 
@@ -235,19 +235,19 @@ public class OvrAvatarAssetMesh : OvrAvatarAsset
 
     public SkinnedMeshRenderer CreateSkinnedMeshRendererOnObject(GameObject target)
     {
-        SkinnedMeshRenderer skinnedMeshRenderer = target.AddComponent<SkinnedMeshRenderer>();
+        var skinnedMeshRenderer = target.AddComponent<SkinnedMeshRenderer>();
         skinnedMeshRenderer.sharedMesh = mesh;
         mesh.name = "AvatarMesh_" + assetID;
-        UInt32 jointCount = skinnedBindPose.jointCount;
-        GameObject[] bones = new GameObject[jointCount];
-        Transform[] boneTransforms = new Transform[jointCount];
-        Matrix4x4[] bindPoses = new Matrix4x4[jointCount];
-        for (UInt32 i = 0; i < jointCount; i++)
+        var jointCount = skinnedBindPose.jointCount;
+        var bones = new GameObject[jointCount];
+        var boneTransforms = new Transform[jointCount];
+        var bindPoses = new Matrix4x4[jointCount];
+        for (uint i = 0; i < jointCount; i++)
         {
             bones[i] = new GameObject();
             boneTransforms[i] = bones[i].transform;
             bones[i].name = jointNames[i];
-            int parentIndex = skinnedBindPose.jointParents[i];
+            var parentIndex = skinnedBindPose.jointParents[i];
             if (parentIndex == -1)
             {
                 bones[i].transform.parent = skinnedMeshRenderer.transform;
@@ -259,11 +259,11 @@ public class OvrAvatarAssetMesh : OvrAvatarAsset
             }
 
             // Set the position relative to the parent
-            Vector3 position = skinnedBindPose.jointTransform[i].position;
+            var position = skinnedBindPose.jointTransform[i].position;
             position.z = -position.z;
             bones[i].transform.localPosition = position;
 
-            Quaternion orientation = skinnedBindPose.jointTransform[i].orientation;
+            var orientation = skinnedBindPose.jointTransform[i].orientation;
             orientation.x = -orientation.x;
             orientation.y = -orientation.y;
             bones[i].transform.localRotation = orientation;
@@ -272,6 +272,7 @@ public class OvrAvatarAssetMesh : OvrAvatarAsset
 
             bindPoses[i] = bones[i].transform.worldToLocalMatrix * skinnedMeshRenderer.transform.localToWorldMatrix;
         }
+
         skinnedMeshRenderer.bones = boneTransforms;
         mesh.bindposes = bindPoses;
         return skinnedMeshRenderer;

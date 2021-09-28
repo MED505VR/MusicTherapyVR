@@ -5,10 +5,10 @@ using Normal.Realtime;
 using Tilia;
 using OculusIntegrationForVRTK;
 
-  public class multiplayerOwnership : MonoBehaviour
+public class multiplayerOwnership : MonoBehaviour
 {
-    public GameObject Cube;  
-    
+    public GameObject Cube;
+
 
     public void RequestOwnership()
     {
@@ -16,15 +16,8 @@ using OculusIntegrationForVRTK;
         var realtimeView = GetComponent<RealtimeView>();
         var realtimeTransform = GetComponent<RealtimeTransform>();
 
-        if (realtimeView != null)
-        {
-            realtimeView.RequestOwnership();
-        }
+        if (realtimeView != null) realtimeView.RequestOwnership();
 
-        if (realtimeTransform != null) {
-
-            realtimeTransform.RequestOwnership();
-        }
+        if (realtimeTransform != null) realtimeTransform.RequestOwnership();
     }
-
 }

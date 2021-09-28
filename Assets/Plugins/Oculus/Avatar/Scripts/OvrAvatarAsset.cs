@@ -1,5 +1,6 @@
 using System;
 
-public class OvrAvatarAsset {
-    public UInt64 assetID;
+public class OvrAvatarAsset
+{
+    public ulong assetID;
 }

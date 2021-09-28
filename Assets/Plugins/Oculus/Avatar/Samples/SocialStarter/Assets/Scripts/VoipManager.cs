@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-
 using Oculus.Platform;
 using Oculus.Platform.Models;
 
@@ -31,19 +30,16 @@ public class VoipManager
         {
             Voip.Stop(userID);
 
-            RemotePlayer remote = SocialPlatformManager.GetRemoteUser(userID);
-            if (remote != null)
-            {
-                remote.voipConnectionState = PeerConnectionState.Unknown;
-            }
+            var remote = SocialPlatformManager.GetRemoteUser(userID);
+            if (remote != null) remote.voipConnectionState = PeerConnectionState.Unknown;
         }
     }
 
-    void VoipConnectRequestCallback(Message<NetworkingPeer> msg)
+    private void VoipConnectRequestCallback(Message<NetworkingPeer> msg)
     {
         SocialPlatformManager.LogOutput("Voip request from " + msg.Data.ID);
 
-        RemotePlayer remote = SocialPlatformManager.GetRemoteUser(msg.Data.ID);
+        var remote = SocialPlatformManager.GetRemoteUser(msg.Data.ID);
         if (remote != null)
         {
             SocialPlatformManager.LogOutput("Voip request accepted from " + msg.Data.ID);
@@ -51,11 +47,11 @@ public class VoipManager
         }
     }
 
-    void VoipStateChangedCallback(Message<NetworkingPeer> msg)
+    private void VoipStateChangedCallback(Message<NetworkingPeer> msg)
     {
         SocialPlatformManager.LogOutput("Voip state to " + msg.Data.ID + " changed to  " + msg.Data.State);
 
-        RemotePlayer remote = SocialPlatformManager.GetRemoteUser(msg.Data.ID);
+        var remote = SocialPlatformManager.GetRemoteUser(msg.Data.ID);
         if (remote != null)
         {
             remote.voipConnectionState = msg.Data.State;

@@ -3,8 +3,8 @@ using System.Collections;
 using System;
 using Oculus.Avatar;
 
-public abstract class OvrAvatarDriver : MonoBehaviour {
-
+public abstract class OvrAvatarDriver : MonoBehaviour
+{
     public enum PacketMode
     {
         SDK,
@@ -13,10 +13,16 @@ public abstract class OvrAvatarDriver : MonoBehaviour {
 
     public PacketMode Mode;
     protected PoseFrame CurrentPose;
-    public PoseFrame GetCurrentPose() { return CurrentPose; }
+
+    public PoseFrame GetCurrentPose()
+    {
+        return CurrentPose;
+    }
+
     public abstract void UpdateTransforms(IntPtr sdkAvatar);
 
-    private ovrAvatarControllerType ControllerType =  ovrAvatarControllerType.Quest;
+    private ovrAvatarControllerType ControllerType = ovrAvatarControllerType.Quest;
+
     public struct ControllerPose
     {
         public ovrAvatarButton buttons;
@@ -35,7 +41,7 @@ public abstract class OvrAvatarDriver : MonoBehaviour {
                 joystickPosition = Vector2.Lerp(a.joystickPosition, b.joystickPosition, t),
                 indexTrigger = Mathf.Lerp(a.indexTrigger, b.indexTrigger, t),
                 handTrigger = Mathf.Lerp(a.handTrigger, b.handTrigger, t),
-                isActive = t < 0.5f ? a.isActive : b.isActive,
+                isActive = t < 0.5f ? a.isActive : b.isActive
             };
         }
     }
@@ -65,12 +71,12 @@ public abstract class OvrAvatarDriver : MonoBehaviour {
                 handRightRotation = Quaternion.Slerp(a.handRightRotation, b.handRightRotation, t),
                 voiceAmplitude = Mathf.Lerp(a.voiceAmplitude, b.voiceAmplitude, t),
                 controllerLeftPose = ControllerPose.Interpolate(a.controllerLeftPose, b.controllerLeftPose, t),
-                controllerRightPose = ControllerPose.Interpolate(a.controllerRightPose, b.controllerRightPose, t),
+                controllerRightPose = ControllerPose.Interpolate(a.controllerRightPose, b.controllerRightPose, t)
             };
         }
     };
 
-    void Start()
+    private void Start()
     {
         var headsetType = OVRPlugin.GetSystemHeadsetType();
         switch (headsetType)
@@ -92,9 +98,13 @@ public abstract class OvrAvatarDriver : MonoBehaviour {
     {
         if (sdkAvatar != IntPtr.Zero)
         {
-            ovrAvatarTransform bodyTransform = OvrAvatar.CreateOvrAvatarTransform(CurrentPose.headPosition, CurrentPose.headRotation);
-            ovrAvatarHandInputState inputStateLeft = OvrAvatar.CreateInputState(OvrAvatar.CreateOvrAvatarTransform(CurrentPose.handLeftPosition, CurrentPose.handLeftRotation), CurrentPose.controllerLeftPose);
-            ovrAvatarHandInputState inputStateRight = OvrAvatar.CreateInputState(OvrAvatar.CreateOvrAvatarTransform(CurrentPose.handRightPosition, CurrentPose.handRightRotation), CurrentPose.controllerRightPose);
+            var bodyTransform = OvrAvatar.CreateOvrAvatarTransform(CurrentPose.headPosition, CurrentPose.headRotation);
+            var inputStateLeft = OvrAvatar.CreateInputState(
+                OvrAvatar.CreateOvrAvatarTransform(CurrentPose.handLeftPosition, CurrentPose.handLeftRotation),
+                CurrentPose.controllerLeftPose);
+            var inputStateRight = OvrAvatar.CreateInputState(
+                OvrAvatar.CreateOvrAvatarTransform(CurrentPose.handRightPosition, CurrentPose.handRightRotation),
+                CurrentPose.controllerRightPose);
 
             CAPI.ovrAvatarPose_UpdateBody(sdkAvatar, bodyTransform);
             CAPI.ovrAvatarPose_UpdateHandsWithType(sdkAvatar, inputStateLeft, inputStateRight, ControllerType);
