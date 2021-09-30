@@ -5,7 +5,7 @@ namespace LoopScripts
 {
     public class BeatTest : MonoBehaviour
     {
-        [SerializeField] private BeatSync _beatSync;
+        private BeatSync _beatSync;
         private GameObject leftHand, rightHand;
         private Color black = new Color(0, 0, 0, 1);
         private Color white = new Color(1, 1, 1, 1);

@@ -1,4 +1,4 @@
-﻿/*using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Drum;
 using UnityEngine;
@@ -6,7 +6,7 @@ using Normal.Realtime;
 
 public class DrumPlay : MonoBehaviour
 {
-    [SerializeField] private DrumSync _drumSync;
+    private DrumSync _drumSync;
     private GameObject leftHand, rightHand;
     private GameObject myObject, DrumSkin;
     private RealtimeView myView;
@@ -43,7 +43,7 @@ public class DrumPlay : MonoBehaviour
         //color();
     }
 
-    /*private void color()
+    private void color()
     {
         if (_play == true)
         {
@@ -53,7 +53,7 @@ public class DrumPlay : MonoBehaviour
         {
             _color = DrumSkinHit;
         }
-    }#1#
+    }
 
     private void OnTriggerExit(Collider other)
     {
@@ -62,11 +62,11 @@ public class DrumPlay : MonoBehaviour
 
     private void Update()
     {
-        /*if (_color != _prevColor)
+        if (_color != _prevColor)
         {
             _drumSync.SetColor(_color);
             _prevColor = _color;
-        }#1#
+        }
 
         if (_play != _prevPlay)
         {
@@ -74,4 +74,4 @@ public class DrumPlay : MonoBehaviour
             _prevPlay = _play;
         }
     }
-}*/
+}

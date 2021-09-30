@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Normal.Realtime;
+using Piano;
 
-public class PianoLoopSync : RealtimeComponent<pianoLoopModel>
+public class PianoLoopSync : RealtimeComponent<PianoLoopModel>
 {
     private MeshRenderer _meshRenderer;
 
@@ -26,7 +27,7 @@ public class PianoLoopSync : RealtimeComponent<pianoLoopModel>
         _pianoBool.pianoPlay = model.pianoPlay;
     }
 
-    protected override void OnRealtimeModelReplaced(pianoLoopModel previousModel, pianoLoopModel currentModel)
+    protected override void OnRealtimeModelReplaced(PianoLoopModel previousModel, PianoLoopModel currentModel)
     {
         if (previousModel != null)
         {
@@ -50,12 +51,12 @@ public class PianoLoopSync : RealtimeComponent<pianoLoopModel>
         currentModel.pianoPlayDidChange += pianoPlayDidChange;
     }
 
-    private void ColorDidChange(pianoLoopModel model, Color value)
+    private void ColorDidChange(PianoLoopModel model, Color value)
     {
         UpdateColor();
     }
 
-    private void pianoPlayDidChange(pianoLoopModel model, bool value)
+    private void pianoPlayDidChange(PianoLoopModel model, bool value)
     {
         UpdatePianoPlay();
     }
