@@ -5,6 +5,7 @@ using UnityEngine;
 public class MoodSound : MonoBehaviour
 {
     public bool play = false;
+
     private bool prevPlay;
     private AudioSource source;
 
@@ -26,7 +27,7 @@ public class MoodSound : MonoBehaviour
 
             if (!play)
             {
-                source.Stop();
+                source.Play();
                 prevPlay = play;
             }
         }

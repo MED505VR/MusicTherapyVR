@@ -5,8 +5,12 @@ using Normal.Realtime;
 
 public class MoodPlay : MonoBehaviour
 {
+    public AudioSource[] audioSources;
+
     [SerializeField]
     private MoodSync _moodSync;
+
+    private MoodSound moodSound;
     private GameObject leftHand, rightHand;
     private GameObject myObject;
     private RealtimeView myView;
@@ -28,8 +32,17 @@ public class MoodPlay : MonoBehaviour
         _play = false;
     }
 
+    private void Start()
+    {
+        audioSources = gameObject.transform.parent.GetComponentsInChildren<AudioSource>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+        foreach (AudioSource audioSource in audioSources) {
+            audioSource.Stop();
+        } 
+
         if (other.gameObject == leftHand || other.gameObject == rightHand)
         {
             myView.RequestOwnership();
