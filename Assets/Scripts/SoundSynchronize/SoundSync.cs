@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Normal.Realtime;
+using SoundSynchronize;
 
 public class SoundSync : RealtimeComponent<SoundSyncModel>
 {
