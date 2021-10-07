@@ -51,8 +51,13 @@ namespace SoundSynchronize
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.GetComponent<TrailRenderer>())
-                other.GetComponent<TrailRenderer>().enabled = false;
+            var trail = other.GetComponent<TrailRenderer>();
+
+            if (trail)
+            {
+                trail.enabled = false;
+                trail.Clear();
+            }
         }
 
         private void OnAudioFilterRead(float[] data, int channels)
