@@ -7,20 +7,20 @@ public class MouthMove : MonoBehaviour
 {
     public Transform mouth;
 
-    private RealtimeAvatarVoice _voice;
+    private AudioOutput _voice;
     private float _mouthSize;
 
     void Awake()
     {
         // Get a reference to the RealtimeAvatarVoice component
-        _voice = GetComponent<RealtimeAvatarVoice>();
+        _voice = GetComponent<AudioOutput>();
     }
 
     void Update()
     {
         // Use the current voice volume (a value between 0 - 1) 
         // to calculate the target mouth size (between 0.1 and 1.0)
-        float targetMouthSize = Mathf.Lerp(0.1f, 1.0f, _voice.voiceVolume);
+        float targetMouthSize = Mathf.Lerp(0.1f, 1.0f, _voice.dbLevel/100);
 
         // Animate the mouth size towards the target mouth size to keep 
         // the open / close animation smooth
