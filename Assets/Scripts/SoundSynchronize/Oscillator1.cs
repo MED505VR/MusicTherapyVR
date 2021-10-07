@@ -45,7 +45,7 @@ namespace SoundSynchronize
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.GetComponent<TrailRenderer>())
+            if (other.CompareTag("PlayerHand") && other.GetComponent<TrailRenderer>())
                 other.GetComponent<TrailRenderer>().enabled = true;
         }
 
@@ -53,11 +53,10 @@ namespace SoundSynchronize
         {
             var trail = other.GetComponent<TrailRenderer>();
 
-            if (trail)
-            {
-                trail.enabled = false;
-                trail.Clear();
-            }
+            if (!trail) return;
+            
+            trail.enabled = false;
+            trail.Clear();
         }
 
         private void OnAudioFilterRead(float[] data, int channels)
