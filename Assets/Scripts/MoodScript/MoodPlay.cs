@@ -6,6 +6,7 @@ using Normal.Realtime;
 public class MoodPlay : MonoBehaviour
 {
     public AudioSource[] audioSources;
+    public Material materialBase, materialPressed;
 
     [SerializeField]
     private MoodSync _moodSync;
@@ -30,6 +31,7 @@ public class MoodPlay : MonoBehaviour
         //myObject = GameObject.Find("AngryEmoji");   // Change name for another object
         myView = GetComponent<RealtimeView>();
         _play = false;
+        materialBase = meshRenderer.material;
     }
 
     private void Start()
@@ -47,9 +49,8 @@ public class MoodPlay : MonoBehaviour
         {
             myView.RequestOwnership();
             _play = !_play;
+            meshRenderer.material = materialPressed;
         }
-
-        //color();
     }
 
     /*private void color()
@@ -68,6 +69,7 @@ public class MoodPlay : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         myView.ClearOwnership();
+        meshRenderer.material = materialBase;
     }
 
     private void Update()

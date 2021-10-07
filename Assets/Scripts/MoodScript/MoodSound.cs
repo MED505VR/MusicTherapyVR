@@ -27,7 +27,7 @@ public class MoodSound : MonoBehaviour
 
             if (!play)
             {
-                source.Play();
+                source.Stop();
                 prevPlay = play;
             }
         }
