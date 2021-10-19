@@ -4,19 +4,12 @@ namespace NormcoreIntegration
 {
     public class InitializeNormcore : MonoBehaviour
     {
-        private Normal.Realtime.Realtime realtime;
-
-        private void Awake()
-        {
-            realtime = GetComponent<Normal.Realtime.Realtime>();
-        }
-
+        private Normal.Realtime.Realtime _realtime;
+    
         private void Start()
         {
-            if (Application.isEditor)
-                realtime.Connect("Dev Room", null);
-
-            else realtime.Connect("Test Room", null);
+            _realtime = GetComponent<Normal.Realtime.Realtime>();
+            _realtime.Connect(Application.isEditor ? "Dev Room" : "Test Room");
         }
     }
 }
