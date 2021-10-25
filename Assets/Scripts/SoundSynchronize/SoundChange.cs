@@ -22,8 +22,8 @@ public class SoundChange : MonoBehaviour
     private SoundSync _soundSync;
 
     // Hand info
-    private GameObject leftHand, rightHand;
-    private Transform leftHandPosition, rightHandPosition;
+    private GameObject leftHand, rightHand, drumStick1, drumStick2, drumStick3, drumStick4;
+    private Transform leftHandPosition, rightHandPosition, drumStick1Pos, drumStick2Pos, drumStick3Pos, drumStick4Pos;
     private float leftHandY;
     private float rightHandY;
 
@@ -33,17 +33,29 @@ public class SoundChange : MonoBehaviour
 
     private float volume = 0.1f;
 
-    
 
-    
+
+
     private void Awake()
     {
         _soundSync = GetComponent<SoundSync>();
 
+        //find hands
         leftHand = GameObject.Find("LeftHandAnchor");
         leftHandPosition = leftHand.transform;
         rightHand = GameObject.Find("RightHandAnchor");
         rightHandPosition = rightHand.transform;
+
+        //Find drumsticks
+        drumStick1 = GameObject.Find("Drumstick1Head");
+        drumStick1Pos = drumStick1.transform;
+        drumStick2 = GameObject.Find("Drumstick2Head");
+        drumStick2Pos = drumStick2.transform;
+        drumStick3 = GameObject.Find("Drumstick3Head");
+        drumStick3Pos = drumStick3.transform;
+        drumStick4 = GameObject.Find("Drumstick4Head");
+        drumStick4Pos = drumStick4.transform;
+
         myObject = GameObject.Find("SynthCube");
         myView = myObject.GetComponent<RealtimeView>();
     }
@@ -52,13 +64,13 @@ public class SoundChange : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == leftHand || other.gameObject == rightHand)
+        if (other.gameObject == leftHand || other.gameObject == rightHand || other.gameObject == drumStick1 || other.gameObject == drumStick2 || other.gameObject == drumStick3 || other.gameObject == drumStick4)
         {
-            if (other.gameObject == leftHand)
+            if (other.gameObject == leftHand || other.gameObject == drumStick1 || other.gameObject == drumStick3)
             {
                 left = true;
             }
-            if (other.gameObject == rightHand)
+            if (other.gameObject == rightHand || other.gameObject == drumStick2 || other.gameObject == drumStick4)
             {
                 right = true;
             }
@@ -69,14 +81,14 @@ public class SoundChange : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject == leftHand || other.gameObject == rightHand)
+        if (other.gameObject == leftHand || other.gameObject == rightHand || other.gameObject == drumStick1 || other.gameObject == drumStick2 || other.gameObject == drumStick3 || other.gameObject == drumStick4)
         {
             _gain = 0;
-            if (other.gameObject == leftHand)
+            if (other.gameObject == leftHand || other.gameObject == drumStick1 || other.gameObject == drumStick3)
             {
                 left = false;
             }
-            if (other.gameObject == rightHand)
+            if (other.gameObject == rightHand || other.gameObject == drumStick2 || other.gameObject == drumStick4)
             {
                 right = false;
             }

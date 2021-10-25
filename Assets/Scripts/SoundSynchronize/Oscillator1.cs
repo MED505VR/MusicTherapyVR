@@ -18,14 +18,15 @@ namespace SoundSynchronize
         private GameObject leftHand, rightHand;
         private Transform leftHandPosition, rightHandPosition;
 
-        private void Awake()
-        {
+        /* private void Awake()
+         {
 
-            leftHand = GameObject.Find("LeftHandAnchor");
-            rightHand = GameObject.Find("RightHandAnchor");
-        
+             leftHand = GameObject.Find("LeftHandAnchor");
+             rightHand = GameObject.Find("RightHandAnchor");
 
-        }
+
+
+         }*/
 
 
         /* private void OnTriggerStay(Collider other)
@@ -54,7 +55,7 @@ namespace SoundSynchronize
             var trail = other.GetComponent<TrailRenderer>();
 
             if (!trail) return;
-            
+
             trail.enabled = false;
             trail.Clear();
         }
@@ -63,16 +64,16 @@ namespace SoundSynchronize
         {
             increment = frequency * 2.0 * Mathf.PI / samplingFrequency;
 
-            for(int i = 0; i < data.Length; i+= channels)
+            for (int i = 0; i < data.Length; i += channels)
             {
                 phase += increment;
                 data[i] = (float)(gain * Mathf.Sin((float)phase));
 
-                if(channels == 2)
+                if (channels == 2)
                 {
                     data[i + 1] = data[i];
                 }
-                if(phase > (Mathf.PI * 2))
+                if (phase > (Mathf.PI * 2))
                 {
                     phase = 0.0;
                 }

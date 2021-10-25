@@ -38,7 +38,7 @@ public class DrumSync : RealtimeComponent<DrumSyncModel>
             // If this is a model that has no data set on it, populate it with the current mesh renderer color.
             if (currentModel.isFreshModel)
                 currentModel.play = _play.play;
-                currentModel.color = _meshRenderer.material.color;
+            currentModel.color = _meshRenderer.material.color;
 
 
             UpdateLoopPlay();

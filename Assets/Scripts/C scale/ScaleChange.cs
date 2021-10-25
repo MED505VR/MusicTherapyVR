@@ -15,7 +15,7 @@ public class ScaleChange : MonoBehaviour
 
     // Hand info
     private GameObject leftHand, rightHand;
-    private GameObject drumStick1, drumStick2;
+    private GameObject drumStick1Head, drumStick2Head, drumStick3Head, drumStick4Head;
 
 
     private GameObject myObject;
@@ -34,8 +34,10 @@ public class ScaleChange : MonoBehaviour
 
         rightHand = GameObject.Find("RightHandAnchor");
 
-        drumStick1 = GameObject.Find("Drumstick1");
-        drumStick2 = GameObject.Find("Drumstick2");
+        drumStick1Head = GameObject.Find("Drumstick1Head");
+        drumStick2Head = GameObject.Find("Drumstick2Head");
+        drumStick3Head = GameObject.Find("Drumstick3Head");
+        drumStick4Head = GameObject.Find("Drumstick4Head");
 
         myObject = GameObject.Find("Table");
         myView = myObject.GetComponent<RealtimeView>();
@@ -45,7 +47,7 @@ public class ScaleChange : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == leftHand || other.gameObject == rightHand || other.gameObject == drumStick1 || other.gameObject == drumStick2)
+        if (other.gameObject == leftHand || other.gameObject == rightHand || other.gameObject == drumStick1Head || other.gameObject == drumStick2Head || other.gameObject == drumStick3Head || other.gameObject == drumStick4Head)
         {
             myView.RequestOwnership();
             _gain = volume;
@@ -54,7 +56,7 @@ public class ScaleChange : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject == leftHand || other.gameObject == rightHand || other.gameObject == drumStick1 || other.gameObject == drumStick2)
+        if (other.gameObject == leftHand || other.gameObject == rightHand || other.gameObject == drumStick1Head || other.gameObject == drumStick2Head || other.gameObject == drumStick3Head || other.gameObject == drumStick4Head)
         {
             _gain = 0;
             myView.ClearOwnership();
