@@ -28,8 +28,9 @@ public class MoodPlay : MonoBehaviour
 
     private Color _originalLight;
     public Color _lightColor;
-    private Color _previousLight = default;
+    private Color _previousLight;
 
+    // #FFF4D6
 
     private void Awake()
     {
