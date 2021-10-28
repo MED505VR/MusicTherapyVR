@@ -7616,11 +7616,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acdb5d8b576742443bfae40bb8d412a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSources: []
-  materialBase: {fileID: 0}
-  materialPressed: {fileID: 2100000, guid: d90ddfe10aed19b4ba4500a9cb02dbf6, type: 2}
   _moodSync: {fileID: 3777399824832384941}
   _play: 0
+  _light: {fileID: 705507994}
+  _lightColor: {r: 0.9245283, g: 0.02180491, b: 0.02180491, a: 0}
 --- !u!95 &3777399824832384937
 Animator:
   serializedVersion: 3
@@ -7938,11 +7937,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acdb5d8b576742443bfae40bb8d412a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSources: []
-  materialBase: {fileID: 0}
-  materialPressed: {fileID: 2100000, guid: 5fb56897471ba4b43977fb33bb69adce, type: 2}
   _moodSync: {fileID: 7119064871289332322}
   _play: 0
+  _light: {fileID: 705507994}
+  _lightColor: {r: 0, g: 0.108579166, b: 0.9811321, a: 0}
 --- !u!114 &7119064871289332322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8180,11 +8178,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acdb5d8b576742443bfae40bb8d412a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSources: []
-  materialBase: {fileID: 0}
-  materialPressed: {fileID: 2100000, guid: 5fb56897471ba4b43977fb33bb69adce, type: 2}
   _moodSync: {fileID: 9020434734285294881}
   _play: 0
+  _light: {fileID: 705507994}
+  _lightColor: {r: 1, g: 1, b: 0, a: 0}
 --- !u!114 &9020434734285294881
 MonoBehaviour:
   m_ObjectHideFlags: 0

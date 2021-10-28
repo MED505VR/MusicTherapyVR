@@ -47,7 +47,6 @@ public class VibrationScripts : MonoBehaviour
         {
             myView.RequestOwnership();
             StartCoroutine(Haptic(freq, amp, dura, true, false));
-
         }
     }
 }
