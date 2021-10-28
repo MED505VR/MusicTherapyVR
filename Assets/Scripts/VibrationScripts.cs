@@ -31,26 +31,19 @@ public class VibrationScripts : MonoBehaviour
 
     private void Awake()
     {
-        leftHand = GameObject.Find("LeftHandAnchor");
-        rightHand = GameObject.Find("RightHandAnchor");
-        drumStick1Head = GameObject.Find("Drumstick1Head");
-        drumStick2Head = GameObject.Find("Drumstick2Head");
-        drumStick3Head = GameObject.Find("Drumstick3Head");
-        drumStick4Head = GameObject.Find("Drumstick4Head");
-
         myObject = GameObject.Find("Table");
         myView = myObject.GetComponent<RealtimeView>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == leftHand || other.gameObject == drumStick1Head || other.gameObject == drumStick3Head)
+        if (other.CompareTag("DrumstickLeft"))
         {
             myView.RequestOwnership();
             StartCoroutine(Haptic(freq, amp, dura, false, true));
         }
 
-        if (other.gameObject == rightHand || other.gameObject == drumStick2Head || other.gameObject == drumStick4Head)
+        if (other.CompareTag("DrumstickRight"))
         {
             myView.RequestOwnership();
             StartCoroutine(Haptic(freq, amp, dura, true, false));

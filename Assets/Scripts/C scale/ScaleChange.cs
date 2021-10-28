@@ -13,10 +13,6 @@ public class ScaleChange : MonoBehaviour
     // Synchronization
     private ScaleSync _scaleSync;
 
-    // Hand info
-    private GameObject leftHand, rightHand;
-    private GameObject drumStick1Head, drumStick2Head, drumStick3Head, drumStick4Head;
-
 
     private GameObject myObject;
     private RealtimeView myView;
@@ -30,15 +26,6 @@ public class ScaleChange : MonoBehaviour
     {
         _scaleSync = GetComponent<ScaleSync>();
 
-        leftHand = GameObject.Find("LeftHandAnchor");
-
-        rightHand = GameObject.Find("RightHandAnchor");
-
-        drumStick1Head = GameObject.Find("Drumstick1Head");
-        drumStick2Head = GameObject.Find("Drumstick2Head");
-        drumStick3Head = GameObject.Find("Drumstick3Head");
-        drumStick4Head = GameObject.Find("Drumstick4Head");
-
         myObject = GameObject.Find("Table");
         myView = myObject.GetComponent<RealtimeView>();
     }
@@ -47,7 +34,7 @@ public class ScaleChange : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == leftHand || other.gameObject == rightHand || other.gameObject == drumStick1Head || other.gameObject == drumStick2Head || other.gameObject == drumStick3Head || other.gameObject == drumStick4Head)
+        if (other.CompareTag("DrumstickLeft") || other.CompareTag("DrumstickRight"))
         {
             myView.RequestOwnership();
             _gain = volume;
@@ -56,7 +43,7 @@ public class ScaleChange : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject == leftHand || other.gameObject == rightHand || other.gameObject == drumStick1Head || other.gameObject == drumStick2Head || other.gameObject == drumStick3Head || other.gameObject == drumStick4Head)
+        if (other.CompareTag("DrumstickLeft") || other.CompareTag("DrumstickRight"))
         {
             _gain = 0;
             myView.ClearOwnership();

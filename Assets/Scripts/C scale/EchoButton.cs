@@ -12,7 +12,7 @@ public class EchoButton : MonoBehaviour
     private bool _previousEcho;
 
     private EchoSync _echoSync;
-    
+
 
     private GameObject leftHand, rightHand;
     //private AudioEchoFilter echo;
@@ -20,8 +20,6 @@ public class EchoButton : MonoBehaviour
     {
         myObject = GameObject.Find("Table");
         myView = myObject.GetComponent<RealtimeView>();
-        leftHand = GameObject.Find("LeftHandAnchor");
-        rightHand = GameObject.Find("RightHandAnchor");
 
         _echoSync = GetComponent<EchoSync>();
     }
@@ -29,7 +27,7 @@ public class EchoButton : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         myView.RequestOwnership();
-        if (other.gameObject == leftHand || other.gameObject == rightHand)
+        if (other.CompareTag("DrumstickLeft") || other.CompareTag("DrumstickRight"))
         {
             _echo = !_echo;
         }

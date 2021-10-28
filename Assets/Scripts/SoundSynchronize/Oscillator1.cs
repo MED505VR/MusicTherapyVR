@@ -46,7 +46,7 @@ namespace SoundSynchronize
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("PlayerHand") && other.GetComponent<TrailRenderer>())
+            if ((other.CompareTag("DrumstickRight") || other.CompareTag("DrumstickLeft")) && other.GetComponent<TrailRenderer>())
                 other.GetComponent<TrailRenderer>().enabled = true;
         }
 

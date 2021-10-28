@@ -28,12 +28,6 @@ public class DrumPlay : MonoBehaviour
         //DrumSkin = GameObject.Find("Skin");
         _drumSync = GetComponent<DrumSync>();
         //meshRenderer = DrumSkin.GetComponent<MeshRenderer>();
-        leftHand = GameObject.Find("LeftHandAnchor");
-        rightHand = GameObject.Find("RightHandAnchor");
-        drumStick1 = GameObject.Find("Drumstick1Head");
-        drumStick2 = GameObject.Find("Drumstick2Head");
-        drumStick3 = GameObject.Find("Drumstick3Head");
-        drumStick4 = GameObject.Find("Drumstick4Head");
         myObject = GameObject.Find("drumCollider"); // skift navn hvis det andet object
         myView = myObject.GetComponent<RealtimeView>();
         source = GetComponent<AudioSource>();
@@ -44,7 +38,7 @@ public class DrumPlay : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         myView.RequestOwnership();
-        if (other.gameObject == leftHand || other.gameObject == rightHand || other.gameObject == drumStick1 || other.gameObject == drumStick2 || other.gameObject == drumStick3 || other.gameObject == drumStick4)
+        if (other.CompareTag("DrumstickLeft") || other.CompareTag("DrumstickRight"))
         {
             _play = !_play;
             //color();
