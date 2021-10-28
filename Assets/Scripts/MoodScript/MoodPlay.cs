@@ -5,9 +5,6 @@ using Normal.Realtime;
 
 public class MoodPlay : MonoBehaviour
 {
-    public AudioSource[] audioSources;
-    public Material materialBase, materialPressed;
-
     [SerializeField]
     private MoodSync _moodSync;
 
@@ -20,7 +17,13 @@ public class MoodPlay : MonoBehaviour
     [SerializeField]
     public bool _play;
     private bool _prevPlay;
-    private Color _color, _prevColor;
+
+    private Color _color = default;
+    private Color _previousColor = default;
+
+    private Color _original;
+
+    Color gray = Color.gray;
 
     private void Awake()
     {
@@ -28,57 +31,50 @@ public class MoodPlay : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         leftHand = GameObject.Find("LeftHandAnchor");
         rightHand = GameObject.Find("RightHandAnchor");
-        //myObject = GameObject.Find("AngryEmoji");   // Change name for another object
         myView = GetComponent<RealtimeView>();
         _play = false;
-        materialBase = meshRenderer.material;
+
+        _original = GetComponent<Renderer>().material.color;
     }
 
-    private void Start()
-    {
-        audioSources = gameObject.transform.parent.GetComponentsInChildren<AudioSource>();
-    }
 
     private void OnTriggerEnter(Collider other)
     {
-        foreach (AudioSource audioSource in audioSources) {
-            audioSource.Stop();
-        } 
-
         if (other.gameObject == leftHand || other.gameObject == rightHand)
         {
             myView.RequestOwnership();
             _play = !_play;
-            meshRenderer.material = materialPressed;
+            color();
         }
     }
 
-    /*private void color()
+    private void color()
     {
         if (_play == true)
         {
-            _color = ;
+            // Farven når den er aktiveret
+            _color = Color.Lerp(_original, Color.white, .5f);
         }
 
         else if (_play == false)
         {
-            _color = ;
+            // Farven når den ikke er aktiveret
+            _color = _original;
         }
-    } */
+    }
 
     private void OnTriggerExit(Collider other)
     {
         myView.ClearOwnership();
-        meshRenderer.material = materialBase;
     }
 
     private void Update()
     {
-        /*if (_color != _prevColor)
+        if (_color != _previousColor)
         {
             _moodSync.SetColor(_color);
-            _prevColor = _color;
-        }*/
+            _previousColor = _color;
+        }
 
         if (_play != _prevPlay)
         {
