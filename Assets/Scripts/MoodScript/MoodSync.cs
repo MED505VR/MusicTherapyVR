@@ -7,11 +7,13 @@ public class MoodSync : RealtimeComponent<MoodSyncModel>
     //private MeshRenderer _meshRenderer;
     private MoodSound _play;
     private MeshRenderer _meshRenderer;
+    //private MeshRenderer _lightRenderer;
 
     private void Awake()
     {
         _play = GetComponent<MoodSound>();
         _meshRenderer = GetComponent<MeshRenderer>();
+        //_lightRenderer = GetComponent<MeshRenderer>();
     }
 
     protected override void OnRealtimeModelReplaced(MoodSyncModel previousModel, MoodSyncModel currentModel)
@@ -21,6 +23,7 @@ public class MoodSync : RealtimeComponent<MoodSyncModel>
             // Unregister from events
             previousModel.playDidChange -= PlayDidChange;
             previousModel.colorDidChange -= ColorDidChange;
+            //previousModel.lightDidChange -= LightDidChange;
         }
 
         if (currentModel != null)
@@ -29,12 +32,15 @@ public class MoodSync : RealtimeComponent<MoodSyncModel>
             if (currentModel.isFreshModel)
                 currentModel.play = _play.play;
                 currentModel.color = _meshRenderer.material.color;
+                //currentModel.color = _lightRenderer.material.color;
 
             UpdateLoopPlay();
             UpdateMeshRendererColor();
+            //UpdateMeshRendererLight();
 
             currentModel.colorDidChange += ColorDidChange;
             currentModel.playDidChange += PlayDidChange;
+            //currentModel.lightDidChange += LightDidChange;
         }
     }
 
@@ -49,6 +55,11 @@ public class MoodSync : RealtimeComponent<MoodSyncModel>
         UpdateMeshRendererColor();
     }
 
+    /*private void LightDidChange(MoodSyncModel model, Color value)
+    {
+        UpdateMeshRendererLight();
+    }*/
+
     private void UpdateLoopPlay()
     {
         _play.play = model.play;
@@ -58,6 +69,11 @@ public class MoodSync : RealtimeComponent<MoodSyncModel>
     {
         _meshRenderer.material.color = model.color;
     }
+
+    /*private void UpdateMeshRendererLight()
+    {
+        _lightRenderer.material.color = model.color;
+    }*/
 
     public void SetPlay(bool play)
     {

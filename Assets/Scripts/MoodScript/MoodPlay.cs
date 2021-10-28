@@ -13,6 +13,7 @@ public class MoodPlay : MonoBehaviour
     private GameObject myObject;
     private RealtimeView myView;
     private MeshRenderer meshRenderer;
+    private MeshRenderer lightRenderer;
 
     [SerializeField]
     public bool _play;
@@ -23,7 +24,12 @@ public class MoodPlay : MonoBehaviour
 
     private Color _original;
 
-    Color gray = Color.gray;
+    public Light _light;
+
+    private Color _originalLight;
+    public Color _lightColor;
+    private Color _previousLight = default;
+
 
     private void Awake()
     {
@@ -35,6 +41,7 @@ public class MoodPlay : MonoBehaviour
         _play = false;
 
         _original = GetComponent<Renderer>().material.color;
+        //_originalLight = GetComponent<Light>().color;
     }
 
 
@@ -54,12 +61,14 @@ public class MoodPlay : MonoBehaviour
         {
             // Farven når den er aktiveret
             _color = Color.Lerp(_original, Color.white, .5f);
+            _light.color = Color.Lerp(_originalLight, _lightColor, .5f);
         }
 
         else if (_play == false)
         {
             // Farven når den ikke er aktiveret
             _color = _original;
+            _light.color = _originalLight;
         }
     }
 
@@ -70,16 +79,22 @@ public class MoodPlay : MonoBehaviour
 
     private void Update()
     {
+        if (_play != _prevPlay)
+        {
+            _moodSync.SetPlay(_play);
+            _prevPlay = _play;
+        }
+
         if (_color != _previousColor)
         {
             _moodSync.SetColor(_color);
             _previousColor = _color;
         }
 
-        if (_play != _prevPlay)
+        if (_lightColor != _previousLight)
         {
-            _moodSync.SetPlay(_play);
-            _prevPlay = _play;
+            _moodSync.SetColor(_lightColor);
+            _previousLight = _lightColor;
         }
     }
 }
