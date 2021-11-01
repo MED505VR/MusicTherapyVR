@@ -41,6 +41,7 @@ public class DrumPlay : MonoBehaviour
         if (other.CompareTag("DrumstickLeft") || other.CompareTag("DrumstickRight"))
         {
             _play = !_play;
+            source.volume = other.gameObject.GetComponent<TrackSpeed>().speed;
             //color();
         }
     }
