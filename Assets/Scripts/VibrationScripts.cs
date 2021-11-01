@@ -33,6 +33,7 @@ public class VibrationScripts : MonoBehaviour
     {
         myObject = GameObject.Find("Table");
         myView = myObject.GetComponent<RealtimeView>();
+
     }
 
     private void OnTriggerEnter(Collider other)
