@@ -6,11 +6,10 @@ using Normal.Realtime;
 public class Xylo : MonoBehaviour
 {
     private AudioSource _source;
-    private GameObject _key;
-    private RealtimeView myView;
     private GameObject myObject;
+    private RealtimeView myView;
     [SerializeField]
-    private string key;
+    public string key;
     public bool _play;
     private bool _prevPlay;
 
