@@ -1,15 +1,15 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Assets.Scripts.RoomEnvironment
+namespace RoomEnvironment
 {
     public class ColorChangeLamp : MonoBehaviour
     {
         public Light PointLight { get; private set; }
         public Light SpotLight { get; private set; }
 
-        private readonly float lightTransitionSpeed = 0.1f;
-        private bool isChanging;
+        private readonly float _lightTransitionSpeed = 0.01f;
+        private bool _isChanging;
 
         private void Start()
         {
@@ -19,22 +19,22 @@ namespace Assets.Scripts.RoomEnvironment
 
         public void ChangeLightColor(Color color)
         {
-            if (isChanging) return;
+            if (_isChanging) return;
             StartCoroutine(UpdateLightColor(color, PointLight));
             StartCoroutine(UpdateLightColor(color, SpotLight));
         }
 
-        private IEnumerator UpdateLightColor(Color targetColor, Light light)
+        private IEnumerator UpdateLightColor(Color targetColor, Light targetLight)
         {
-            isChanging = true;
+            _isChanging = true;
 
-            while (light.color != targetColor)
+            while (targetLight.color != targetColor)
             {
-                light.color = Color.Lerp(light.color, targetColor, lightTransitionSpeed);
+                targetLight.color = Color.Lerp(targetLight.color, targetColor, _lightTransitionSpeed);
                 yield return new WaitForEndOfFrame();
             }
 
-            isChanging = false;
+            _isChanging = false;
         }
     }
 }

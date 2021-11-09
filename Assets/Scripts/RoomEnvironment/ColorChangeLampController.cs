@@ -1,29 +1,30 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-namespace Assets.Scripts.RoomEnvironment
+namespace RoomEnvironment
 {
     public class ColorChangeLampController : MonoBehaviour
     {
-        public ColorChangeLamp[] Lamps { get; private set; }
-
-        [SerializeField]
-        public Color[] Colors { get; set; }
-
         private int _currentColorIndex;
+        [field: SerializeField] private List<Color> LampColors { get; set; }
+        private ColorChangeLamp[] Lamps { get; set; }
 
-        void Start()
+        private void Start()
         {
             Lamps = FindObjectsOfType<ColorChangeLamp>();
+            LampColors.Add(Lamps[0].PointLight.color);
         }
 
-        public void ChangeLampColor()
+        private void OnCollisionEnter(Collision other)
         {
-            foreach (var lamp in Lamps)
-            {
-                lamp.ChangeLightColor(Colors[_currentColorIndex]);
-            }
+            if (other.gameObject.CompareTag("PlayerInteractor")) ChangeLampColor();
+        }
 
-            _currentColorIndex = _currentColorIndex == Colors.Length ? 0 : _currentColorIndex + 1;
+        private void ChangeLampColor()
+        {
+            foreach (var lamp in Lamps) lamp.ChangeLightColor(LampColors[_currentColorIndex]);
+
+            _currentColorIndex = _currentColorIndex == LampColors.Count - 1 ? 0 : _currentColorIndex + 1;
         }
     }
 }
