@@ -8449,6 +8449,9 @@ GameObject:
   - component: {fileID: 3222317817123599790}
   - component: {fileID: 1952349394575522315}
   - component: {fileID: 4394620603715260097}
+  - component: {fileID: 2881222219791347479}
+  - component: {fileID: 2881222219791347478}
+  - component: {fileID: 2881222219791347477}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -8456,6 +8459,54 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &2881222219791347477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2881222219791347476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f14e88fb5cad9d448c9324658f028da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _moodSync: {fileID: 0}
+--- !u!114 &2881222219791347478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2881222219791347476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd114291337460f4786a011e0a27fc3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2881222219791347479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2881222219791347476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -363599832, guid: c424820a8880b8845bda10ec0b41507e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _realtime: {fileID: 1232529767}
+  _sceneViewUUID: 
+  _viewUUID: 27301503-5cea-441e-8e1f-f1575ccef255
+  _sceneViewPreventOwnershipTakeover: 0
+  _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
+  _sceneViewDestroyWhenOwnerOrLastClientLeavesMigrated: 0
+  _sceneViewDestroyWhenLastClientLeaves: 1
+  _components:
+  - componentID: 1
+    component: {fileID: 2881222219791347478}
+  _childViews: []
 --- !u!4 &3222317817123599790
 Transform:
   m_ObjectHideFlags: 0
