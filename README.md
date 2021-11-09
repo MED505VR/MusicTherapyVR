@@ -15,7 +15,7 @@ Hjalte Drejer
 
 Joey Ho
 
-Jacob Noer 
+Jacob Noer 📧: noerjacob@gmail.com
 
 Kresten Carr
 
