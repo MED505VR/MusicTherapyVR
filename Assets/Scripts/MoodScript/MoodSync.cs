@@ -7,7 +7,7 @@ public class MoodSync : RealtimeComponent<MoodSyncModel>
     //private MeshRenderer _meshRenderer;
     private MoodSound _play;
     private MeshRenderer _meshRenderer;
-    private MeshRenderer _lightRenderer;
+    private MoodLight _lightRenderer;
 
     private void Awake()
     {
@@ -34,10 +34,12 @@ public class MoodSync : RealtimeComponent<MoodSyncModel>
                 currentModel.color = _meshRenderer.material.color;
                 currentModel.color = _lightRenderer.material.color;
 
+            // Update the mesh render or boolean to match the new model
             UpdateLoopPlay();
             UpdateMeshRendererColor();
             UpdateMeshRendererLight();
 
+            // Register for events so we'll know if the color or bool changes later
             currentModel.colorDidChange += ColorDidChange;
             currentModel.playDidChange += PlayDidChange;
             currentModel.lightDidChange += LightDidChange;
@@ -46,6 +48,7 @@ public class MoodSync : RealtimeComponent<MoodSyncModel>
 
     private void PlayDidChange(MoodSyncModel model, bool value)
     {
+        // Update the bool
         UpdateLoopPlay();
     }
 
@@ -57,31 +60,46 @@ public class MoodSync : RealtimeComponent<MoodSyncModel>
 
     private void LightDidChange(MoodSyncModel model, Color value)
     {
+        // Update the mesh renderer
         UpdateMeshRendererLight();
     }
 
     private void UpdateLoopPlay()
     {
+        // Get the bool from the model and set it on the model
         _play.play = model.play;
     }
 
     private void UpdateMeshRendererColor()
     {
+        // Get the color from the model and set it on the mesh renderer
         _meshRenderer.material.color = model.color;
     }
 
     private void UpdateMeshRendererLight()
     {
+        // Get the color from the model and set it on the mesh renderer
         _lightRenderer.material.color = model.color;
     }
 
     public void SetPlay(bool play)
     {
+        // Set the bool on the model
+        // This will fire the boolChanged event on the model, which will update the bool for both the local player and all remote players
         model.play = play;
     }
 
     public void SetColor(Color color)
     {
+        // Set the color on the model
+        // This will fire the colorChanged event on the model, which will update the renderer for both the local player and all remote players
         model.color = color;
+    }
+
+    public void SetLight(Color light)
+    {
+        // Set the color on the model
+        // This will fire the colorChanged event on the model, which will update the renderer for both the local player and all remote players
+        model.color = light;
     }
 }
