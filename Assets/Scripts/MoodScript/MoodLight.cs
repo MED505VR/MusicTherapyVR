@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Normal.Realtime;
 
-
 public class MoodLight : MonoBehaviour
 {
     [SerializeField]
@@ -15,9 +14,10 @@ public class MoodLight : MonoBehaviour
     private Light _light;
     private Color _originalLight;
     private Color _previousLight;
+
+    private void Awake()
+    {
+        _moodSync = GetComponent<MoodSync>();
+    }
 }
 
-private void Awake()
-{
-    _moodSync = GetComponent<MoodSync>();
-}

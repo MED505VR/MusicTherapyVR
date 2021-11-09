@@ -7,7 +7,7 @@ public class MoodSync : RealtimeComponent<MoodSyncModel>
     //private MeshRenderer _meshRenderer;
     private MoodSound _play;
     private MeshRenderer _meshRenderer;
-    private MoodLight _lightRenderer;
+    private MeshRenderer _lightRenderer;
 
     private void Awake()
     {
