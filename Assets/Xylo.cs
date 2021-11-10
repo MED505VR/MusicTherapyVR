@@ -6,25 +6,25 @@ using Normal.Realtime;
 public class Xylo : MonoBehaviour
 {
     private AudioSource _source;
-    private GameObject myObject;
     private RealtimeView myView;
     [SerializeField]
-    public string key;
     public bool _play;
     private bool _prevPlay;
 
     private DrumSync _drumSync;
 
 
+    private void Start()
+    {
+        _drumSync = GetComponent<DrumSync>();
+        myView = GetComponent<RealtimeView>();
+        _source = GetComponent<AudioSource>();
+    }
+
     // Start is called before the first frame update
     private void Awake()
     {
-        _drumSync = GetComponent<DrumSync>();
-        myObject = GameObject.Find(key);
-        myView = myObject.GetComponent<RealtimeView>();
-        _source = GetComponent<AudioSource>();
         _play = false;
-
     }
 
     private void OnTriggerEnter(Collider other)
