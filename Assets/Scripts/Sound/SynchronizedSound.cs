@@ -11,7 +11,7 @@ namespace Sound
     {
         protected AudioSource SoundAudioSource { get; set; }
 
-        [field: SerializeField] private List<AudioClip> SoundAudioClips { get; }
+        [field: SerializeField] private List<AudioClip> SoundAudioClips { get; set; }
 
         private void Start()
         {
