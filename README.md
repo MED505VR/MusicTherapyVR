@@ -18,6 +18,7 @@ Joey Ho
 Jacob Noer 📧: noerjacob@gmail.com
 
 Kresten Carr
+email📧 : kresten.bild.carr@gmail.com
 
 Hector Thøgersen
 
