@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
+using Normal.Realtime;
+using RoomEnvironment.Models;
 using UnityEngine;
 
 namespace RoomEnvironment
 {
-    public class ColorChangeLamp : MonoBehaviour
+    public class ColorChangeLamp : RealtimeComponent<ColorChangeLampModel>
     {
         public Light PointLight { get; private set; }
-        public Light SpotLight { get; private set; }
+        private Light SpotLight { get; set; }
 
         private readonly float _lightTransitionSpeed = 0.01f;
         private bool _isChanging;
@@ -17,20 +20,26 @@ namespace RoomEnvironment
             if (!SpotLight) SpotLight = GetComponentsInChildren<Light>()[1];
         }
 
+        private void Update()
+        {
+            PointLight.color = model.color;
+            SpotLight.color = model.color;
+        }
+
         public void ChangeLightColor(Color color)
         {
             if (_isChanging) return;
-            StartCoroutine(UpdateLightColor(color, PointLight));
-            StartCoroutine(UpdateLightColor(color, SpotLight));
+            StartCoroutine(UpdateLightColor(color));
+            StartCoroutine(UpdateLightColor(color));
         }
 
-        private IEnumerator UpdateLightColor(Color targetColor, Light targetLight)
+        private IEnumerator UpdateLightColor(Color targetColor)
         {
             _isChanging = true;
 
-            while (targetLight.color != targetColor)
+            while (model.color != targetColor)
             {
-                targetLight.color = Color.Lerp(targetLight.color, targetColor, _lightTransitionSpeed);
+                model.color = Color.Lerp(model.color, targetColor, _lightTransitionSpeed);
                 yield return new WaitForEndOfFrame();
             }
 
