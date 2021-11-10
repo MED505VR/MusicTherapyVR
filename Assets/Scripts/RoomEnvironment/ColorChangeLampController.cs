@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
-using Normal.Realtime;
-using RoomEnvironment.Models;
 using UnityEngine;
 
 namespace RoomEnvironment
 {
     public class ColorChangeLampController : MonoBehaviour
     {
-        private int _currentColorIndex;
-        [field: SerializeField] private List<Color> LampColors { get; set; }
+        public float LightTransitionSpeed { get; set; }
+        public int CurrentColorIndex { get; set; }
+        [field: SerializeField] public List<Color> LampColors { get; set; }
         private ColorChangeLamp[] Lamps { get; set; }
+
 
         private void Start()
         {
@@ -24,9 +24,9 @@ namespace RoomEnvironment
 
         private void ChangeLampColor()
         {
-            foreach (var lamp in Lamps) lamp.ChangeLightColor(LampColors[_currentColorIndex]);
+            foreach (var lamp in Lamps) lamp.SetModelColorIndex(CurrentColorIndex);
 
-            _currentColorIndex = _currentColorIndex == LampColors.Count - 1 ? 0 : _currentColorIndex + 1;
+            CurrentColorIndex = CurrentColorIndex == LampColors.Count - 1 ? 0 : CurrentColorIndex + 1;
         }
     }
 }
