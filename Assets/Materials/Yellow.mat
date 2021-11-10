@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8266262309123720974
+--- !u!114 &-4210531363552222513
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,5 +122,5 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 0.72156864, a: 1}
     - _Color: {r: 1, g: 1, b: 0.72156864, a: 1}
     - _EmissionColor: {r: 1.1486983, g: 0.510835, b: 0, a: 1}
-    - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
