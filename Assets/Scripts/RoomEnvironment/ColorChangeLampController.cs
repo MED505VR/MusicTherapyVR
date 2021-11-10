@@ -17,7 +17,7 @@ namespace RoomEnvironment
             LampColors.Add(Lamps[0].PointLight.color);
         }
 
-        private void OnCollisionEnter(Collision other)
+        private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.CompareTag("PlayerInteractor")) ChangeLampColor();
         }
