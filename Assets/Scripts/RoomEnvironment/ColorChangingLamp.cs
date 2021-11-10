@@ -22,7 +22,7 @@ namespace RoomEnvironment
             if (!SpotLight) SpotLight = GetComponentsInChildren<Light>()[1];
 
             _controller = FindObjectOfType<ColorChangingLampController>();
-            _colorTransitionSpeed = _controller.LightTransitionSpeed;
+            _colorTransitionSpeed = _controller.lightTransitionSpeed;
             _colors = _controller.LampColors;
         }
 
@@ -34,7 +34,7 @@ namespace RoomEnvironment
             if (currentModel != null && _controller != null)
             {
                 // If this is a model that has no data set on it, populate it with the current mesh renderer color.
-                if (currentModel.isFreshModel) currentModel.colorIndex = _controller.CurrentColorIndex;
+                if (currentModel.isFreshModel) currentModel.colorIndex = 0;
 
                 ChangeLightColor(currentModel.colorIndex);
 
@@ -53,20 +53,20 @@ namespace RoomEnvironment
             ChangeLightColor(model.colorIndex);
         }
 
-        public void ChangeLightColor(int colorIndex)
+        private void ChangeLightColor(int colorIndex)
         {
             if (_isChanging) return;
             StartCoroutine(UpdateLightColor(PointLight, _colors[colorIndex], _colorTransitionSpeed));
             StartCoroutine(UpdateLightColor(SpotLight, _colors[colorIndex], _colorTransitionSpeed));
         }
 
-        private IEnumerator UpdateLightColor(Light light, Color targetColor, float transitionSpeed)
+        private IEnumerator UpdateLightColor(Light pLight, Color targetColor, float transitionSpeed)
         {
             _isChanging = true;
 
-            while (light.color != targetColor)
+            while (pLight.color != targetColor)
             {
-                light.color = Color.Lerp(light.color, targetColor, transitionSpeed);
+                pLight.color = Color.Lerp(pLight.color, targetColor, transitionSpeed);
                 yield return new WaitForEndOfFrame();
             }
 
