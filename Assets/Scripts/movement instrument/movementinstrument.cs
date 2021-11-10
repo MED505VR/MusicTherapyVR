@@ -7,15 +7,15 @@ public class movementinstrument : MonoBehaviour
 {
     private GameObject lefthand, righthand;
     private RealtimeView myView;
-    public bool _play;
-    public bool _prevPlay;
+    public bool _movPlay;
+    public bool _prevMovPlay;
 
 
     private void Awake()
     {
         lefthand = GameObject.Find("LeftHandAnchor");
         righthand = GameObject.Find("RightHandAnchor");
-        _play = false;
+        _movPlay = false;
         myView = GetComponent<RealtimeView>();
     }
     private void OnTriggerEnter(Collider other)
@@ -23,7 +23,7 @@ public class movementinstrument : MonoBehaviour
         if (other.gameObject == lefthand || other.gameObject == righthand)
         {
             myView.RequestOwnership();
-            _play = !_play;
+            _movPlay = !_movPlay;
 
         }
     }
@@ -33,10 +33,10 @@ public class movementinstrument : MonoBehaviour
     }
     private void Update()
     {
-        if (_play != _prevPlay)
+        if (_movPlay != _prevMovPlay)
         {
-            
-            _prevPlay = _play;
+
+            _prevMovPlay = _movPlay;
         }
     }
 }
