@@ -7,7 +7,7 @@ namespace Sound
     {
         private void OnTriggerEnter(Collider other)
         {
-            PlaySynchronizedSound();
+            StartSynchronizedSound();
         }
     }
 }

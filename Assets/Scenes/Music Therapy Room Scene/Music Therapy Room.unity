@@ -619,7 +619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <SoundAudioClips>k__BackingField:
-  - {fileID: 8300000, guid: 171a0da529c61f4498eea19994a9a353, type: 3}
+  - {fileID: 8300000, guid: 494bd1721199a40c5a79fa3011793556, type: 3}
 --- !u!114 &1975625084
 MonoBehaviour:
   m_ObjectHideFlags: 0
