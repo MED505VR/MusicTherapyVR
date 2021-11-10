@@ -10,10 +10,12 @@ public class MoodPlay : MonoBehaviour
 
     private MoodSound moodSound;
     private GameObject leftHand, rightHand;
-    private GameObject myObject;
+    private GameObject stopButton;
     private RealtimeView myView;
     private MeshRenderer meshRenderer;
     private MeshRenderer lightRenderer;
+
+    private AudioSource audioSource;
 
     [SerializeField]
     public bool _play;
@@ -39,11 +41,15 @@ public class MoodPlay : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         leftHand = GameObject.Find("LeftHandAnchor");
         rightHand = GameObject.Find("RightHandAnchor");
+        stopButton = GameObject.Find("stopButton");
+
         myView = GetComponent<RealtimeView>();
         _play = false;
 
         _original = GetComponent<Renderer>().material.color;
         _originalLight = _light.GetComponent<Light>().color;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
 
@@ -57,7 +63,8 @@ public class MoodPlay : MonoBehaviour
         }
     }
 
-    private void color()
+
+    public void color()
     {
         if (_play == true)
         {

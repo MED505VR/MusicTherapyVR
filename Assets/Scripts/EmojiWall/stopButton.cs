@@ -2,40 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Normal.Realtime;
-/*
+
 public class stopButton : MonoBehaviour
 {
     [SerializeField]
-    private MoodSound _moodSound;
-    private MoodPlay _moodPlay;
+    public bool play = false;
+    private bool prevPlay;
+    public GameObject emoji0, emoji1, emoji2;
 
-    private MeshRenderer _meshRenderer;
-    private RealtimeView myView;
+    private AudioSource source;
 
-    private GameObject leftHand, rightHand, myObject;
+    private GameObject leftHand, rightHand;
 
-    private void Awake()
+    private void Start()
     {
-        _meshRenderer = GetComponent<MeshRenderer>();
-
         leftHand = GameObject.Find("LeftHandAnchor");
         rightHand = GameObject.Find("RightHandAnchor");
-        myView = GetComponent<RealtimeView>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == leftHand || other.gameObject == rightHand)
         {
-            myView.RequestOwnership();
-            //_moodSound.play = false;
-            _moodPlay._play = false;
+            emoji0.GetComponent<MoodPlay>()._play = false;
+            emoji1.GetComponent<MoodPlay>()._play = false;
+            emoji2.GetComponent<MoodPlay>()._play = false;
+
+            emoji0.GetComponent<MoodPlay>().color();
+            emoji1.GetComponent<MoodPlay>().color();
+            emoji2.GetComponent<MoodPlay>().color();
+
         }
     }
-
-    private void OnTriggerExit(Collider other)
-    {
-        myView.ClearOwnership();
-    }
 }
-*/
