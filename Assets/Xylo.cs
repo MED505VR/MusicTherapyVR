@@ -30,11 +30,11 @@ public class Xylo : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         myView.RequestOwnership();
-        if (other.CompareTag("DrumstickLeft") || other.CompareTag("DrumstickRight"))
+        if (other.CompareTag("DrumStickHead") || other.CompareTag("DrumstickRight"))
         {
             _play = !_play;
-            _source.volume = other.gameObject.GetComponent<TrackSpeed>().speed; //will set the volume to speed but max 1
-            //color();
+            //_source.volume = other.gameObject.GetComponent<TrackSpeed>().speed; //will set the volume to speed but max 1
+            _source.Play();
         }
     }
 
