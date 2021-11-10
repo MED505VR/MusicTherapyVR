@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace RoomEnvironment
 {
-    public class ColorChangeLamp : RealtimeComponent<ColorChangeLampModel>
+    public class ColorChangingLamp : RealtimeComponent<ColorChangingLampModel>
     {
         private List<Color> _colors;
         private float _colorTransitionSpeed;
-        private ColorChangeLampController _controller;
+        private ColorChangingLampController _controller;
         private bool _isChanging;
 
         public Light PointLight { get; private set; }
@@ -21,17 +21,17 @@ namespace RoomEnvironment
             if (!PointLight) PointLight = GetComponentsInChildren<Light>()[0];
             if (!SpotLight) SpotLight = GetComponentsInChildren<Light>()[1];
 
-            _controller = FindObjectOfType<ColorChangeLampController>();
+            _controller = FindObjectOfType<ColorChangingLampController>();
             _colorTransitionSpeed = _controller.LightTransitionSpeed;
             _colors = _controller.LampColors;
         }
 
-        protected override void OnRealtimeModelReplaced(ColorChangeLampModel previousModel,
-            ColorChangeLampModel currentModel)
+        protected override void OnRealtimeModelReplaced(ColorChangingLampModel previousModel,
+            ColorChangingLampModel currentModel)
         {
             if (previousModel != null) previousModel.colorIndexDidChange -= UpdateColorToMatchModel;
 
-            if (currentModel != null)
+            if (currentModel != null && _controller != null)
             {
                 // If this is a model that has no data set on it, populate it with the current mesh renderer color.
                 if (currentModel.isFreshModel) currentModel.colorIndex = _controller.CurrentColorIndex;
@@ -48,7 +48,7 @@ namespace RoomEnvironment
             model.colorIndex = colorIndex;
         }
 
-        private void UpdateColorToMatchModel(ColorChangeLampModel pModel, int value)
+        private void UpdateColorToMatchModel(ColorChangingLampModel pModel, int value)
         {
             ChangeLightColor(model.colorIndex);
         }

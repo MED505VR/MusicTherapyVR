@@ -3,17 +3,17 @@ using UnityEngine;
 
 namespace RoomEnvironment
 {
-    public class ColorChangeLampController : MonoBehaviour
+    public class ColorChangingLampController : MonoBehaviour
     {
         public float LightTransitionSpeed { get; set; }
         public int CurrentColorIndex { get; set; }
         [field: SerializeField] public List<Color> LampColors { get; set; }
-        private ColorChangeLamp[] Lamps { get; set; }
+        private ColorChangingLamp[] Lamps { get; set; }
 
 
         private void Start()
         {
-            Lamps = FindObjectsOfType<ColorChangeLamp>();
+            Lamps = FindObjectsOfType<ColorChangingLamp>();
             LampColors.Add(Lamps[0].PointLight.color);
         }
 
