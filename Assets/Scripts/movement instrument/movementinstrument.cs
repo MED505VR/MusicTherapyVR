@@ -35,7 +35,7 @@ public class movementinstrument : MonoBehaviour
     {
         if (_play != _prevPlay)
         {
-            _moodSync.SetPlay(_play);
+            
             _prevPlay = _play;
         }
     }
