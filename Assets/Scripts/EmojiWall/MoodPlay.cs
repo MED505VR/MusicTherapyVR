@@ -47,8 +47,8 @@ public class MoodPlay : MonoBehaviour
                 emoji1.GetComponent<MoodSync>().SetPlay(false);
                 emoji2.GetComponent<MoodSync>().SetPlay(false);
 
-                emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._originalLight);
-                emoji2.GetComponent<MoodSync>().SetLight(emoji2.GetComponent<MoodPlay>()._originalLight);
+                //emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._originalLight);
+                //emoji2.GetComponent<MoodSync>().SetLight(emoji2.GetComponent<MoodPlay>()._originalLight);
             }
 
             if (emoji1 == true) 
@@ -56,8 +56,8 @@ public class MoodPlay : MonoBehaviour
                 emoji0.GetComponent<MoodSync>().SetPlay(false);
                 emoji2.GetComponent<MoodSync>().SetPlay(false);
 
-                emoji0.GetComponent<MoodSync>().SetLight(emoji0.GetComponent<MoodPlay>()._originalLight);
-                emoji2.GetComponent<MoodSync>().SetLight(emoji2.GetComponent<MoodPlay>()._originalLight);
+                //emoji0.GetComponent<MoodSync>().SetLight(emoji0.GetComponent<MoodPlay>()._originalLight);
+                //emoji2.GetComponent<MoodSync>().SetLight(emoji2.GetComponent<MoodPlay>()._originalLight);
             }
 
             if (emoji2 == true)
@@ -65,8 +65,8 @@ public class MoodPlay : MonoBehaviour
                 emoji0.GetComponent<MoodSync>().SetPlay(false);
                 emoji1.GetComponent<MoodSync>().SetPlay(false);
 
-                emoji0.GetComponent<MoodSync>().SetLight(emoji0.GetComponent<MoodPlay>()._originalLight);
-                emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._originalLight);
+                //emoji0.GetComponent<MoodSync>().SetLight(emoji0.GetComponent<MoodPlay>()._originalLight);
+                //emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._originalLight);
             }            
             myView.RequestOwnership();
             _play = !_play;
