@@ -11,6 +11,7 @@ namespace Sound
     {
         [SerializeField] private List<AudioClip> soundAudioClips;
         private IEnumerator _playSoundCoroutine;
+        
         protected AudioSource SoundAudioSource { get; set; }
         private List<AudioClip> SoundAudioClips
         {
@@ -23,11 +24,31 @@ namespace Sound
             SoundAudioSource = GetComponent<AudioSource>();
         }
 
-        private void Update()
+        protected override void OnRealtimeModelReplaced(SynchronizedSoundModel previousModel,
+            SynchronizedSoundModel currentModel)
         {
-            if (model.playSynchronizedSound && !SoundAudioSource.isPlaying) PlayLocalSound();
-            if (!model.playSynchronizedSound && SoundAudioSource.isPlaying) StopLocalSound();
+            if (previousModel != null) // Unregister from events
+                previousModel.playSynchronizedSoundDidChange -= PlaySynchronizedSoundDidChange;
+
+            if (currentModel != null)
+            {
+                // If this is a model that has no data set on it, populate it with the current mesh renderer color.
+                if (currentModel.isFreshModel)
+                    currentModel.playSynchronizedSound = false;
+
+                // Register for events so we'll know if the color changes later
+                currentModel.playSynchronizedSoundDidChange += PlaySynchronizedSoundDidChange;
+            }
         }
+
+        private void PlaySynchronizedSoundDidChange(SynchronizedSoundModel pModel, bool value)
+        {
+            if (model.playSynchronizedSound)
+                PlayLocalSound();
+            else
+                StopLocalSound();
+        }
+
 
         private void SetSoundAudioClips(List<AudioClip> list)
         {
@@ -35,16 +56,16 @@ namespace Sound
             SoundAudioClips = list;
         }
 
-        protected void StartSynchronizedSound()
+        protected void PlaySynchronizedSound()
         {
             model.playSynchronizedSound = true;
         }
 
-        protected void StartSynchronizedSound(AudioClip clip)
+        protected void PlaySynchronizedSound(AudioClip clip)
         {
-            model.playSynchronizedSound = true;
             SoundAudioClips.Clear();
             SoundAudioClips.Add(clip);
+            model.playSynchronizedSound = true;
         }
 
 
