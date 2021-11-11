@@ -8,14 +8,15 @@ namespace RoomEnvironment
         public float lightTransitionSpeed = 0.01f;
 
         public int CurrentColorIndex { get; set; }
-        [field: SerializeField] public List<Color> LampColors { get; set; }
+        [field: SerializeField] public List<Color> Colors { get; set; }
         private ColorChangingLamp[] Lamps { get; set; }
 
 
         private void Start()
         {
             Lamps = FindObjectsOfType<ColorChangingLamp>();
-            LampColors.Add(Lamps[0].PointLight.color);
+            Colors.Add(Lamps[0].PointLight.color);
+            CurrentColorIndex = Colors.Count - 1;
         }
 
         private void OnTriggerEnter(Collider other)
@@ -27,7 +28,7 @@ namespace RoomEnvironment
         {
             foreach (var lamp in Lamps) lamp.SetModelColorIndex(CurrentColorIndex);
 
-            CurrentColorIndex = CurrentColorIndex == LampColors.Count - 1 ? 0 : CurrentColorIndex + 1;
+            CurrentColorIndex = CurrentColorIndex == Colors.Count - 1 ? 0 : CurrentColorIndex + 1;
         }
     }
 }

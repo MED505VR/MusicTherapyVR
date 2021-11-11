@@ -23,7 +23,8 @@ namespace RoomEnvironment
 
             _controller = FindObjectOfType<ColorChangingLampController>();
             _colorTransitionSpeed = _controller.lightTransitionSpeed;
-            _colors = _controller.LampColors;
+            _colors = _controller.Colors;
+            model.colorIndex = _colors.Count - 1;
         }
 
         protected override void OnRealtimeModelReplaced(ColorChangingLampModel previousModel,
@@ -31,16 +32,7 @@ namespace RoomEnvironment
         {
             if (previousModel != null) previousModel.colorIndexDidChange -= UpdateColorToMatchModel;
 
-            if (currentModel != null && _controller != null)
-            {
-                // If this is a model that has no data set on it, populate it with the current mesh renderer color.
-                if (currentModel.isFreshModel) currentModel.colorIndex = 0;
-
-                ChangeLightColor(currentModel.colorIndex);
-
-                // Register for events so we'll know if the color changes later
-                currentModel.colorIndexDidChange += UpdateColorToMatchModel;
-            }
+            if (currentModel != null) currentModel.colorIndexDidChange += UpdateColorToMatchModel;
         }
 
         public void SetModelColorIndex(int colorIndex)

@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using UnityEngine.Animations;
+#pragma warning disable 618
 
 namespace Normal.Realtime.Examples
 {

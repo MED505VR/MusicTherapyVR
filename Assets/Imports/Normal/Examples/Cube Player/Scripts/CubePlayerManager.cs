@@ -1,6 +1,7 @@
 ﻿#if NORMCORE
 
 using UnityEngine;
+#pragma warning disable 618
 
 namespace Normal.Realtime.Examples
 {
