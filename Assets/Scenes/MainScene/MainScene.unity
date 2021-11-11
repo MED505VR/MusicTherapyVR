@@ -8432,7 +8432,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3777399825742507439, guid: e4de45b9966b5f94eb0ef5410d501e7f,
         type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3777399825742507439, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3777399825742507439, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3777399825742507439, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
+      propertyPath: m_CookingOptions
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4157800576409315130, guid: e4de45b9966b5f94eb0ef5410d501e7f,
