@@ -151,8 +151,11 @@ public class MoodPlay : MonoBehaviour
         if (_play != _prevPlay)
         {
             emoji0.GetComponent<MoodSound>().play = false;
+            emoji0.GetComponent<MoodPlay>()._moodSync.SetPlay(false);
             emoji1.GetComponent<MoodSound>().play = false;
+            emoji1.GetComponent<MoodPlay>()._moodSync.SetPlay(false);
             emoji2.GetComponent<MoodSound>().play = false;
+            emoji2.GetComponent<MoodPlay>()._moodSync.SetPlay(false);
 
             _moodSync.SetPlay(_play);
             _prevPlay = _play;
