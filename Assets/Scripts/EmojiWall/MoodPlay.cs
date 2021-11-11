@@ -18,7 +18,7 @@ public class MoodPlay : MonoBehaviour
     // Variables for colour on the emojis
     private Color _color = default;
     private Color _previousColor = default;
-    private Color _original;
+    public Color _original;
 
     // Variables for the light caused by the emojis
     public Light _light;
@@ -42,11 +42,41 @@ public class MoodPlay : MonoBehaviour
     {
         if (other.gameObject == leftHand || other.gameObject == rightHand)
         {
-            //this.GetComponent<MoodSync>().SetPlay(false);
-            emoji0.GetComponent<MoodSync>().SetLight(_lightColor);
-            emoji1.GetComponent<MoodSync>().SetLight(_lightColor);
-            emoji2.GetComponent<MoodSync>().SetLight(_lightColor);
+            if (emoji0 == true)
+            {          
+                
+                emoji1.GetComponent<MoodSync>().SetPlay(false);
+                emoji2.GetComponent<MoodSync>().SetPlay(false);
 
+                this.GetComponent<MoodPlay>().Update();
+
+                emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._originalLight);
+                emoji2.GetComponent<MoodSync>().SetLight(emoji2.GetComponent<MoodPlay>()._originalLight);
+            }
+
+            if (emoji1 == true) 
+            {
+                emoji0.GetComponent<MoodSync>().SetPlay(false);
+                emoji2.GetComponent<MoodSync>().SetPlay(false);
+
+                this.GetComponent<MoodPlay>().Update();
+
+
+                emoji0.GetComponent<MoodSync>().SetLight(emoji0.GetComponent<MoodPlay>()._originalLight);
+                emoji2.GetComponent<MoodSync>().SetLight(emoji2.GetComponent<MoodPlay>()._originalLight);
+            }
+
+            if (emoji2 == true)
+            {
+                emoji0.GetComponent<MoodSync>().SetPlay(false);
+                emoji1.GetComponent<MoodSync>().SetPlay(false);
+
+                this.GetComponent<MoodPlay>().Update();
+                emoji0.GetComponent<MoodSync>().SetLight(emoji0.GetComponent<MoodPlay>()._originalLight);
+                emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._originalLight);
+            }
+
+            
             myView.RequestOwnership();
             _play = !_play;
             color();

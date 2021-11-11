@@ -79,7 +79,7 @@ public class MoodSync : RealtimeComponent<MoodSyncModel>
     private void UpdateMeshRendererLight()
     {
         // Get the color from the model and set it on the mesh renderer
-        _lightRenderer.material.color = model.color;
+        _lightRenderer.material.color = model.light;
     }
 
     public void SetPlay(bool play)
