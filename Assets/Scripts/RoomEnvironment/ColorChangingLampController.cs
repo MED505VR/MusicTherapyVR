@@ -5,7 +5,7 @@ namespace RoomEnvironment
 {
     public class ColorChangingLampController : MonoBehaviour
     {
-        public float lightTransitionSpeed = 0.01f;
+        public float lightTransitionSpeed = 0.5f;
 
         private int CurrentColorIndex { get; set; }
         [field: SerializeField] private List<Color> Colors { get; set; }
