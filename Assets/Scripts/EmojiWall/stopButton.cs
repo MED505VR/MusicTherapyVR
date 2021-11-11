@@ -8,7 +8,7 @@ public class stopButton : MonoBehaviour
     [SerializeField]
     public bool play = false;
     private bool prevPlay;
-    public GameObject emoji0, emoji1, emoji2;
+    private GameObject emoji0, emoji1, emoji2;
 
     private AudioSource source;
 
@@ -18,6 +18,9 @@ public class stopButton : MonoBehaviour
     {
         leftHand = GameObject.Find("LeftHandAnchor");
         rightHand = GameObject.Find("RightHandAnchor");
+        emoji0 = GameObject.Find("AngryEmoji");
+        emoji1 = GameObject.Find("SadEmoji");
+        emoji2 = GameObject.Find("NeutralEmoji");
     }
 
     public void OnTriggerEnter(Collider other)

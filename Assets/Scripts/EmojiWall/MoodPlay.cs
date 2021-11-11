@@ -8,7 +8,7 @@ public class MoodPlay : MonoBehaviour
     [SerializeField]
     private MoodSync _moodSync; // For normcore syncing 
     private GameObject leftHand, rightHand; // for objects
-    public GameObject emoji0, emoji1, emoji2; // For public objects
+    private GameObject emoji0, emoji1, emoji2; // For public objects
     private RealtimeView myView; // For normcore object ownership
 
     // Varaibles for playing the sound
@@ -26,26 +26,32 @@ public class MoodPlay : MonoBehaviour
     public Color _lightColor;
     private Color _previousLight;
 
-    private void Awake() 
+    private void Start() 
     {
         _moodSync = GetComponent<MoodSync>();
         leftHand = GameObject.Find("LeftHandAnchor");
         rightHand = GameObject.Find("RightHandAnchor");
+        emoji0 = GameObject.Find("AngryEmoji");
+        emoji1 = GameObject.Find("SadEmoji");
+        emoji2 = GameObject.Find("NeutralEmoji");
         myView = GetComponent<RealtimeView>();
         _play = false;
         _original = GetComponent<Renderer>().material.color;
         _originalLight = _light.GetComponent<Light>().color;
+
+
     }
 
-
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == leftHand || other.gameObject == rightHand)
         {
-            
+            Debug.Log("Hej");
 
-            if (emoji0 == true)
+            if (emoji0)
             {
+                Debug.Log("emoji0 works0");
 
                 myView.RequestOwnership();
 
@@ -63,8 +69,9 @@ public class MoodPlay : MonoBehaviour
                 myView.ClearOwnership();
             }
 
-            if (emoji1 == true) 
+            else if (emoji1 == true) 
             {
+                Debug.Log("emoji1 works0");
 
                 myView.RequestOwnership();
                 emoji0.GetComponent<MoodPlay>()._play = false;
@@ -80,8 +87,9 @@ public class MoodPlay : MonoBehaviour
                 myView.ClearOwnership();
             }
 
-            if (emoji2 == true)
+            else if (emoji2 == true)
             {
+                Debug.Log("emoji2 works0");
 
                 myView.RequestOwnership();
                 emoji0.GetComponent<MoodPlay>()._play = false;
