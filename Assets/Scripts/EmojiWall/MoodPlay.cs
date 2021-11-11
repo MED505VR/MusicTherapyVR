@@ -6,50 +6,35 @@ using Normal.Realtime;
 public class MoodPlay : MonoBehaviour
 {
     [SerializeField]
-    private MoodSync _moodSync;
+    private MoodSync _moodSync; // For normcore syncing 
+    private GameObject leftHand, rightHand; // for objects
+    public GameObject emoji0, emoji1, emoji2; // For public objects
+    private RealtimeView myView; // For normcore object ownership
 
-    private MoodSound moodSound;
-    private GameObject leftHand, rightHand;
-    private GameObject stopButton;
-    private RealtimeView myView;
-    private MeshRenderer meshRenderer;
-    private MeshRenderer lightRenderer;
-
-    private AudioSource audioSource;
-
-    [SerializeField]
+    // Varaibles for playing the sound
     public bool _play;
     private bool _prevPlay;
 
+    // Variables for colour on the emojis
     private Color _color = default;
     private Color _previousColor = default;
-
     private Color _original;
 
+    // Variables for the light caused by the emojis
     public Light _light;
-
     private Color _originalLight;
     public Color _lightColor;
     private Color _previousLight;
-    private Color _testLight;
 
-    // #FFF4D6
-
-    private void Awake()
+    private void Awake() 
     {
         _moodSync = GetComponent<MoodSync>();
-        meshRenderer = GetComponent<MeshRenderer>();
         leftHand = GameObject.Find("LeftHandAnchor");
         rightHand = GameObject.Find("RightHandAnchor");
-        stopButton = GameObject.Find("stopButton");
-
         myView = GetComponent<RealtimeView>();
         _play = false;
-
         _original = GetComponent<Renderer>().material.color;
         _originalLight = _light.GetComponent<Light>().color;
-
-        audioSource = GetComponent<AudioSource>();
     }
 
 
@@ -57,6 +42,10 @@ public class MoodPlay : MonoBehaviour
     {
         if (other.gameObject == leftHand || other.gameObject == rightHand)
         {
+            emoji0.GetComponent<MoodSound>().play = false;
+            emoji1.GetComponent<MoodSound>().play = false;
+            emoji2.GetComponent<MoodSound>().play = false;
+
             myView.RequestOwnership();
             _play = !_play;
             color();
@@ -86,7 +75,7 @@ public class MoodPlay : MonoBehaviour
         myView.ClearOwnership();
     }
 
-    private void Update()
+    public void Update()
     {
         if (_play != _prevPlay)
         {
@@ -102,13 +91,14 @@ public class MoodPlay : MonoBehaviour
 
         if (_lightColor != _previousLight)
         {
-            _moodSync.SetColor(_lightColor);
+            _moodSync.SetLight(_lightColor);
             _previousLight = _lightColor;
         }
     }
 
     public void stopButtonSync()
     {
-        Update();
+        this.Update();
+        
     }
 }

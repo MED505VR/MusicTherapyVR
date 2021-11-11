@@ -8353,6 +8353,21 @@ PrefabInstance:
       objectReference: {fileID: 705507994}
     - target: {fileID: 3777399825742507436, guid: e4de45b9966b5f94eb0ef5410d501e7f,
         type: 3}
+      propertyPath: emoji0
+      value: 
+      objectReference: {fileID: 864730889}
+    - target: {fileID: 3777399825742507436, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
+      propertyPath: emoji1
+      value: 
+      objectReference: {fileID: 1514181074}
+    - target: {fileID: 3777399825742507436, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
+      propertyPath: emoji2
+      value: 
+      objectReference: {fileID: 1185789251}
+    - target: {fileID: 3777399825742507436, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
       propertyPath: _lightColor.b
       value: 0.07371521
       objectReference: {fileID: 0}
@@ -8408,6 +8423,21 @@ PrefabInstance:
       objectReference: {fileID: 705507994}
     - target: {fileID: 7119064872526626917, guid: e4de45b9966b5f94eb0ef5410d501e7f,
         type: 3}
+      propertyPath: emoji0
+      value: 
+      objectReference: {fileID: 864730889}
+    - target: {fileID: 7119064872526626917, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
+      propertyPath: emoji1
+      value: 
+      objectReference: {fileID: 1514181074}
+    - target: {fileID: 7119064872526626917, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
+      propertyPath: emoji2
+      value: 
+      objectReference: {fileID: 1185789251}
+    - target: {fileID: 7119064872526626917, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
       propertyPath: _lightColor.b
       value: 1
       objectReference: {fileID: 0}
@@ -8436,6 +8466,21 @@ PrefabInstance:
       propertyPath: _light
       value: 
       objectReference: {fileID: 705507994}
+    - target: {fileID: 9020434735237394212, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
+      propertyPath: emoji0
+      value: 
+      objectReference: {fileID: 864730889}
+    - target: {fileID: 9020434735237394212, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
+      propertyPath: emoji1
+      value: 
+      objectReference: {fileID: 1514181074}
+    - target: {fileID: 9020434735237394212, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
+      propertyPath: emoji2
+      value: 
+      objectReference: {fileID: 1185789251}
     - target: {fileID: 9020434735237394212, guid: e4de45b9966b5f94eb0ef5410d501e7f,
         type: 3}
       propertyPath: _lightColor.b
