@@ -114,6 +114,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundAudioClips: []
+  freq: 0
+  amp: 0
+  dura: 0
 --- !u!82 &1154003319178700501
 AudioSource:
   m_ObjectHideFlags: 0
@@ -486,6 +489,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundAudioClips: []
+  freq: 0
+  amp: 0
+  dura: 0
 --- !u!114 &1154003319440321726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -621,7 +627,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7b8906305f3ff084ca206b6fb231f56b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -903,6 +909,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundAudioClips: []
+  freq: 0
+  amp: 0
+  dura: 0
 --- !u!114 &1154003319524853570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1179,6 +1188,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundAudioClips: []
+  freq: 0
+  amp: 0
+  dura: 0
 --- !u!114 &1154003320078065067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1359,6 +1371,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundAudioClips: []
+  freq: 0
+  amp: 0
+  dura: 0
 --- !u!82 &1154003320122604448
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1635,6 +1650,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundAudioClips: []
+  freq: 0
+  amp: 0
+  dura: 0
 --- !u!82 &1154003320237302491
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1911,6 +1929,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundAudioClips: []
+  freq: 0
+  amp: 0
+  dura: 0
 --- !u!82 &1154003320381142194
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2283,6 +2304,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundAudioClips: []
+  freq: 0
+  amp: 0
+  dura: 0
 --- !u!114 &1154003320570593403
 MonoBehaviour:
   m_ObjectHideFlags: 0
