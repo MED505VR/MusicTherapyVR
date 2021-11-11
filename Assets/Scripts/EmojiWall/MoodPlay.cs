@@ -59,6 +59,8 @@ public class MoodPlay : MonoBehaviour
 
                 //emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._originalLight);
                 //emoji2.GetComponent<MoodSync>().SetLight(emoji2.GetComponent<MoodPlay>()._originalLight);
+
+                myView.ClearOwnership();
             }
 
             if (emoji1 == true) 
@@ -75,6 +77,7 @@ public class MoodPlay : MonoBehaviour
 
                 //emoji0.GetComponent<MoodSync>().SetLight(emoji0.GetComponent<MoodPlay>()._originalLight);
                 //emoji2.GetComponent<MoodSync>().SetLight(emoji2.GetComponent<MoodPlay>()._originalLight);
+                myView.ClearOwnership();
             }
 
             if (emoji2 == true)
@@ -91,8 +94,9 @@ public class MoodPlay : MonoBehaviour
 
                 //emoji0.GetComponent<MoodSync>().SetLight(emoji0.GetComponent<MoodPlay>()._originalLight);
                 //emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._originalLight);
+                myView.ClearOwnership();
             }            
-            myView.RequestOwnership();
+
             _play = !_play;
             color();
         }
