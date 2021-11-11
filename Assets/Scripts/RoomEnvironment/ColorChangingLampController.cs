@@ -10,12 +10,11 @@ namespace RoomEnvironment
         private int CurrentColorIndex { get; set; }
         [field: SerializeField] private List<Color> Colors { get; set; }
         private ColorChangingLamp[] Lamps { get; set; }
-
-
+        
         private void Start()
         {
             Lamps = FindObjectsOfType<ColorChangingLamp>();
-            Colors.Add(Lamps[0].PointLight.color);
+            Colors.Add(Lamps[0].GetComponentsInChildren<Light>()[0].color);
             CurrentColorIndex = Colors.Count - 1;
         }
 
