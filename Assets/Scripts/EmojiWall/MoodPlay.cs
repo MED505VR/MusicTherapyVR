@@ -106,4 +106,9 @@ public class MoodPlay : MonoBehaviour
             _previousLight = _lightColor;
         }
     }
+
+    public void stopButtonSync()
+    {
+        Update();
+    }
 }

@@ -24,13 +24,38 @@ public class stopButton : MonoBehaviour
     {
         if (other.gameObject == leftHand || other.gameObject == rightHand)
         {
-            emoji0.GetComponent<MoodPlay>()._play = false;
-            emoji1.GetComponent<MoodPlay>()._play = false;
-            emoji2.GetComponent<MoodPlay>()._play = false;
+            if (emoji0 == true)
+            {
+                emoji0.GetComponent<MoodPlay>()._play = false;
+                emoji0.GetComponent<MoodPlay>().color();
+                emoji0.GetComponent<MoodPlay>().stopButtonSync();
+            }
 
-            emoji0.GetComponent<MoodPlay>().color();
-            emoji1.GetComponent<MoodPlay>().color();
-            emoji2.GetComponent<MoodPlay>().color();
+            if (emoji1 == true)
+            {
+                emoji1.GetComponent<MoodPlay>()._play = false;
+                emoji1.GetComponent<MoodPlay>().color();
+                emoji1.GetComponent<MoodPlay>().stopButtonSync();
+            }
+
+            if (emoji2 == true)
+            {
+                emoji2.GetComponent<MoodPlay>()._play = false;
+                emoji2.GetComponent<MoodPlay>().color();
+                emoji2.GetComponent<MoodPlay>().stopButtonSync();
+            }
+
+            
+            
+            
+
+            
+            
+            
+
+            
+            
+            
 
         }
     }
