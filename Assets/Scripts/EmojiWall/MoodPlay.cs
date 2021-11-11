@@ -43,12 +43,9 @@ public class MoodPlay : MonoBehaviour
         if (other.gameObject == leftHand || other.gameObject == rightHand)
         {
             if (emoji0 == true)
-            {          
-                
+            {                          
                 emoji1.GetComponent<MoodSync>().SetPlay(false);
                 emoji2.GetComponent<MoodSync>().SetPlay(false);
-
-                this.GetComponent<MoodPlay>().Update();
 
                 emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._originalLight);
                 emoji2.GetComponent<MoodSync>().SetLight(emoji2.GetComponent<MoodPlay>()._originalLight);
@@ -59,9 +56,6 @@ public class MoodPlay : MonoBehaviour
                 emoji0.GetComponent<MoodSync>().SetPlay(false);
                 emoji2.GetComponent<MoodSync>().SetPlay(false);
 
-                this.GetComponent<MoodPlay>().Update();
-
-
                 emoji0.GetComponent<MoodSync>().SetLight(emoji0.GetComponent<MoodPlay>()._originalLight);
                 emoji2.GetComponent<MoodSync>().SetLight(emoji2.GetComponent<MoodPlay>()._originalLight);
             }
@@ -71,12 +65,9 @@ public class MoodPlay : MonoBehaviour
                 emoji0.GetComponent<MoodSync>().SetPlay(false);
                 emoji1.GetComponent<MoodSync>().SetPlay(false);
 
-                this.GetComponent<MoodPlay>().Update();
                 emoji0.GetComponent<MoodSync>().SetLight(emoji0.GetComponent<MoodPlay>()._originalLight);
                 emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._originalLight);
-            }
-
-            
+            }            
             myView.RequestOwnership();
             _play = !_play;
             color();
