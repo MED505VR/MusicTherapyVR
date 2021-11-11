@@ -46,9 +46,13 @@ public class MoodPlay : MonoBehaviour
 
             if (emoji0 == true)
             {
-                myView.RequestOwnership();
-                emoji1.GetComponent<MoodSync>().SetPlay(false);
-                emoji2.GetComponent<MoodSync>().SetPlay(false);
+
+                
+
+                emoji1.GetComponent<MoodPlay>()._play = false;
+                emoji2.GetComponent<MoodPlay>()._play = false;
+
+                Debug.Log("emoji0 works");
 
                 //emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._originalLight);
                 //emoji2.GetComponent<MoodSync>().SetLight(emoji2.GetComponent<MoodPlay>()._originalLight);
@@ -56,9 +60,10 @@ public class MoodPlay : MonoBehaviour
 
             if (emoji1 == true) 
             {
-                myView.RequestOwnership();
-                emoji0.GetComponent<MoodSync>().SetPlay(false);
-                emoji2.GetComponent<MoodSync>().SetPlay(false);
+                emoji0.GetComponent<MoodPlay>()._play = false;
+                emoji2.GetComponent<MoodPlay>()._play = false;
+
+                Debug.Log("emoji1 works");
 
                 //emoji0.GetComponent<MoodSync>().SetLight(emoji0.GetComponent<MoodPlay>()._originalLight);
                 //emoji2.GetComponent<MoodSync>().SetLight(emoji2.GetComponent<MoodPlay>()._originalLight);
@@ -66,14 +71,15 @@ public class MoodPlay : MonoBehaviour
 
             if (emoji2 == true)
             {
-                myView.RequestOwnership();
-                emoji0.GetComponent<MoodSync>().SetPlay(false);
-                emoji1.GetComponent<MoodSync>().SetPlay(false);
+                emoji0.GetComponent<MoodPlay>()._play = false;
+                emoji1.GetComponent<MoodPlay>()._play = false;
+
+                Debug.Log("emoji2 works");
 
                 //emoji0.GetComponent<MoodSync>().SetLight(emoji0.GetComponent<MoodPlay>()._originalLight);
                 //emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._originalLight);
             }            
-            //myView.RequestOwnership();
+            myView.RequestOwnership();
             _play = !_play;
             color();
         }
