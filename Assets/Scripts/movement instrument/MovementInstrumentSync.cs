@@ -33,6 +33,6 @@ public class MovementInstrumentSync : RealtimeComponent<MovModel>
         UpdatePlay();
     }
     private void UpdatePlay() {
-        movement.MovPlay = MovModel.movPlay;
+        movement.MovPlay = model.movPlay;
     }
 }
