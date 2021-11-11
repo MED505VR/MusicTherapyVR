@@ -1203,7 +1203,7 @@ MeshCollider:
   m_GameObject: {fileID: 919132148141151159}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
@@ -2404,6 +2404,19 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2121925999}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &864730901
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 864730889}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.02, y: 0.02, z: 0.0049721436}
+  m_Center: {x: 0.00000035436824, y: 0.022749921, z: 0.0021188247}
 --- !u!1001 &874838713
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4183,6 +4196,19 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2121925999}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &1185789262
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1185789251}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.02, y: 0.02, z: 0.0049721445}
+  m_Center: {x: 0, y: 0.000000007450581, z: 0.0021188294}
 --- !u!1001 &1232529765
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5300,6 +5326,19 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2121925999}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &1514181085
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514181074}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.019999985, y: 0.020231636, z: 0.0049778298}
+  m_Center: {x: 0.09822491, y: 0.023018036, z: 0.0021159893}
 --- !u!1 &1519473047
 GameObject:
   m_ObjectHideFlags: 0
@@ -8391,6 +8430,11 @@ PrefabInstance:
       propertyPath: _viewUUID
       value: 1e621908-a09d-4964-8d0c-45a55f456691
       objectReference: {fileID: 0}
+    - target: {fileID: 3777399825742507439, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4157800576409315130, guid: e4de45b9966b5f94eb0ef5410d501e7f,
         type: 3}
       propertyPath: m_LocalScale.z
@@ -8461,6 +8505,11 @@ PrefabInstance:
       propertyPath: _viewUUID
       value: 3c22889c-b808-495e-b97d-de5b4c30ea64
       objectReference: {fileID: 0}
+    - target: {fileID: 7119064872526626939, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9020434735237394212, guid: e4de45b9966b5f94eb0ef5410d501e7f,
         type: 3}
       propertyPath: _light
@@ -8511,6 +8560,11 @@ PrefabInstance:
       propertyPath: _viewUUID
       value: 525a7971-661b-41b5-9816-3c2b06d900f3
       objectReference: {fileID: 0}
+    - target: {fileID: 9020434735237394234, guid: e4de45b9966b5f94eb0ef5410d501e7f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e4de45b9966b5f94eb0ef5410d501e7f, type: 3}
 --- !u!4 &2129490562 stripped
@@ -8553,6 +8607,7 @@ GameObject:
   - component: {fileID: 280849622}
   - component: {fileID: 280849623}
   - component: {fileID: 919132148141151160}
+  - component: {fileID: 919132148141151161}
   m_Layer: 0
   m_Name: stopButton
   m_TagString: Untagged
@@ -8576,6 +8631,19 @@ MonoBehaviour:
   emoji0: {fileID: 1185789251}
   emoji1: {fileID: 1514181074}
   emoji2: {fileID: 864730889}
+--- !u!135 &919132148141151161
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148141151159}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.968227
+  m_Center: {x: -0.03339132, y: -0.18717998, z: -0.021201922}
 --- !u!23 &1711813854536135266
 MeshRenderer:
   m_ObjectHideFlags: 0
