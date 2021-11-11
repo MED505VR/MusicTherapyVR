@@ -27,25 +27,31 @@ public class stopButton : MonoBehaviour
             if (emoji0 == true)
             {
                 emoji0.GetComponent<MoodPlay>()._play = false;
+                emoji0.GetComponent<MoodSync>().SetPlay(false);
+
                 emoji0.GetComponent<MoodPlay>().color();
-                emoji0.GetComponent<MoodPlay>().stopButtonSync();
-                emoji0.GetComponent<MoodPlay>().Update();
+                emoji0.GetComponent<MoodSync>().SetLight(emoji0.GetComponent<MoodPlay>()._lightColor);
+                //emoji0.GetComponent<MoodPlay>().Update();
             }
 
             if (emoji1 == true)
             {
                 emoji1.GetComponent<MoodPlay>()._play = false;
+                emoji1.GetComponent<MoodSync>().SetPlay(false);
+
                 emoji1.GetComponent<MoodPlay>().color();
-                emoji1.GetComponent<MoodPlay>().stopButtonSync();
-                emoji1.GetComponent<MoodPlay>().Update();
+                emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._lightColor);
+                //emoji1.GetComponent<MoodPlay>().Update();
             }
 
             if (emoji2 == true)
             {
                 emoji2.GetComponent<MoodPlay>()._play = false;
+                emoji2.GetComponent<MoodSync>().SetPlay(false);
+
                 emoji2.GetComponent<MoodPlay>().color();
-                emoji2.GetComponent<MoodPlay>().stopButtonSync();
-                emoji2.GetComponent<MoodPlay>().Update();
+                emoji2.GetComponent<MoodSync>().SetLight(emoji2.GetComponent<MoodPlay>()._lightColor);
+                //emoji2.GetComponent<MoodPlay>().Update();
             }
 
             
