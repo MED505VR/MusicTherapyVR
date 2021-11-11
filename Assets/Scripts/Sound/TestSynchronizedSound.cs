@@ -7,7 +7,16 @@ namespace Sound
     {
         private void OnTriggerEnter(Collider other)
         {
-            StartSynchronizedSound();
+            Debug.LogWarning("Collider Entered");
+
+            PlaySynchronizedSound();
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            Debug.LogWarning("Collider Exited");
+
+            StopSynchronizedSound();
         }
     }
 }
