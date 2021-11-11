@@ -42,6 +42,10 @@ public class MoodPlay : MonoBehaviour
     {
         if (other.gameObject == leftHand || other.gameObject == rightHand)
         {
+            emoji0.GetComponent<MoodSync>().SetPlay(false);
+            emoji1.GetComponent<MoodSync>().SetPlay(false);
+            emoji2.GetComponent<MoodSync>().SetPlay(false);
+
             if (emoji0 == true)
             {                          
                 emoji1.GetComponent<MoodSync>().SetPlay(false);
