@@ -11,7 +11,7 @@ namespace Sound
     {
         [SerializeField] private List<AudioClip> soundAudioClips;
         private IEnumerator _playSoundCoroutine;
-        
+
         protected AudioSource SoundAudioSource { get; set; }
         private List<AudioClip> SoundAudioClips
         {
@@ -58,6 +58,8 @@ namespace Sound
 
         protected void PlaySynchronizedSound()
         {
+            Debug.LogWarning("Play");
+
             model.playSynchronizedSound = true;
         }
 
@@ -71,11 +73,15 @@ namespace Sound
 
         protected void StopSynchronizedSound()
         {
+            Debug.LogWarning("Stop");
+
             model.playSynchronizedSound = false;
         }
 
         private void StopLocalSound()
         {
+            Debug.LogWarning("Stop Local Sound");
+
             if (_playSoundCoroutine != null) StopCoroutine(_playSoundCoroutine);
             SoundAudioSource.Stop();
         }
@@ -84,23 +90,26 @@ namespace Sound
         {
             if (SoundAudioClips.Count == 0) return;
 
-            _playSoundCoroutine = PlayAudioClip();
+            _playSoundCoroutine = ExecutePlaybackOfAudiouClips(SoundAudioClips);
+            StartCoroutine(_playSoundCoroutine);
+        }
 
-            foreach (var audioClip in SoundAudioClips)
+        private IEnumerator ExecutePlaybackOfAudiouClips(List<AudioClip> clips)
+        {
+            foreach (var clip in clips)
             {
-                SoundAudioSource.clip = audioClip;
-                StartCoroutine(_playSoundCoroutine);
+                var playClipCoroutine = PlayAudioClip(clip);
+                yield return StartCoroutine(playClipCoroutine);
             }
 
             model.playSynchronizedSound = false;
         }
 
-        private IEnumerator PlayAudioClip()
+        private IEnumerator PlayAudioClip(AudioClip audioClip)
         {
+            SoundAudioSource.clip = audioClip;
             SoundAudioSource.Play();
-
             while (SoundAudioSource.isPlaying) yield return new WaitForEndOfFrame();
-
             SoundAudioSource.Stop();
         }
     }
