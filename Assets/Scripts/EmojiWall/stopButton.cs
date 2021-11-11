@@ -27,7 +27,7 @@ public class stopButton : MonoBehaviour
             if (emoji0 == true)
             {
                 emoji0.GetComponent<MoodPlay>()._play = false;
-                //emoji0.GetComponent<MoodSync>().SetPlay(false);
+                emoji0.GetComponent<MoodSync>().SetPlay(false);
 
                 emoji0.GetComponent<MoodPlay>().color();
                 emoji0.GetComponent<MoodSync>().SetColor(emoji0.GetComponent<MoodPlay>()._original);
@@ -38,7 +38,7 @@ public class stopButton : MonoBehaviour
             if (emoji1 == true)
             {
                 emoji1.GetComponent<MoodPlay>()._play = false;
-                //emoji1.GetComponent<MoodSync>().SetPlay(false);
+                emoji1.GetComponent<MoodSync>().SetPlay(false);
 
                 emoji1.GetComponent<MoodPlay>().color();
                 emoji1.GetComponent<MoodSync>().SetColor(emoji1.GetComponent<MoodPlay>()._original);
@@ -49,7 +49,7 @@ public class stopButton : MonoBehaviour
             if (emoji2 == true)
             {
                 emoji2.GetComponent<MoodPlay>()._play = false;
-                //emoji2.GetComponent<MoodSync>().SetPlay(false);
+                emoji2.GetComponent<MoodSync>().SetPlay(false);
 
                 emoji2.GetComponent<MoodPlay>().color();
                 emoji2.GetComponent<MoodSync>().SetColor(emoji2.GetComponent<MoodPlay>()._original);
