@@ -47,16 +47,19 @@ public class MoodPlay : MonoBehaviour
     {
         if (other.gameObject == leftHand || other.gameObject == rightHand)
         {
-            Debug.Log("Hej");
+            /*if (this.GetComponent<MoodSound>().play == true)
+            {
+                emoji0.GetComponent<MoodSound>().play = false;
+                emoji1.GetComponent<MoodSound>().play = false;
+                emoji2.GetComponent<MoodSound>().play = false;
+                Debug.Log("Hej");
+            }*/
 
-            emoji0.GetComponent<MoodPlay>()._play = false;
-            emoji1.GetComponent<MoodPlay>()._play = false;
-            emoji2.GetComponent<MoodPlay>()._play = false;
 
-            emoji0.GetComponent<MoodSync>().SetPlay(false);
-            emoji1.GetComponent<MoodSync>().SetPlay(false);
-            emoji2.GetComponent<MoodSync>().SetPlay(false);
-
+            //emoji0.GetComponent<MoodSync>().SetPlay(false);
+            //emoji1.GetComponent<MoodSync>().SetPlay(false);
+            //emoji2.GetComponent<MoodSync>().SetPlay(false);
+            
             /*
             if (emoji0)
             {
@@ -147,6 +150,10 @@ public class MoodPlay : MonoBehaviour
     {
         if (_play != _prevPlay)
         {
+            emoji0.GetComponent<MoodSound>().play = false;
+            emoji1.GetComponent<MoodSound>().play = false;
+            emoji2.GetComponent<MoodSound>().play = false;
+
             _moodSync.SetPlay(_play);
             _prevPlay = _play;
         }
