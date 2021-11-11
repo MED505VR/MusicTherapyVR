@@ -7,8 +7,8 @@ namespace RoomEnvironment
     {
         public float lightTransitionSpeed = 0.01f;
 
-        public int CurrentColorIndex { get; set; }
-        [field: SerializeField] public List<Color> Colors { get; set; }
+        private int CurrentColorIndex { get; set; }
+        [field: SerializeField] private List<Color> Colors { get; set; }
         private ColorChangingLamp[] Lamps { get; set; }
 
 
@@ -26,7 +26,7 @@ namespace RoomEnvironment
 
         private void ChangeLampColor()
         {
-            foreach (var lamp in Lamps) lamp.SetModelColorIndex(CurrentColorIndex);
+            foreach (var lamp in Lamps) lamp.SetModelColor(Colors[CurrentColorIndex]);
 
             CurrentColorIndex = CurrentColorIndex == Colors.Count - 1 ? 0 : CurrentColorIndex + 1;
         }

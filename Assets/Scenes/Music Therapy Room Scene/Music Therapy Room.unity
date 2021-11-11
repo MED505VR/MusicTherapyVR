@@ -916,11 +916,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a4a5830c694724eb73d76093c80d63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <LampColors>k__BackingField:
-  - {r: 0.21276498, g: 1, b: 0, a: 0}
-  - {r: 1, g: 0.6486836, b: 0, a: 0}
-  - {r: 1, g: 0, b: 0.986495, a: 0}
-  - {r: 0, g: 1, b: 0.9581437, a: 0}
+  lightTransitionSpeed: 0.01
+  <Colors>k__BackingField:
+  - {r: 0.6290784, g: 1, b: 0, a: 0}
+  - {r: 1, g: 0.5574361, b: 0, a: 0}
+  - {r: 0, g: 0.9791081, b: 1, a: 0}
 --- !u!4 &1977319538
 Transform:
   m_ObjectHideFlags: 0
