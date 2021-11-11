@@ -125,7 +125,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9c336a94e0a61ca4db2942e52123b1b6, type: 2}
+  - {fileID: 2100000, guid: 7b8906305f3ff084ca206b6fb231f56b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -260,7 +260,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 376cbe66b56cf7d45848a42939e07ef9, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 6bf76d016564b39419063a1222bd2a10, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -413,6 +413,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moodSync: {fileID: 3777399825742507433}
   _play: 0
+  _original: {r: 0, g: 0, b: 0, a: 0}
+  _light: {fileID: 0}
+  _lightColor: {r: 1, g: 0, b: 0, a: 0}
 --- !u!114 &3777399825742507433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -557,7 +560,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d6698542d0facc34b8b9cedfc3f09b29, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 954569d464c02d04fb951ca764254e71, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -710,6 +713,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moodSync: {fileID: 7119064872526626918}
   _play: 0
+  _original: {r: 0, g: 0, b: 0, a: 0}
+  _light: {fileID: 0}
+  _lightColor: {r: 0, g: 0.43521762, b: 1, a: 0}
 --- !u!114 &7119064872526626918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -834,7 +840,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 584fd5682e12564419250dd8c517204b, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -987,6 +993,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moodSync: {fileID: 9020434735237394213}
   _play: 0
+  _original: {r: 0, g: 0, b: 0, a: 0}
+  _light: {fileID: 0}
+  _lightColor: {r: 1, g: 0.90752995, b: 0, a: 0}
 --- !u!114 &9020434735237394213
 MonoBehaviour:
   m_ObjectHideFlags: 0
