@@ -52,6 +52,9 @@ public class MoodPlay : MonoBehaviour
                 emoji1.GetComponent<MoodPlay>()._play = false;
                 emoji2.GetComponent<MoodPlay>()._play = false;
 
+                emoji1.GetComponent<MoodSync>().SetPlay(false);
+                emoji2.GetComponent<MoodSync>().SetPlay(false);
+
                 Debug.Log("emoji0 works");
 
                 //emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._originalLight);
@@ -64,6 +67,9 @@ public class MoodPlay : MonoBehaviour
                 myView.RequestOwnership();
                 emoji0.GetComponent<MoodPlay>()._play = false;
                 emoji2.GetComponent<MoodPlay>()._play = false;
+
+                emoji0.GetComponent<MoodSync>().SetPlay(false);
+                emoji2.GetComponent<MoodSync>().SetPlay(false);
 
                 Debug.Log("emoji1 works");
 
@@ -78,12 +84,15 @@ public class MoodPlay : MonoBehaviour
                 emoji0.GetComponent<MoodPlay>()._play = false;
                 emoji1.GetComponent<MoodPlay>()._play = false;
 
+                emoji0.GetComponent<MoodSync>().SetPlay(false);
+                emoji1.GetComponent<MoodSync>().SetPlay(false);
+
                 Debug.Log("emoji2 works");
 
                 //emoji0.GetComponent<MoodSync>().SetLight(emoji0.GetComponent<MoodPlay>()._originalLight);
                 //emoji1.GetComponent<MoodSync>().SetLight(emoji1.GetComponent<MoodPlay>()._originalLight);
             }            
-            //myView.RequestOwnership();
+            myView.RequestOwnership();
             _play = !_play;
             color();
         }
