@@ -4,9 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - DrumStickHead
   - DrumstickHeadL
   - DrumstickHeadR
+  - PlayerInteractor
   layers:
   - Default
   - TransparentFX
