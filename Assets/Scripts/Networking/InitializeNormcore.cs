@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace NormcoreIntegration
+namespace Networking
 {
     public class InitializeNormcore : MonoBehaviour
     {

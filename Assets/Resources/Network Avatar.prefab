@@ -421,7 +421,7 @@ GameObject:
   - component: {fileID: 2628030094277674132}
   - component: {fileID: 3847942290230744191}
   m_Layer: 0
-  m_Name: HandAvatar
+  m_Name: Network Avatar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
