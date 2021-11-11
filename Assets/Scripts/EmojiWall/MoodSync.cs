@@ -32,7 +32,7 @@ public class MoodSync : RealtimeComponent<MoodSyncModel>
             if (currentModel.isFreshModel)
                 currentModel.play = _play.play;
                 currentModel.color = _meshRenderer.material.color;
-                currentModel.color = _lightRenderer.material.color;
+                currentModel.light = _lightRenderer.material.color;
 
             // Update the mesh render or boolean to match the new model
             UpdateLoopPlay();
@@ -100,6 +100,6 @@ public class MoodSync : RealtimeComponent<MoodSyncModel>
     {
         // Set the color on the model
         // This will fire the colorChanged event on the model, which will update the renderer for both the local player and all remote players
-        model.color = light;
+        model.light = light;
     }
 }
