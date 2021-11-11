@@ -9,9 +9,14 @@ namespace Sound
     [RequireComponent(typeof(AudioSource))]
     public abstract class SynchronizedSound : RealtimeComponent<SynchronizedSoundModel>
     {
+        [SerializeField] private List<AudioClip> soundAudioClips;
+        private IEnumerator _playSoundCoroutine;
         protected AudioSource SoundAudioSource { get; set; }
-
-        [field: SerializeField] private List<AudioClip> SoundAudioClips { get; set; }
+        private List<AudioClip> SoundAudioClips
+        {
+            get => soundAudioClips;
+            set => SetSoundAudioClips(value);
+        }
 
         private void Start()
         {
@@ -21,6 +26,13 @@ namespace Sound
         private void Update()
         {
             if (model.playSynchronizedSound && !SoundAudioSource.isPlaying) PlayLocalSound();
+            if (!model.playSynchronizedSound && SoundAudioSource.isPlaying) StopLocalSound();
+        }
+
+        private void SetSoundAudioClips(List<AudioClip> list)
+        {
+            SoundAudioClips.Clear();
+            SoundAudioClips = list;
         }
 
         protected void StartSynchronizedSound()
@@ -28,14 +40,35 @@ namespace Sound
             model.playSynchronizedSound = true;
         }
 
+        protected void StartSynchronizedSound(AudioClip clip)
+        {
+            model.playSynchronizedSound = true;
+            SoundAudioClips.Clear();
+            SoundAudioClips.Add(clip);
+        }
+
+
+        protected void StopSynchronizedSound()
+        {
+            model.playSynchronizedSound = false;
+        }
+
+        private void StopLocalSound()
+        {
+            if (_playSoundCoroutine != null) StopCoroutine(_playSoundCoroutine);
+            SoundAudioSource.Stop();
+        }
+
         private void PlayLocalSound()
         {
             if (SoundAudioClips.Count == 0) return;
 
+            _playSoundCoroutine = PlayAudioClip();
+
             foreach (var audioClip in SoundAudioClips)
             {
                 SoundAudioSource.clip = audioClip;
-                StartCoroutine(PlayAudioClip());
+                StartCoroutine(_playSoundCoroutine);
             }
 
             model.playSynchronizedSound = false;

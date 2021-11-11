@@ -9,5 +9,10 @@ namespace Sound
         {
             StartSynchronizedSound();
         }
+
+        private void OnTriggerExit(Collider other)
+        {
+            StopSynchronizedSound();
+        }
     }
 }
