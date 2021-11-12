@@ -8,25 +8,24 @@ namespace RoomEnvironment
 {
     public class EmojiLight : MonoBehaviour
     {
-        private int CurrentColorIndex { get; set; }
-        [field: SerializeField] private List<Color> Colors { get; set; }
         private ColorChangingLamp[] Lamps { get; set; }
+        private Color moodColor;
 
-        private void Start()
+        private void Awake()
         {
-            //this.GetComponent<Emoji>().color == true;
+            
         }
 
-        public void setLight()
+        private void ChangeLampColor()
         {
-            // Herinde skal der være koden for at ændre lyset
+            foreach (var lamp in Lamps) lamp.SetModelColor(Color.blue);
         }
 
         public void Update()
         {
             if (this.GetComponent<Emoji>().color == true)
             {
-                setLight();
+                ChangeLampColor();
             }
         }
     }

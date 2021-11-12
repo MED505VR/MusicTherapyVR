@@ -173,13 +173,9 @@ GameObject:
   - component: {fileID: 8221919071458856397}
   - component: {fileID: 3777399825742507432}
   - component: {fileID: 3777399825742507438}
-  - component: {fileID: 3777399825742507439}
   - component: {fileID: 3777399825742507427}
-  - component: {fileID: 3777399825742507436}
-  - component: {fileID: 3777399825742507433}
-  - component: {fileID: 3777399825742507434}
-  - component: {fileID: 3777399825742507437}
   - component: {fileID: 3424546058567751635}
+  - component: {fileID: 2667098316522727781}
   m_Layer: 0
   m_Name: AngryEmoji
   m_TagString: Untagged
@@ -368,24 +364,10 @@ MonoBehaviour:
   _sceneViewDestroyWhenLastClientLeaves: 1
   _components:
   - componentID: 1
-    component: {fileID: 3777399825742507433}
+    component: {fileID: 0}
   - componentID: 2
     component: {fileID: 3424546058567751635}
   _childViews: []
---- !u!64 &3777399825742507439
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3777399825742507435}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 3740423133473325046, guid: aacf9f79e38a2c641bde245e5b198915, type: 3}
 --- !u!54 &3777399825742507427
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -402,67 +384,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &3777399825742507436
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3777399825742507435}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acdb5d8b576742443bfae40bb8d412a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _moodSync: {fileID: 3777399825742507433}
-  _play: 0
-  _original: {r: 0, g: 0, b: 0, a: 0}
-  _light: {fileID: 0}
-  _lightColor: {r: 1, g: 0, b: 0, a: 0}
---- !u!114 &3777399825742507433
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3777399825742507435}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd114291337460f4786a011e0a27fc3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3777399825742507434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3777399825742507435}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1e1a04cbb5ae5d49903c421f2f5dde6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  play: 0
---- !u!95 &3777399825742507437
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3777399825742507435}
-  m_Enabled: 0
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9ade680cab952bc4696f189fcfa0863f, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &3424546058567751635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,6 +403,19 @@ MonoBehaviour:
   emoji2: {fileID: 9020434735237394215}
   play: 0
   color: 0
+--- !u!65 &2667098316522727781
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3777399825742507435}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.02, y: 0.02, z: 0.0049721436}
+  m_Center: {x: 0.00000035436824, y: 0.022749921, z: 0.0021188247}
 --- !u!1 &7119064872526626913
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,12 +429,9 @@ GameObject:
   - component: {fileID: 2403421497142706412}
   - component: {fileID: 7119064872526626912}
   - component: {fileID: 7119064872526626938}
-  - component: {fileID: 7119064872526626939}
   - component: {fileID: 7119064872526626916}
-  - component: {fileID: 7119064872526626917}
-  - component: {fileID: 7119064872526626918}
-  - component: {fileID: 7119064872526626919}
   - component: {fileID: 1128609885106394894}
+  - component: {fileID: 7443012615549275167}
   m_Layer: 0
   m_Name: SadEmoji
   m_TagString: Untagged
@@ -690,24 +621,10 @@ MonoBehaviour:
   _sceneViewDestroyWhenLastClientLeaves: 1
   _components:
   - componentID: 1
-    component: {fileID: 7119064872526626918}
+    component: {fileID: 0}
   - componentID: 2
     component: {fileID: 1128609885106394894}
   _childViews: []
---- !u!64 &7119064872526626939
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7119064872526626913}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 7108004245302804196, guid: aacf9f79e38a2c641bde245e5b198915, type: 3}
 --- !u!54 &7119064872526626916
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -724,48 +641,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7119064872526626917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7119064872526626913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acdb5d8b576742443bfae40bb8d412a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _moodSync: {fileID: 7119064872526626918}
-  _play: 0
-  _original: {r: 0, g: 0, b: 0, a: 0}
-  _light: {fileID: 0}
-  _lightColor: {r: 0, g: 0.43521762, b: 1, a: 0}
---- !u!114 &7119064872526626918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7119064872526626913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd114291337460f4786a011e0a27fc3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7119064872526626919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7119064872526626913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1e1a04cbb5ae5d49903c421f2f5dde6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  play: 0
 --- !u!114 &1128609885106394894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -785,6 +660,19 @@ MonoBehaviour:
   emoji2: {fileID: 9020434735237394215}
   play: 0
   color: 0
+--- !u!65 &7443012615549275167
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7119064872526626913}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.019999985, y: 0.020231636, z: 0.0049778298}
+  m_Center: {x: 0.09822491, y: 0.023018036, z: 0.0021159893}
 --- !u!1 &9020434735237394215
 GameObject:
   m_ObjectHideFlags: 0
@@ -798,12 +686,9 @@ GameObject:
   - component: {fileID: 4806385442859065484}
   - component: {fileID: 9020434735237394232}
   - component: {fileID: 9020434735237394233}
-  - component: {fileID: 9020434735237394234}
   - component: {fileID: 9020434735237394235}
-  - component: {fileID: 9020434735237394212}
-  - component: {fileID: 9020434735237394213}
-  - component: {fileID: 9020434735237394214}
   - component: {fileID: 8769834696942219743}
+  - component: {fileID: 6795823895507881226}
   m_Layer: 0
   m_Name: NeutralEmoji
   m_TagString: Untagged
@@ -992,24 +877,10 @@ MonoBehaviour:
   _sceneViewDestroyWhenLastClientLeaves: 1
   _components:
   - componentID: 1
-    component: {fileID: 9020434735237394213}
+    component: {fileID: 0}
   - componentID: 2
     component: {fileID: 8769834696942219743}
   _childViews: []
---- !u!64 &9020434735237394234
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9020434735237394215}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -2529556382188597415, guid: 98b611fe5cc2a9542b31d7a3430cf03a, type: 3}
 --- !u!54 &9020434735237394235
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1026,48 +897,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &9020434735237394212
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9020434735237394215}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acdb5d8b576742443bfae40bb8d412a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _moodSync: {fileID: 9020434735237394213}
-  _play: 0
-  _original: {r: 0, g: 0, b: 0, a: 0}
-  _light: {fileID: 0}
-  _lightColor: {r: 1, g: 0.90752995, b: 0, a: 0}
---- !u!114 &9020434735237394213
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9020434735237394215}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd114291337460f4786a011e0a27fc3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &9020434735237394214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9020434735237394215}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1e1a04cbb5ae5d49903c421f2f5dde6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  play: 0
 --- !u!114 &8769834696942219743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1087,3 +916,16 @@ MonoBehaviour:
   emoji2: {fileID: 9020434735237394215}
   play: 0
   color: 0
+--- !u!65 &6795823895507881226
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9020434735237394215}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.02, y: 0.02, z: 0.0049721445}
+  m_Center: {x: 0, y: 0.000000007450581, z: 0.0021188294}

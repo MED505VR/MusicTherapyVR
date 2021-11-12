@@ -47,23 +47,23 @@ public class Emoji : SynchronizedSound
     {
         if (color == true)
         {
-            // Her skal farven på lys i rummet og emojien ændres til deres tilsvarende følelse (e.g. angry = red hue)
+            // Her skal farven pï¿½ lys i rummet og emojien ï¿½ndres til deres tilsvarende fï¿½lelse (e.g. angry = red hue)
 
             // Emoji lyset
             
 
             // Emoji farven
-            // Sætter alle emojis objects til deres originale farve
+            // Sï¿½tter alle emojis objects til deres originale farve
             emoji0.GetComponent<Renderer>().material.color = emoji0.GetComponent<Emoji>()._originalColor;
             emoji1.GetComponent<Renderer>().material.color = emoji1.GetComponent<Emoji>()._originalColor;
             emoji2.GetComponent<Renderer>().material.color = emoji2.GetComponent<Emoji>()._originalColor;
 
-            // Sætter deres boolean til false som gør at de kan aktiveres igen når de trykkes på
+            // Sï¿½tter deres boolean til false som gï¿½r at de kan aktiveres igen nï¿½r de trykkes pï¿½
             emoji0.GetComponent<Emoji>().color = false;
             emoji1.GetComponent<Emoji>().color = false;
             emoji2.GetComponent<Emoji>().color = false;
 
-            // Sætter den emoji der er trykket på til pressed
+            // Sï¿½tter den emoji der er trykket pï¿½ til pressed
             emojiRend.material.color = _pressedColor;
         }
     }
@@ -72,7 +72,7 @@ public class Emoji : SynchronizedSound
     {
         if (color == true)
         {
-            // Skifter farve på emoji feedback
+            // Skifter farve pï¿½ emoji feedback
             colorChange();
         }
     }
