@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 3777399825742507433}
   - component: {fileID: 3777399825742507434}
   - component: {fileID: 3777399825742507437}
+  - component: {fileID: 3424546058567751635}
   m_Layer: 0
   m_Name: AngryEmoji
   m_TagString: Untagged
@@ -368,6 +369,8 @@ MonoBehaviour:
   _components:
   - componentID: 1
     component: {fileID: 3777399825742507433}
+  - componentID: 2
+    component: {fileID: 3424546058567751635}
   _childViews: []
 --- !u!64 &3777399825742507439
 MeshCollider:
@@ -460,6 +463,25 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &3424546058567751635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3777399825742507435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21345a9b2cb977a49a0c83192419707b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundAudioClips:
+  - {fileID: 8300000, guid: 6bf76d016564b39419063a1222bd2a10, type: 3}
+  emoji0: {fileID: 3777399825742507435}
+  emoji1: {fileID: 7119064872526626913}
+  emoji2: {fileID: 9020434735237394215}
+  play: 0
+  color: 0
 --- !u!1 &7119064872526626913
 GameObject:
   m_ObjectHideFlags: 0
@@ -478,6 +500,7 @@ GameObject:
   - component: {fileID: 7119064872526626917}
   - component: {fileID: 7119064872526626918}
   - component: {fileID: 7119064872526626919}
+  - component: {fileID: 1128609885106394894}
   m_Layer: 0
   m_Name: SadEmoji
   m_TagString: Untagged
@@ -668,6 +691,8 @@ MonoBehaviour:
   _components:
   - componentID: 1
     component: {fileID: 7119064872526626918}
+  - componentID: 2
+    component: {fileID: 1128609885106394894}
   _childViews: []
 --- !u!64 &7119064872526626939
 MeshCollider:
@@ -741,6 +766,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   play: 0
+--- !u!114 &1128609885106394894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7119064872526626913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21345a9b2cb977a49a0c83192419707b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundAudioClips:
+  - {fileID: 8300000, guid: 954569d464c02d04fb951ca764254e71, type: 3}
+  emoji0: {fileID: 3777399825742507435}
+  emoji1: {fileID: 7119064872526626913}
+  emoji2: {fileID: 9020434735237394215}
+  play: 0
+  color: 0
 --- !u!1 &9020434735237394215
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,6 +803,7 @@ GameObject:
   - component: {fileID: 9020434735237394212}
   - component: {fileID: 9020434735237394213}
   - component: {fileID: 9020434735237394214}
+  - component: {fileID: 8769834696942219743}
   m_Layer: 0
   m_Name: NeutralEmoji
   m_TagString: Untagged
@@ -948,6 +993,8 @@ MonoBehaviour:
   _components:
   - componentID: 1
     component: {fileID: 9020434735237394213}
+  - componentID: 2
+    component: {fileID: 8769834696942219743}
   _childViews: []
 --- !u!64 &9020434735237394234
 MeshCollider:
@@ -1021,3 +1068,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   play: 0
+--- !u!114 &8769834696942219743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9020434735237394215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21345a9b2cb977a49a0c83192419707b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundAudioClips:
+  - {fileID: 8300000, guid: 584fd5682e12564419250dd8c517204b, type: 3}
+  emoji0: {fileID: 3777399825742507435}
+  emoji1: {fileID: 7119064872526626913}
+  emoji2: {fileID: 9020434735237394215}
+  play: 0
+  color: 0
