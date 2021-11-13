@@ -176,6 +176,7 @@ GameObject:
   - component: {fileID: 3777399825742507427}
   - component: {fileID: 3424546058567751635}
   - component: {fileID: 2667098316522727781}
+  - component: {fileID: 7274688226384478801}
   m_Layer: 0
   m_Name: AngryEmoji
   m_TagString: Untagged
@@ -416,6 +417,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.02, y: 0.02, z: 0.0049721436}
   m_Center: {x: 0.00000035436824, y: 0.022749921, z: 0.0021188247}
+--- !u!114 &7274688226384478801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3777399825742507435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aacf6278564c23643b9af0df3663ea95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7119064872526626913
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,6 +445,7 @@ GameObject:
   - component: {fileID: 7119064872526626916}
   - component: {fileID: 1128609885106394894}
   - component: {fileID: 7443012615549275167}
+  - component: {fileID: 1179783518907781311}
   m_Layer: 0
   m_Name: SadEmoji
   m_TagString: Untagged
@@ -673,6 +687,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.019999985, y: 0.020231636, z: 0.0049778298}
   m_Center: {x: 0.09822491, y: 0.023018036, z: 0.0021159893}
+--- !u!114 &1179783518907781311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7119064872526626913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aacf6278564c23643b9af0df3663ea95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9020434735237394215
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,6 +715,7 @@ GameObject:
   - component: {fileID: 9020434735237394235}
   - component: {fileID: 8769834696942219743}
   - component: {fileID: 6795823895507881226}
+  - component: {fileID: 7353912777375689993}
   m_Layer: 0
   m_Name: NeutralEmoji
   m_TagString: Untagged
@@ -929,3 +956,15 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.02, y: 0.02, z: 0.0049721445}
   m_Center: {x: 0, y: 0.000000007450581, z: 0.0021188294}
+--- !u!114 &7353912777375689993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9020434735237394215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aacf6278564c23643b9af0df3663ea95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
