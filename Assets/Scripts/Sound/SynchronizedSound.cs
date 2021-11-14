@@ -68,7 +68,7 @@ namespace Sound
         {
             model.playSynchronizedSound = false;
 
-            yield return new WaitForSecondsRealtime(0.02f);
+            yield return new WaitForEndOfFrame();
 
             model.playSynchronizedSound = true;
         }
