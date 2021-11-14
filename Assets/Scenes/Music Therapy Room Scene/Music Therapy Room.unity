@@ -772,6 +772,8 @@ MonoBehaviour:
   _components:
   - componentID: 1
     component: {fileID: 1104686931}
+  - componentID: 2
+    component: {fileID: 1104686953}
   _childViews: []
 --- !u!82 &1104686933
 AudioSource:
@@ -905,6 +907,8 @@ MonoBehaviour:
   _components:
   - componentID: 1
     component: {fileID: 1104686934}
+  - componentID: 2
+    component: {fileID: 1104686940}
   _childViews: []
 --- !u!82 &1104686936
 AudioSource:
@@ -1038,6 +1042,8 @@ MonoBehaviour:
   _components:
   - componentID: 1
     component: {fileID: 1104686937}
+  - componentID: 2
+    component: {fileID: 1104686941}
   _childViews: []
 --- !u!82 &1104686939
 AudioSource:
@@ -1135,6 +1141,48 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1104686940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104686929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adbf8a0c276eb3944ac224046230c0f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _color: {r: 1, g: 0.91679966, b: 0, a: 0}
+  _emissionColor: {r: 1, g: 0.9176471, b: 0, a: 0}
+--- !u!114 &1104686941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104686930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adbf8a0c276eb3944ac224046230c0f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _color: {r: 1, g: 0.9632827, b: 0, a: 0}
+  _emissionColor: {r: 1, g: 0.96470594, b: 0, a: 0}
+--- !u!114 &1104686953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104686928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adbf8a0c276eb3944ac224046230c0f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _color: {r: 1, g: 0, b: 0, a: 0}
+  _emissionColor: {r: 1, g: 0, b: 0, a: 0}
 --- !u!1 &1400341212
 GameObject:
   m_ObjectHideFlags: 0

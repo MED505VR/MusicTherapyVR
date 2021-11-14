@@ -8,7 +8,7 @@ namespace Sound
     [RequireComponent(typeof(AudioSource))]
     public abstract class SynchronizedSound : RealtimeComponent<SynchronizedSoundModel>
     {
-        protected AudioSource SoundAudioSource { get; set; }
+        public AudioSource SoundAudioSource { get; set; }
 
         [field: SerializeField] private AudioClip SoundAudioClip { get; set; }
 
