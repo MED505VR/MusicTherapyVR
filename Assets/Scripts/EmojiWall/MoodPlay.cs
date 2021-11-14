@@ -1,53 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Normal.Realtime;
+using UnityEngine;
 
-public class MoodPlay : MonoBehaviour
+namespace EmojiWall
 {
-    [SerializeField]
-    private MoodSync _moodSync; // For normcore syncing 
-    private GameObject leftHand, rightHand; // for objects
-    private GameObject emoji0, emoji1, emoji2; // For public objects
-    private RealtimeView myView; // For normcore object ownership
-
-    // Varaibles for playing the sound
-    public bool _play;
-    private bool _prevPlay;
-
-    // Variables for colour on the emojis
-    private Color _color = default;
-    private Color _previousColor = default;
-    public Color _original;
-
-    // Variables for the light caused by the emojis
-    public Light _light;
-    private Color _originalLight;
-    public Color _lightColor;
-    private Color _previousLight;
-
-    private void Start() 
+    public class MoodPlay : MonoBehaviour
     {
-        _moodSync = GetComponent<MoodSync>();
-        leftHand = GameObject.Find("LeftHandAnchor");
-        rightHand = GameObject.Find("RightHandAnchor");
-        emoji0 = GameObject.Find("AngryEmoji");
-        emoji1 = GameObject.Find("SadEmoji");
-        emoji2 = GameObject.Find("NeutralEmoji");
-        myView = GetComponent<RealtimeView>();
-        _play = false;
-        _original = GetComponent<Renderer>().material.color;
-        _originalLight = _light.GetComponent<Light>().color;
+        [SerializeField]
+        private MoodSync _moodSync; // For normcore syncing 
+        private GameObject leftHand, rightHand; // for objects
+        private GameObject emoji0, emoji1, emoji2; // For public objects
+        private RealtimeView myView; // For normcore object ownership
+
+        // Varaibles for playing the sound
+        public bool _play;
+        private bool _prevPlay;
+
+        // Variables for colour on the emojis
+        private Color _color = default;
+        private Color _previousColor = default;
+        public Color _original;
+
+        // Variables for the light caused by the emojis
+        public Light _light;
+        private Color _originalLight;
+        public Color _lightColor;
+        private Color _previousLight;
+
+        private void Start() 
+        {
+            _moodSync = GetComponent<MoodSync>();
+            leftHand = GameObject.Find("LeftHandAnchor");
+            rightHand = GameObject.Find("RightHandAnchor");
+            emoji0 = GameObject.Find("AngryEmoji");
+            emoji1 = GameObject.Find("SadEmoji");
+            emoji2 = GameObject.Find("NeutralEmoji");
+            myView = GetComponent<RealtimeView>();
+            _play = false;
+            _original = GetComponent<Renderer>().material.color;
+            _originalLight = _light.GetComponent<Light>().color;
 
 
-    }
+        }
 
     
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject == leftHand || other.gameObject == rightHand)
+        private void OnTriggerEnter(Collider other)
         {
-            /*if (this.GetComponent<MoodSound>().play == true)
+            if (other.gameObject == leftHand || other.gameObject == rightHand)
+            {
+                /*if (this.GetComponent<MoodSound>().play == true)
             {
                 emoji0.GetComponent<MoodSound>().play = false;
                 emoji1.GetComponent<MoodSound>().play = false;
@@ -56,11 +56,11 @@ public class MoodPlay : MonoBehaviour
             }*/
 
 
-            //emoji0.GetComponent<MoodSync>().SetPlay(false);
-            //emoji1.GetComponent<MoodSync>().SetPlay(false);
-            //emoji2.GetComponent<MoodSync>().SetPlay(false);
+                //emoji0.GetComponent<MoodSync>().SetPlay(false);
+                //emoji1.GetComponent<MoodSync>().SetPlay(false);
+                //emoji2.GetComponent<MoodSync>().SetPlay(false);
             
-            /*
+                /*
             if (emoji0)
             {
                 Debug.Log("emoji0 works0");
@@ -117,60 +117,61 @@ public class MoodPlay : MonoBehaviour
                 myView.ClearOwnership();
             }            */
 
-            myView.RequestOwnership();
-            _play = !_play;
-            color();
-        }
-    }
-
-
-    public void color()
-    {
-        if (_play == true)
-        {
-            // Farven når den er aktiveret
-            _color = Color.Lerp(_original, Color.white, .5f);
-            _light.color = Color.Lerp(_originalLight, _lightColor, .5f);
+                myView.RequestOwnership();
+                _play = !_play;
+                color();
+            }
         }
 
-        else if (_play == false)
+
+        public void color()
         {
-            // Farven når den ikke er aktiveret
-            _color = _original;
-            _light.color = _originalLight;
-        }
-    }
+            if (_play == true)
+            {
+                // Farven nÃ¥r den er aktiveret
+                _color = Color.Lerp(_original, Color.white, .5f);
+                _light.color = Color.Lerp(_originalLight, _lightColor, .5f);
+            }
 
-    private void OnTriggerExit(Collider other)
-    {
-        myView.ClearOwnership();
-    }
-
-    public void Update()
-    {
-        if (_play != _prevPlay)
-        {
-            emoji0.GetComponent<MoodSound>().play = false;
-            emoji0.GetComponent<MoodPlay>()._moodSync.SetPlay(false);
-            emoji1.GetComponent<MoodSound>().play = false;
-            emoji1.GetComponent<MoodPlay>()._moodSync.SetPlay(false);
-            emoji2.GetComponent<MoodSound>().play = false;
-            emoji2.GetComponent<MoodPlay>()._moodSync.SetPlay(false);
-
-            _moodSync.SetPlay(_play);
-            _prevPlay = _play;
+            else if (_play == false)
+            {
+                // Farven nÃ¥r den ikke er aktiveret
+                _color = _original;
+                _light.color = _originalLight;
+            }
         }
 
-        if (_color != _previousColor)
+        private void OnTriggerExit(Collider other)
         {
-            _moodSync.SetColor(_color);
-            _previousColor = _color;
+            myView.ClearOwnership();
         }
 
-        if (_lightColor != _previousLight)
+        public void Update()
         {
-            _moodSync.SetLight(_lightColor);
-            _previousLight = _lightColor;
+            if (_play != _prevPlay)
+            {
+                emoji0.GetComponent<MoodSound>().play = false;
+                emoji0.GetComponent<MoodPlay>()._moodSync.SetPlay(false);
+                emoji1.GetComponent<MoodSound>().play = false;
+                emoji1.GetComponent<MoodPlay>()._moodSync.SetPlay(false);
+                emoji2.GetComponent<MoodSound>().play = false;
+                emoji2.GetComponent<MoodPlay>()._moodSync.SetPlay(false);
+
+                _moodSync.SetPlay(_play);
+                _prevPlay = _play;
+            }
+
+            if (_color != _previousColor)
+            {
+                _moodSync.SetColor(_color);
+                _previousColor = _color;
+            }
+
+            if (_lightColor != _previousLight)
+            {
+                _moodSync.SetLight(_lightColor);
+                _previousLight = _lightColor;
+            }
         }
     }
 }

@@ -1,22 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MoodAnimation : MonoBehaviour
+namespace EmojiWall
 {
-    Animator anim;
-    private MoodSound _moodSound;
-
-    private void Start()
+    public class MoodAnimation : MonoBehaviour
     {
-        anim = GetComponent<Animator>();
-        _moodSound = GetComponent<MoodSound>();
-    }
+        Animator anim;
+        private MoodSound _moodSound;
 
-    private void Update()
-    {
-        //if (Input.GetKeyDown(KeyCode.Space)) anim.SetTrigger("Press");
+        private void Start()
+        {
+            anim = GetComponent<Animator>();
+            _moodSound = GetComponent<MoodSound>();
+        }
 
-        if (_moodSound.play == true) anim.SetTrigger("Press");
+        private void Update()
+        {
+            //if (Input.GetKeyDown(KeyCode.Space)) anim.SetTrigger("Press");
+
+            if (_moodSound.play == true) anim.SetTrigger("Press");
+        }
     }
 }

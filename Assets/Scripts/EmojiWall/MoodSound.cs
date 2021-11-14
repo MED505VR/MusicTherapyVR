@@ -1,34 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MoodSound : MonoBehaviour
+namespace EmojiWall
 {
-    public bool play = false;
-
-    private bool prevPlay;
-    private AudioSource source;
-
-    private void Awake()
+    public class MoodSound : MonoBehaviour
     {
-        play = false;
-        source = GetComponent<AudioSource>();
-    }
+        public bool play = false;
 
-    private void Update()
-    {
-        if (play != prevPlay)
+        private bool prevPlay;
+        private AudioSource source;
+
+        private void Awake()
         {
-            if (play)
-            {
-                source.Play();
-                prevPlay = play;
-            }
+            play = false;
+            source = GetComponent<AudioSource>();
+        }
 
-            if (!play)
+        private void Update()
+        {
+            if (play != prevPlay)
             {
-                source.Stop();
-                prevPlay = play;
+                if (play)
+                {
+                    source.Play();
+                    prevPlay = play;
+                }
+
+                if (!play)
+                {
+                    source.Stop();
+                    prevPlay = play;
+                }
             }
         }
     }

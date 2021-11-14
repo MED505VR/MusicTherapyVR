@@ -13,13 +13,14 @@ namespace Sound
         private IEnumerator _playSoundCoroutine;
 
         protected AudioSource SoundAudioSource { get; set; }
+
         private List<AudioClip> SoundAudioClips
         {
             get => soundAudioClips;
             set => SetSoundAudioClips(value);
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             SoundAudioSource = GetComponent<AudioSource>();
         }
@@ -49,7 +50,6 @@ namespace Sound
                 StopLocalSound();
         }
 
-
         private void SetSoundAudioClips(List<AudioClip> list)
         {
             SoundAudioClips.Clear();
@@ -70,8 +70,7 @@ namespace Sound
             model.playSynchronizedSound = true;
         }
 
-
-        protected void StopSynchronizedSound()
+        public void StopSynchronizedSound()
         {
             Debug.LogWarning("Stop");
 
