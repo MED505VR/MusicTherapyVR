@@ -1,3 +1,4 @@
+using System.Collections;
 using Normal.Realtime;
 using Sound.Models;
 using UnityEngine;
@@ -49,8 +50,7 @@ namespace Sound
 
         protected void PlaySynchronizedSound()
         {
-            StopSynchronizedSound();
-            model.playSynchronizedSound = true;
+            StartCoroutine(UpdatePlaySynchronizedSound());
         }
 
         protected void PlaySynchronizedSound(AudioClip clip)
@@ -62,6 +62,15 @@ namespace Sound
         public void StopSynchronizedSound()
         {
             model.playSynchronizedSound = false;
+        }
+
+        private IEnumerator UpdatePlaySynchronizedSound()
+        {
+            model.playSynchronizedSound = false;
+
+            yield return new WaitForSecondsRealtime(0.02f);
+
+            model.playSynchronizedSound = true;
         }
     }
 }
