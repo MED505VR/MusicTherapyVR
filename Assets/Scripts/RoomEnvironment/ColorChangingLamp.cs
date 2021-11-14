@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using Normal.Realtime;
 using RoomEnvironment.Models;
 using UnityEngine;
@@ -22,6 +21,7 @@ namespace RoomEnvironment
 
             _controller = FindObjectOfType<ColorChangingLampController>();
             _colorTransitionSpeed = _controller.lightTransitionSpeed;
+            model.color = PointLight.color;
         }
 
         protected override void OnRealtimeModelReplaced(ColorChangingLampModel previousModel,
@@ -38,14 +38,9 @@ namespace RoomEnvironment
 
         private void UpdateColorToMatchModel(ColorChangingLampModel pModel, Color value)
         {
-            ChangeLightColor(value);
-        }
-
-        private void ChangeLightColor(Color color)
-        {
             if (_isChanging) return;
-            StartCoroutine(UpdateLightColor(PointLight, color, _colorTransitionSpeed));
-            StartCoroutine(UpdateLightColor(SpotLight, color, _colorTransitionSpeed));
+            StartCoroutine(UpdateLightColor(PointLight, value, _colorTransitionSpeed));
+            StartCoroutine(UpdateLightColor(SpotLight, value, _colorTransitionSpeed));
         }
 
         private IEnumerator UpdateLightColor(Light targetLight, Color targetColor, float transitionSpeed)
