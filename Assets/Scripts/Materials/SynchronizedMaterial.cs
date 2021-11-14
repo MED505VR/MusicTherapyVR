@@ -12,7 +12,7 @@ namespace Materials
         private Material _material;
         private MeshRenderer _meshRenderer;
 
-        private void Start()
+        protected virtual void Start()
         {
             _meshRenderer = GetComponent<MeshRenderer>();
             _material = _meshRenderer.material;
@@ -55,6 +55,21 @@ namespace Materials
         private void ColorDidChange(SynchronizedMaterialModel synchronizedMaterialModel, Color value)
         {
             _material.SetColor(PColor, value);
+        }
+
+        public void SetIsEmissive(bool value)
+        {
+            model.isEmissive = value;
+        }
+
+        public void SetEmissionColor(Color value)
+        {
+            model.emissionColor = value;
+        }
+
+        public void SetColor(Color value)
+        {
+            model.emissionColor = value;
         }
     }
 }
