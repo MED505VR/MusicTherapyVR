@@ -10,7 +10,7 @@ namespace RoomEnvironment
         private int CurrentColorIndex { get; set; }
         [field: SerializeField] private List<Color> Colors { get; set; }
         private ColorChangingLamp[] Lamps { get; set; }
-        
+
         private void Start()
         {
             Lamps = FindObjectsOfType<ColorChangingLamp>();
@@ -20,7 +20,8 @@ namespace RoomEnvironment
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("PlayerInteractor")) ChangeLampColor();
+            if (other.gameObject.CompareTag("DrumstickHeadL") || other.gameObject.CompareTag("DrumstickHeadR"))
+                ChangeLampColor();
         }
 
         private void ChangeLampColor()
