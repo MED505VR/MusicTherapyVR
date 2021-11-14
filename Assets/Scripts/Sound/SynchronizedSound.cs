@@ -1,3 +1,4 @@
+using System.Collections;
 using Normal.Realtime;
 using Sound.Models;
 using UnityEngine;
@@ -7,6 +8,7 @@ namespace Sound
     [RequireComponent(typeof(AudioSource))]
     public abstract class SynchronizedSound : RealtimeComponent<SynchronizedSoundModel>
     {
+        private IEnumerator _localPlayCoroutine;
         protected AudioSource SoundAudioSource { get; set; }
 
         [field: SerializeField] private AudioClip SoundAudioClip { get; set; }
@@ -36,11 +38,17 @@ namespace Sound
 
         private void PlaySynchronizedSoundDidChange(SynchronizedSoundModel pModel, bool value)
         {
-            if (SoundAudioSource.isPlaying) SoundAudioSource.Stop();
+            _localPlayCoroutine = PlayLocalSound();
+
             if (model.playSynchronizedSound)
-                SoundAudioSource.Play();
+            {
+                StartCoroutine(_localPlayCoroutine);
+            }
             else
+            {
+                StopCoroutine(_localPlayCoroutine);
                 SoundAudioSource.Stop();
+            }
         }
 
         protected void PlaySynchronizedSound()
@@ -57,6 +65,13 @@ namespace Sound
         public void StopSynchronizedSound()
         {
             model.playSynchronizedSound = false;
+        }
+
+        private IEnumerator PlayLocalSound()
+        {
+            SoundAudioSource.Play();
+            while (SoundAudioSource.isPlaying) yield return new WaitForEndOfFrame();
+            StopSynchronizedSound();
         }
     }
 }
