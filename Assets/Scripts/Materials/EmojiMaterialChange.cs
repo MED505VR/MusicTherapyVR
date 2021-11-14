@@ -9,9 +9,9 @@ namespace Materials
         private static readonly int EmissionColor1 = Shader.PropertyToID("_EmissionColor");
 
         [Header("Color Settings")] [SerializeField]
-        private Color _color;
+        private Color color;
 
-        [SerializeField] private Color _emissionColor;
+        [SerializeField] private Color emissionColor;
 
         private Color _baseColor, _baseEmissionColor;
         private EmojiSynchronizedSound _emojiSynchronizedSound;
@@ -25,13 +25,12 @@ namespace Materials
             _baseEmissionColor = GetComponent<MeshRenderer>().material.GetColor(EmissionColor1);
         }
 
-        // Update is called once per frame
         private void Update()
         {
             if (_emojiSynchronizedSound.SoundAudioSource.isPlaying)
             {
-                SetColor(_color);
-                SetEmissionColor(_emissionColor);
+                SetColor(color);
+                SetEmissionColor(emissionColor);
                 SetIsEmissive(true);
             }
             else
