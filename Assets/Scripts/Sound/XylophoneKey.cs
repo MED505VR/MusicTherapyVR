@@ -16,7 +16,6 @@ namespace Sound
         {
             if (other.CompareTag("DrumstickHeadR") || other.CompareTag("DrumstickHeadL"))
             {
-                StopSynchronizedSound();
                 PlaySynchronizedSound();
 
                 if (other.CompareTag("DrumstickHeadR"))
