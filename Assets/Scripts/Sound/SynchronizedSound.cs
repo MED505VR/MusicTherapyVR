@@ -68,7 +68,7 @@ namespace Sound
         {
             model.playSynchronizedSound = false;
 
-            yield return new WaitForSecondsRealtime(0.01f);
+            yield return new WaitForSecondsRealtime(0.01f); // Wait for previous model update to make it to server
 
             model.playSynchronizedSound = true;
         }
