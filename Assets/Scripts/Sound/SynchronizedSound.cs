@@ -45,9 +45,14 @@ namespace Sound
         private void PlaySynchronizedSoundDidChange(SynchronizedSoundModel pModel, bool value)
         {
             if (model.playSynchronizedSound)
-                PlayLocalSound();
-            else
+            {
                 StopLocalSound();
+                PlayLocalSound();
+            }
+            else
+            {
+                StopLocalSound();
+            }
         }
 
         private void SetSoundAudioClips(List<AudioClip> list)
@@ -58,8 +63,6 @@ namespace Sound
 
         protected void PlaySynchronizedSound()
         {
-            Debug.LogWarning("Play");
-
             model.playSynchronizedSound = true;
         }
 
@@ -72,15 +75,11 @@ namespace Sound
 
         public void StopSynchronizedSound()
         {
-            Debug.LogWarning("Stop");
-
             model.playSynchronizedSound = false;
         }
 
         private void StopLocalSound()
         {
-            Debug.LogWarning("Stop Local Sound");
-
             if (_playSoundCoroutine != null) StopCoroutine(_playSoundCoroutine);
             SoundAudioSource.Stop();
         }
@@ -89,11 +88,11 @@ namespace Sound
         {
             if (SoundAudioClips.Count == 0) return;
 
-            _playSoundCoroutine = ExecutePlaybackOfAudiouClips(SoundAudioClips);
+            _playSoundCoroutine = ExecutePlaybackOfAudioClips(SoundAudioClips);
             StartCoroutine(_playSoundCoroutine);
         }
 
-        private IEnumerator ExecutePlaybackOfAudiouClips(List<AudioClip> clips)
+        private IEnumerator ExecutePlaybackOfAudioClips(List<AudioClip> clips)
         {
             foreach (var clip in clips)
             {
