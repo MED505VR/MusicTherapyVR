@@ -594,6 +594,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65524c332822a184fafb639524e83b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &996350262
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996350260}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 1.560355, z: 2}
+  m_Center: {x: 0.00000011920929, y: 0.0000005066395, z: 0}
 --- !u!1001 &1104686926
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -604,7 +617,7 @@ PrefabInstance:
     - target: {fileID: 283502032310441940, guid: e4de45b9966b5f94eb0ef5410d501e7f,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 283502032310441940, guid: e4de45b9966b5f94eb0ef5410d501e7f,
         type: 3}
@@ -737,8 +750,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f7cc60b757864e4d8b930bd9c1a6c9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundAudioClips:
-  - {fileID: 8300000, guid: 6bf76d016564b39419063a1222bd2a10, type: 3}
+  <SoundAudioClip>k__BackingField: {fileID: 8300000, guid: 6bf76d016564b39419063a1222bd2a10,
+    type: 3}
 --- !u!114 &1104686932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -870,8 +883,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f7cc60b757864e4d8b930bd9c1a6c9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundAudioClips:
-  - {fileID: 8300000, guid: 954569d464c02d04fb951ca764254e71, type: 3}
+  <SoundAudioClip>k__BackingField: {fileID: 8300000, guid: 954569d464c02d04fb951ca764254e71,
+    type: 3}
 --- !u!114 &1104686935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1003,8 +1016,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f7cc60b757864e4d8b930bd9c1a6c9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundAudioClips:
-  - {fileID: 8300000, guid: 584fd5682e12564419250dd8c517204b, type: 3}
+  <SoundAudioClip>k__BackingField: {fileID: 8300000, guid: 584fd5682e12564419250dd8c517204b,
+    type: 3}
 --- !u!114 &1104686938
 MonoBehaviour:
   m_ObjectHideFlags: 0

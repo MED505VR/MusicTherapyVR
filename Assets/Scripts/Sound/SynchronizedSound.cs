@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Normal.Realtime;
 using Sound.Models;
 using UnityEngine;
@@ -9,20 +7,14 @@ namespace Sound
     [RequireComponent(typeof(AudioSource))]
     public abstract class SynchronizedSound : RealtimeComponent<SynchronizedSoundModel>
     {
-        [SerializeField] private List<AudioClip> soundAudioClips;
-        private IEnumerator _playSoundCoroutine;
-
         protected AudioSource SoundAudioSource { get; set; }
 
-        private List<AudioClip> SoundAudioClips
-        {
-            get => soundAudioClips;
-            set => SetSoundAudioClips(value);
-        }
+        [field: SerializeField] private AudioClip SoundAudioClip { get; set; }
 
         protected virtual void Start()
         {
             SoundAudioSource = GetComponent<AudioSource>();
+            SoundAudioSource.clip = SoundAudioClip;
         }
 
         protected override void OnRealtimeModelReplaced(SynchronizedSoundModel previousModel,
@@ -44,21 +36,11 @@ namespace Sound
 
         private void PlaySynchronizedSoundDidChange(SynchronizedSoundModel pModel, bool value)
         {
+            if (SoundAudioSource.isPlaying) SoundAudioSource.Stop();
             if (model.playSynchronizedSound)
-            {
-                StopLocalSound();
-                PlayLocalSound();
-            }
+                SoundAudioSource.Play();
             else
-            {
-                StopLocalSound();
-            }
-        }
-
-        private void SetSoundAudioClips(List<AudioClip> list)
-        {
-            SoundAudioClips.Clear();
-            SoundAudioClips = list;
+                SoundAudioSource.Stop();
         }
 
         protected void PlaySynchronizedSound()
@@ -68,47 +50,13 @@ namespace Sound
 
         protected void PlaySynchronizedSound(AudioClip clip)
         {
-            SoundAudioClips.Clear();
-            SoundAudioClips.Add(clip);
+            SoundAudioSource.clip = clip;
             model.playSynchronizedSound = true;
         }
 
         public void StopSynchronizedSound()
         {
             model.playSynchronizedSound = false;
-        }
-
-        private void StopLocalSound()
-        {
-            if (_playSoundCoroutine != null) StopCoroutine(_playSoundCoroutine);
-            SoundAudioSource.Stop();
-        }
-
-        private void PlayLocalSound()
-        {
-            if (SoundAudioClips.Count == 0) return;
-
-            _playSoundCoroutine = ExecutePlaybackOfAudioClips(SoundAudioClips);
-            StartCoroutine(_playSoundCoroutine);
-        }
-
-        private IEnumerator ExecutePlaybackOfAudioClips(List<AudioClip> clips)
-        {
-            foreach (var clip in clips)
-            {
-                var playClipCoroutine = PlayAudioClip(clip);
-                yield return StartCoroutine(playClipCoroutine);
-            }
-
-            model.playSynchronizedSound = false;
-        }
-
-        private IEnumerator PlayAudioClip(AudioClip audioClip)
-        {
-            SoundAudioSource.clip = audioClip;
-            SoundAudioSource.Play();
-            while (SoundAudioSource.isPlaying) yield return new WaitForEndOfFrame();
-            SoundAudioSource.Stop();
         }
     }
 }

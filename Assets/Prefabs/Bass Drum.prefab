@@ -195,6 +195,23 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4928349164197563118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4638530819475782000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 631820d6c56bb634181b66ac912c3287, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SoundAudioClip>k__BackingField: {fileID: 8300000, guid: 05b4da3b26e2fbf4d87046da5a0d7eb0,
+    type: 3}
+  freq: 0.1
+  amp: 0.2
+  dura: 3
 --- !u!114 &9064725865761459419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,23 +235,6 @@ MonoBehaviour:
   - componentID: 1
     component: {fileID: 4928349164197563118}
   _childViews: []
---- !u!114 &4928349164197563118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4638530819475782000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 631820d6c56bb634181b66ac912c3287, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  soundAudioClips:
-  - {fileID: 8300000, guid: 05b4da3b26e2fbf4d87046da5a0d7eb0, type: 3}
-  freq: 0.1
-  amp: 0.2
-  dura: 3
 --- !u!1001 &4638530819475881940
 PrefabInstance:
   m_ObjectHideFlags: 0

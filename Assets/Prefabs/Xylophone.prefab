@@ -229,8 +229,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 631820d6c56bb634181b66ac912c3287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundAudioClips:
-  - {fileID: 8300000, guid: c76a713719a0d2841b8c5330f24103db, type: 3}
+  <SoundAudioClip>k__BackingField: {fileID: 8300000, guid: c76a713719a0d2841b8c5330f24103db,
+    type: 3}
   freq: 0
   amp: 0
   dura: 0
@@ -463,8 +463,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 631820d6c56bb634181b66ac912c3287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundAudioClips:
-  - {fileID: 8300000, guid: ce24fa2206d44854ba9e15d393ddc239, type: 3}
+  <SoundAudioClip>k__BackingField: {fileID: 8300000, guid: ce24fa2206d44854ba9e15d393ddc239,
+    type: 3}
   freq: 0
   amp: 0
   dura: 0
@@ -800,8 +800,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 631820d6c56bb634181b66ac912c3287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundAudioClips:
-  - {fileID: 8300000, guid: a43448eea9928f64db2654ce41b96229, type: 3}
+  <SoundAudioClip>k__BackingField: {fileID: 8300000, guid: a43448eea9928f64db2654ce41b96229,
+    type: 3}
   freq: 0
   amp: 0
   dura: 0
@@ -1034,8 +1034,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 631820d6c56bb634181b66ac912c3287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundAudioClips:
-  - {fileID: 8300000, guid: 0b1a3825bb61d854bbcfa9300b976e38, type: 3}
+  <SoundAudioClip>k__BackingField: {fileID: 8300000, guid: 0b1a3825bb61d854bbcfa9300b976e38,
+    type: 3}
   freq: 0
   amp: 0
   dura: 0
@@ -1268,8 +1268,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 631820d6c56bb634181b66ac912c3287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundAudioClips:
-  - {fileID: 8300000, guid: bd7f714048755bc4ba282d2657976975, type: 3}
+  <SoundAudioClip>k__BackingField: {fileID: 8300000, guid: 4aa10e7163888be4f82b19222c83b9c8,
+    type: 3}
   freq: 0
   amp: 0
   dura: 0
@@ -1502,8 +1502,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 631820d6c56bb634181b66ac912c3287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundAudioClips:
-  - {fileID: 8300000, guid: 62bd82d7458560a4796409711acff269, type: 3}
+  <SoundAudioClip>k__BackingField: {fileID: 8300000, guid: 62bd82d7458560a4796409711acff269,
+    type: 3}
   freq: 0
   amp: 0
   dura: 0
@@ -1736,8 +1736,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 631820d6c56bb634181b66ac912c3287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundAudioClips:
-  - {fileID: 8300000, guid: 4aa10e7163888be4f82b19222c83b9c8, type: 3}
+  <SoundAudioClip>k__BackingField: {fileID: 8300000, guid: bd7f714048755bc4ba282d2657976975,
+    type: 3}
   freq: 0
   amp: 0
   dura: 0
@@ -1970,8 +1970,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 631820d6c56bb634181b66ac912c3287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundAudioClips:
-  - {fileID: 8300000, guid: 980bc1ab47b212948ac8c6fb02d71412, type: 3}
+  <SoundAudioClip>k__BackingField: {fileID: 8300000, guid: 980bc1ab47b212948ac8c6fb02d71412,
+    type: 3}
   freq: 0
   amp: 0
   dura: 0
