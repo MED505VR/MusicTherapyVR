@@ -1,4 +1,5 @@
 using Sound;
+using System.Collections;
 using UnityEngine;
 
 namespace EmojiWall
@@ -6,6 +7,7 @@ namespace EmojiWall
     public class EmojiSynchronizedSound : SynchronizedSound
     {
         private StopEmojiSounds _stopEmojiSounds;
+        private bool recentlyTriggered;
 
         protected override void Start()
         {
@@ -16,12 +18,22 @@ namespace EmojiWall
 
         private void OnTriggerEnter(Collider other)
         {
+            if (recentlyTriggered) return;
             var isPlaying = SoundAudioSource.isPlaying;
 
             _stopEmojiSounds.StopAllEmojiSoundsRightNow();
 
             if (isPlaying) return;
             PlaySynchronizedSound();
+            StartCoroutine(RecentlyTriggeredWait());
+
+        }
+
+        private IEnumerator RecentlyTriggeredWait()
+        {
+            recentlyTriggered = true;
+            yield return new WaitForSeconds(0.2f);
+            recentlyTriggered = false;
         }
     }
 }
