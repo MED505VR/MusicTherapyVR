@@ -18,7 +18,9 @@ namespace EmojiWall
 
         private void OnTriggerEnter(Collider other)
         {
+            if(!other.CompareTag("DrumstickHeadL") || !other.CompareTag("DrumstickHeadR")) return;
             if (recentlyTriggered) return;
+            
             var isPlaying = SoundAudioSource.isPlaying;
 
             _stopEmojiSounds.StopAllEmojiSoundsRightNow();
@@ -26,7 +28,6 @@ namespace EmojiWall
             if (isPlaying) return;
             PlaySynchronizedSound();
             StartCoroutine(RecentlyTriggeredWait());
-
         }
 
         private IEnumerator RecentlyTriggeredWait()
