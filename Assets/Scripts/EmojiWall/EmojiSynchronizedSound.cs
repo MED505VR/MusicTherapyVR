@@ -18,16 +18,18 @@ namespace EmojiWall
 
         private void OnTriggerEnter(Collider other)
         {
-            if(!other.CompareTag("DrumstickHeadL") || !other.CompareTag("DrumstickHeadR")) return;
-            if (recentlyTriggered) return;
-            
-            var isPlaying = SoundAudioSource.isPlaying;
+            if (other.CompareTag("DrumstickHeadL") || other.CompareTag("DrumstickHeadR"))
+            {
+                if (recentlyTriggered) return;
 
-            _stopEmojiSounds.StopAllEmojiSoundsRightNow();
+                var isPlaying = SoundAudioSource.isPlaying;
 
-            if (isPlaying) return;
-            PlaySynchronizedSound();
-            StartCoroutine(RecentlyTriggeredWait());
+                _stopEmojiSounds.StopAllEmojiSoundsRightNow();
+
+                if (isPlaying) return;
+                PlaySynchronizedSound();
+                StartCoroutine(RecentlyTriggeredWait());
+            }
         }
 
         private IEnumerator RecentlyTriggeredWait()
