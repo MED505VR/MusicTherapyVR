@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.Audio;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 #if UNITY_EDITOR
 using UnityEditor;
-using System;
 using System.Reflection;
 #endif
 
@@ -67,13 +67,13 @@ namespace OVR
         [HideInInspector] public int playingSoundCount = 0;
     }
 
-/*
------------------------
+    /*
+    -----------------------
 
- AudioManager
+     AudioManager
 
------------------------
-*/
+    -----------------------
+    */
     public partial class AudioManager : MonoBehaviour
     {
         [Tooltip("Make the audio manager persistent across all scene loads")]
@@ -334,13 +334,13 @@ namespace OVR
                     return defaultSound;
             names.Add(nullSound.name);
             for (var group = 0; group < theAudioManager.soundGroupings.Length; group++)
-            for (var i = 0; i < theAudioManager.soundGroupings[@group].soundList.Length; i++)
-            {
-                if (string.Compare(currentValue, theAudioManager.soundGroupings[@group].soundList[i].name, true) == 0)
-                    currentIdx = names.Count;
-                names.Add(theAudioManager.soundGroupings[@group].name + "/" +
-                          theAudioManager.soundGroupings[@group].soundList[i].name);
-            }
+                for (var i = 0; i < theAudioManager.soundGroupings[@group].soundList.Length; i++)
+                {
+                    if (string.Compare(currentValue, theAudioManager.soundGroupings[@group].soundList[i].name, true) == 0)
+                        currentIdx = names.Count;
+                    names.Add(theAudioManager.soundGroupings[@group].name + "/" +
+                              theAudioManager.soundGroupings[@group].soundList[i].name);
+                }
 
             //names.Sort( delegate( string s1, string s2 ) { return s1.CompareTo( s2 ); } );
             return names.ToArray();
