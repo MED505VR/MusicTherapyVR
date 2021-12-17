@@ -13,7 +13,7 @@ Ali Adjorlu
 
 Hjalte Drejer
 
-Joey Ho
+Joey Ho 📧: joeyho229@gmail.com
 
 Jacob Noer 📧: noerjacob@gmail.com
 
