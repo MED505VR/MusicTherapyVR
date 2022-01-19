@@ -1363,6 +1363,11 @@ PrefabInstance:
       propertyPath: _components.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8155412086850765881, guid: 443c54470c9ca4a0a9fde0cf684f7482,
+        type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8315179721738986840, guid: 443c54470c9ca4a0a9fde0cf684f7482,
         type: 3}
       propertyPath: _realtime

@@ -15,7 +15,7 @@ public class TrackSpeed : MonoBehaviour
     }
     private void FixedUpdate()  //Instaed of Update() that runs on every frame FixedUpdate runs every 0.2 sec
     {
-        speed = (((transform.position - lastPosition).magnitude) / Time.deltaTime); //How much have we moved in pr sec
+        speed = ((((transform.position - lastPosition).magnitude) / Time.deltaTime)/4); //How much have we moved in pr sec
         lastPosition = transform.position; //set the current position to the lastPosition
     }
 }
