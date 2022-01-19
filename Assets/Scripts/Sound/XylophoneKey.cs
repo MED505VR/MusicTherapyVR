@@ -10,12 +10,16 @@ namespace Sound
 
         [SerializeField] private float amp;
         [SerializeField] private float dura;
-
-
+        private AudioSource _source;
+        void Start()
+        {
+            _source = GetComponent<AudioSource>();
+        }
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("DrumstickHeadR") || other.CompareTag("DrumstickHeadL"))
             {
+                _source.volume = other.gameObject.GetComponent<TrackSpeed>().speed;
                 PlaySynchronizedSound();
 
                 if (other.CompareTag("DrumstickHeadR"))
