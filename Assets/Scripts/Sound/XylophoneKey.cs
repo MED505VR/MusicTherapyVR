@@ -10,7 +10,7 @@ namespace Sound
 
         [SerializeField] private float amp;
         [SerializeField] private float dura;
-        private AudioSource _source;
+        
        
         private void OnTriggerEnter(Collider other)
         {
