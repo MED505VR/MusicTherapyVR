@@ -28,6 +28,7 @@ public class Drumscript : SynchronizedSound
         if (other.CompareTag("DrumstickHeadR") || other.CompareTag("DrumstickHeadL"))
         {
             StopSynchronizedSound();
+            SoundAudioSource.volume = other.gameObject.GetComponent<TrackSpeed>().speed;
             PlaySynchronizedSound();
 
             if (other.CompareTag("DrumstickHeadR"))
