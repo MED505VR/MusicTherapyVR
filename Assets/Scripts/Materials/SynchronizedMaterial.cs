@@ -27,8 +27,8 @@ namespace Materials
             if (previousModel != null)
             {
                 previousModel.colorDidChange -= ColorDidChange;
-                currentModel.emissionColorDidChange -= EmissionColorDidChange;
-                currentModel.isEmissiveDidChange -= IsEmissiveDidChange;
+                previousModel.emissionColorDidChange -= EmissionColorDidChange;
+                previousModel.isEmissiveDidChange -= IsEmissiveDidChange;
             }
 
             if (currentModel != null)
@@ -57,17 +57,17 @@ namespace Materials
             _material.SetColor(PColor, value);
         }
 
-        public void SetIsEmissive(bool value)
+        protected void SetIsEmissive(bool value)
         {
             model.isEmissive = value;
         }
 
-        public void SetEmissionColor(Color value)
+        protected void SetEmissionColor(Color value)
         {
             model.emissionColor = value;
         }
 
-        public void SetColor(Color value)
+        protected void SetColor(Color value)
         {
             model.emissionColor = value;
         }
