@@ -8,9 +8,8 @@ namespace DataRecording
     {
         private static string reportDirectoryName = "Report";
         private static string reportFileName = GetDayStamp()+".csv";
-        
         private static string reportSeparator = ",";
-        
+        private static string timeStampHeader = "time stamp";
         private static string[] reportHeaders = new string[36]
         {
             "Head X position",  //float or double
@@ -50,7 +49,6 @@ namespace DataRecording
             "Speed left hand",  //float
             "Speed right hand", //float
         };
-        private static string timeStampHeader = "time stamp";
 
         #region Interactions
 
@@ -62,6 +60,7 @@ namespace DataRecording
             using (StreamWriter sw = File.AppendText(GetFilePath()))
             {
                 string finalString = "";
+                finalString += reportSeparator + GetTimeStamp();
                 for (int i = 0; i < strings.Length; i++)
                 {
                     if (finalString != "")
@@ -70,8 +69,7 @@ namespace DataRecording
                     }
                     finalString += strings[i];
                 }
-
-                finalString += reportSeparator + GetTimeStamp();
+                
                 sw.WriteLine(finalString);
             }
         }
@@ -82,6 +80,7 @@ namespace DataRecording
             using (StreamWriter sw = File.CreateText(GetFilePath()))
             {
                 string finalString = "";
+                finalString += reportSeparator + timeStampHeader;
                 for (int i = 0; i < reportHeaders.Length; i++)
                 {
                     if (finalString != "")
@@ -91,8 +90,6 @@ namespace DataRecording
 
                     finalString += reportHeaders[i];
                 }
-
-                finalString += reportSeparator + timeStampHeader;
                 sw.WriteLine(finalString);
             }
         }
@@ -142,7 +139,8 @@ namespace DataRecording
         {
             System.DateTime theTime = System.DateTime.Now;
             string date = theTime.Year + "-" + theTime.Month + "-" + theTime.Day;
-            return date;
+            string time = date + "T" + theTime.Hour + "-" + theTime.Minute + "-" + theTime.Second;
+            return time;
         }
         
         #endregion
