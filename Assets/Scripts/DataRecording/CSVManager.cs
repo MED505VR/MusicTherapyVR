@@ -7,7 +7,7 @@ namespace DataRecording
     public static class CsvManager
     {
         private static string reportDirectoryName = "Report";
-        private static string reportFileName = "report.csv";
+        private static string reportFileName = GetDayStamp()+".csv";
         
         private static string reportSeparator = ",";
         
@@ -140,7 +140,9 @@ namespace DataRecording
 
         static string GetDayStamp()
         {
-            return System.DateTime.Today.ToString();
+            System.DateTime theTime = System.DateTime.Now;
+            string date = theTime.Year + "-" + theTime.Month + "-" + theTime.Day;
+            return date;
         }
         
         #endregion
