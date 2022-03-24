@@ -109,7 +109,7 @@ namespace DataRecording
 
         static string GetFilePath(int playerNum)
         {
-            return GetDirectoryPath() + "/" + "PlayerNumber: " + playerNum + "Time: " + reportFileName;
+            return GetDirectoryPath() + "/" + playerNum + reportFileName;
         }
 
         static string GetTimeStamp()
