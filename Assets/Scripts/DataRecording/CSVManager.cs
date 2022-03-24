@@ -10,7 +10,7 @@ namespace DataRecording
         private static string reportFileName = GetDayStamp()+".csv";
         private static string reportSeparator = ",";
         private static string timeStampHeader = "time stamp";
-        private static string[] reportHeaders = new string[36]
+        private static string[] reportHeaders = new string[18]
         {
             "Head X position",  //float or double
             "Head Y position",  //float or double
@@ -24,40 +24,22 @@ namespace DataRecording
             "Lhand X rotation",  //float or double
             "Lhand Y rotation",  //float or double
             "Lhand Z rotation",  //float or double
-            "Rhand X position",  //float or double
+            "Rhand X position",  //float or double                                                                                                                                                                                                                                                                            
             "Rhand Y position",  //float or double
             "Rhand Z position",  //float or double
             "Rhand X rotation",  //float or double
             "Rhand Y rotation",  //float or double
             "Rhand Z rotation",  //float or double
-            "Angry smiley", //Bool
-            "Sad smiley", //Bool
-            "Happy smiley", //Bool
-            "Drum", //Bool
-            "Balafon key 1", //Bool
-            "Balafon key 2", //Bool
-            "Balafon key 3", //Bool
-            "Balafon key 4", //Bool
-            "Balafon key 5", //Bool
-            "Balafon key 6", //Bool
-            "Balafon key 7", //Bool
-            "Balafon key 8", //Bool
-            "Balafon key 9", //Bool
-            "Balafon key 10", //Bool
-            "Balafon key 11", //Bool
-            "Balafon key 12", //Bool
-            "Speed left hand",  //float
-            "Speed right hand", //float
         };
 
         #region Interactions
 
-        public static void AppendToReport(string[] strings)
+        public static void AppendToReport(int num,string[] strings)
         {
             Debug.Log(GetDayStamp());
             VerifyDirectory();
-            VerifyFile();
-            using (StreamWriter sw = File.AppendText(GetFilePath()))
+            VerifyFile(num);
+            using (StreamWriter sw = File.AppendText(GetFilePath(num)))
             {
                 string finalString = "";
                 finalString += reportSeparator + GetTimeStamp();
@@ -74,10 +56,10 @@ namespace DataRecording
             }
         }
 
-        public static void CreateReport()
+        public static void CreateReport(int num)
         {
             VerifyDirectory();
-            using (StreamWriter sw = File.CreateText(GetFilePath()))
+            using (StreamWriter sw = File.CreateText(GetFilePath(num)))
             {
                 string finalString = "";
                 finalString += reportSeparator + timeStampHeader;
@@ -107,27 +89,27 @@ namespace DataRecording
             }
         }
 
-        static void VerifyFile()
+        static void VerifyFile(int playernum)
         {
-            string file = GetFilePath();
+            string file = GetFilePath(playernum);
             if (!File.Exists(file))
             {
-                CreateReport();
+                CreateReport(playernum);
             }
         }
-        
+
         #endregion
 
         #region Queries
 
         static string GetDirectoryPath()
         {
-            return Application.dataPath + "/" + reportDirectoryName;
+            return Application.dataPath + "/" + reportDirectoryName + "/" + GetDateStamp();
         }
 
-        static string GetFilePath()
+        static string GetFilePath(int playerNum)
         {
-            return GetDirectoryPath() + "/" + reportFileName;
+            return GetDirectoryPath() + "/" + "PlayerNumber: " + playerNum + "Time: " + reportFileName;
         }
 
         static string GetTimeStamp()
@@ -138,9 +120,15 @@ namespace DataRecording
         static string GetDayStamp()
         {
             System.DateTime theTime = System.DateTime.Now;
-            string date = theTime.Year + "-" + theTime.Month + "-" + theTime.Day;
-            string time = date + "T" + theTime.Hour + "-" + theTime.Minute + "-" + theTime.Second;
+            string time = "T" + theTime.Hour + "-" + theTime.Minute;
             return time;
+        }
+        
+        static string GetDateStamp()
+        {
+            System.DateTime theTime = System.DateTime.Now;
+            string date = theTime.Year + "-" + theTime.Month + "-" + theTime.Day;
+            return date;
         }
         
         #endregion

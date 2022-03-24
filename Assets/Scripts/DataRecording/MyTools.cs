@@ -18,60 +18,59 @@ namespace DataRecording
             print(dataRecorder.CurrentConnectedPlayers.Count);
             if (dataRecorder.CurrentConnectedPlayers.Count > 0)
             {
-                CsvManager.AppendToReport(
-                    new string[36]
+                CsvManager.AppendToReport(1,
+                    new string[18]
                     {
-                        "Head X ", //float or double
-                        "Head Y position", //float or double
-                        "Head Z position", //float or double
-                        "Head X rotation", //float or double
-                        "Head Y rotation", //float or double
-                        "Head Z rotation", //float or double
-                        "Lhand X position", //float or double
-                        "Lhand Y position", //float or double
-                        "Lhand Z position", //float or double
-                        "Lhand X rotation", //float or double
-                        "Lhand Y rotation", //float or double
-                        "Lhand Z rotation", //float or double
-                        "Rhand X position", //float or double
-                        "Rhand Y position", //float or double
-                        "Rhand Z position", //float or double
-                        "Rhand X rotation", //float or double
-                        "Rhand Y rotation", //float or double
-                        "Rhand Z rotation", //float or double
-                        "Angry smiley", //Bool
-                        "Sad smiley", //Bool
-                        "Happy smiley", //Bool
-                        "Drum", //Bool
-                        "Balafon key 1", //Bool
-                        "Balafon key 2", //Bool
-                        "Balafon key 3", //Bool
-                        "Balafon key 4", //Bool
-                        "Balafon key 5", //Bool
-                        "Balafon key 6", //Bool
-                        "Balafon key 7", //Bool
-                        "Balafon key 8", //Bool
-                        "Balafon key 9", //Bool
-                        "Balafon key 10", //Bool
-                        "Balafon key 11", //Bool
-                        "Balafon key 12", //Bool
-                        "Speed left hand", //float
-                        "Speed right hand", //float
+                        dataRecorder.CurrentConnectedPlayers[0].head.position.x.ToString(), //float
+                        dataRecorder.CurrentConnectedPlayers[0].head.position.y.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].head.position.z.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].head.rotation.x.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].head.rotation.y.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].head.rotation.z.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].leftHand.position.x.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].leftHand.position.y.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].leftHand.position.z.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].leftHand.rotation.x.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].leftHand.rotation.y.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].leftHand.rotation.z.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].rightHand.position.x.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].rightHand.position.y.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].rightHand.position.z.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].rightHand.rotation.x.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].rightHand.rotation.y.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].rightHand.rotation.z.ToString(), //float 
                     }
                 );
+
+                if (dataRecorder.CurrentConnectedPlayers.Count > 1)
+                {
+                    CsvManager.AppendToReport(2,
+                        new string[18]
+                        {
+                            dataRecorder.CurrentConnectedPlayers[1].head.position.x.ToString(), //float
+                            dataRecorder.CurrentConnectedPlayers[1].head.position.y.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].head.position.z.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].head.rotation.x.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].head.rotation.y.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].head.rotation.z.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].leftHand.position.x.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].leftHand.position.y.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].leftHand.position.z.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].leftHand.rotation.x.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].leftHand.rotation.y.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].leftHand.rotation.z.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].rightHand.position.x.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].rightHand.position.y.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].rightHand.position.z.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].rightHand.rotation.x.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].rightHand.rotation.y.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].rightHand.rotation.z.ToString(), //float 
+                        }
+                    );
+                }
+
                 Debug.Log("Report updated succesfully!");
             }
         }
-   
-    
-        [MenuItem("My Tools/Reset Report %F12")]
-        static void DEV_ResetReport()
-        {
-            CsvManager.CreateReport();
-            EditorApplication.Beep();
-            Debug.Log("Report reset");
-        }
-    
-    
     }
 }
