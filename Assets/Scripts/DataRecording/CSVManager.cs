@@ -8,7 +8,7 @@ namespace DataRecording
     {
         private static string reportDirectoryName = "Report";
         private static string reportFileName = GetDayStamp()+".csv";
-        
+
         private static string reportSeparator = ",";
         
         private static string[] reportHeaders = new string[36]
