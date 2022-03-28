@@ -104,7 +104,8 @@ namespace DataRecording
 
         static string GetDirectoryPath()
         {
-            return Application.dataPath + "/" + reportDirectoryName + "/" + GetDateStamp();
+            
+            return Application.persistentDataPath + "/" + reportDirectoryName + "/" + GetDateStamp();
         }
 
         static string GetFilePath(int playerNum)

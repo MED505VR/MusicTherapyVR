@@ -25,7 +25,7 @@ namespace DataRecording
         void FixedUpdate()
         {
             print(dataRecorder.CurrentConnectedPlayers.Count);
-            if (dataRecorder.CurrentConnectedPlayers.Count > 0)
+            if (dataRecorder.CurrentConnectedPlayers.Count >= 0)
             {
                 CsvPositionWriter.AppendToReport(1,
                     new string[18]
