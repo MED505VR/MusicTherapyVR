@@ -1,13 +1,22 @@
-using Sound;
+using System;
 using System.Collections;
+using JetBrains.Annotations;
+using Sound;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace EmojiWall
 {
     public class EmojiSynchronizedSound : SynchronizedSound
     {
+        public static UnityEvent<string> emojiActivated;
+        private bool _recentlyTriggered;
         private StopEmojiSounds _stopEmojiSounds;
-        private bool recentlyTriggered;
+
+        protected void Awake()
+        {
+            emojiActivated ??= new UnityEvent<string>();
+        }
 
         protected override void Start()
         {
@@ -20,7 +29,7 @@ namespace EmojiWall
         {
             if (other.CompareTag("DrumstickHeadL") || other.CompareTag("DrumstickHeadR"))
             {
-                if (recentlyTriggered) return;
+                if (_recentlyTriggered) return;
 
                 var isPlaying = SoundAudioSource.isPlaying;
 
@@ -28,15 +37,16 @@ namespace EmojiWall
 
                 if (isPlaying) return;
                 PlaySynchronizedSound();
+                if (emojiActivated != null) emojiActivated.Invoke(gameObject.name);
                 StartCoroutine(RecentlyTriggeredWait());
             }
         }
 
         private IEnumerator RecentlyTriggeredWait()
         {
-            recentlyTriggered = true;
+            _recentlyTriggered = true;
             yield return new WaitForSeconds(0.2f);
-            recentlyTriggered = false;
+            _recentlyTriggered = false;
         }
     }
 }

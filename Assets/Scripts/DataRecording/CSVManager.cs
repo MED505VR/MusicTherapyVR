@@ -1,57 +1,55 @@
+using System;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 namespace DataRecording
 {
     public static class CsvManager
     {
-        private static string reportDirectoryName = "Report";
-        private static string reportFileName = GetDayStamp()+".csv";
-        private static string reportSeparator = ",";
-        private static string timeStampHeader = "time stamp";
-        private static string[] reportHeaders = new string[18]
+        private static readonly string ReportDirectoryName = "Report";
+        private static readonly string ReportFileName = GetDayStamp() + ".csv";
+        private static readonly string ReportSeparator = ",";
+        private static readonly string TimeStampHeader = "time stamp";
+
+        private static readonly string[] ReportHeaders = new string[18]
         {
-            "Head X position",  //float or double
-            "Head Y position",  //float or double
-            "Head Z position",  //float or double
-            "Head X rotation",  //float or double
-            "Head Y rotation",  //float or double
-            "Head Z rotation",  //float or double
-            "Lhand X position",  //float or double
-            "Lhand Y position",  //float or double
-            "Lhand Z position",  //float or double
-            "Lhand X rotation",  //float or double
-            "Lhand Y rotation",  //float or double
-            "Lhand Z rotation",  //float or double
-            "Rhand X position",  //float or double                                                                                                                                                                                                                                                                            
-            "Rhand Y position",  //float or double
-            "Rhand Z position",  //float or double
-            "Rhand X rotation",  //float or double
-            "Rhand Y rotation",  //float or double
-            "Rhand Z rotation",  //float or double
+            "Head X position", //float or double
+            "Head Y position", //float or double
+            "Head Z position", //float or double
+            "Head X rotation", //float or double
+            "Head Y rotation", //float or double
+            "Head Z rotation", //float or double
+            "Lhand X position", //float or double
+            "Lhand Y position", //float or double
+            "Lhand Z position", //float or double
+            "Lhand X rotation", //float or double
+            "Lhand Y rotation", //float or double
+            "Lhand Z rotation", //float or double
+            "Rhand X position", //float or double                                                                                                                                                                                                                                                                            
+            "Rhand Y position", //float or double
+            "Rhand Z position", //float or double
+            "Rhand X rotation", //float or double
+            "Rhand Y rotation", //float or double
+            "Rhand Z rotation" //float or double
         };
 
         #region Interactions
 
-        public static void AppendToReport(int num,string[] strings)
+        public static void AppendToReport(int num, string[] strings)
         {
             Debug.Log(GetDayStamp());
             VerifyDirectory();
             VerifyFile(num);
-            using (StreamWriter sw = File.AppendText(GetFilePath(num)))
+            using (var sw = File.AppendText(GetFilePath(num)))
             {
-                string finalString = "";
-                finalString += reportSeparator + GetTimeStamp();
-                for (int i = 0; i < strings.Length; i++)
+                var finalString = "";
+                finalString += ReportSeparator + GetTimeStamp();
+                for (var i = 0; i < strings.Length; i++)
                 {
-                    if (finalString != "")
-                    {
-                        finalString += reportSeparator;
-                    }
+                    if (finalString != "") finalString += ReportSeparator;
                     finalString += strings[i];
                 }
-                
+
                 sw.WriteLine(finalString);
             }
         }
@@ -59,80 +57,70 @@ namespace DataRecording
         public static void CreateReport(int num)
         {
             VerifyDirectory();
-            using (StreamWriter sw = File.CreateText(GetFilePath(num)))
+            using (var sw = File.CreateText(GetFilePath(num)))
             {
-                string finalString = "";
-                finalString += reportSeparator + timeStampHeader;
-                for (int i = 0; i < reportHeaders.Length; i++)
+                var finalString = "";
+                finalString += ReportSeparator + TimeStampHeader;
+                for (var i = 0; i < ReportHeaders.Length; i++)
                 {
-                    if (finalString != "")
-                    {
-                        finalString += reportSeparator;
-                    }
+                    if (finalString != "") finalString += ReportSeparator;
 
-                    finalString += reportHeaders[i];
+                    finalString += ReportHeaders[i];
                 }
+
                 sw.WriteLine(finalString);
             }
         }
-        
+
         #endregion
-        
+
         #region Operations
 
-        static void VerifyDirectory()
+        private static void VerifyDirectory()
         {
-            string dir = GetDirectoryPath();
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
+            var dir = GetDirectoryPath();
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
         }
 
-        static void VerifyFile(int playernum)
+        private static void VerifyFile(int playernum)
         {
-            string file = GetFilePath(playernum);
-            if (!File.Exists(file))
-            {
-                CreateReport(playernum);
-            }
+            var file = GetFilePath(playernum);
+            if (!File.Exists(file)) CreateReport(playernum);
         }
 
         #endregion
 
         #region Queries
 
-        static string GetDirectoryPath()
+        private static string GetDirectoryPath()
         {
-            return Application.dataPath + "/" + reportDirectoryName + "/" + GetDateStamp();
+            return Application.dataPath + "/" + ReportDirectoryName + "/" + GetDateStamp();
         }
 
-        static string GetFilePath(int playerNum)
+        private static string GetFilePath(int playerNum)
         {
-            return GetDirectoryPath() + "/" + playerNum + reportFileName;
+            return GetDirectoryPath() + "/" + playerNum + ReportFileName;
         }
 
-        static string GetTimeStamp()
+        private static string GetTimeStamp()
         {
-            return System.DateTime.UtcNow.ToString();
+            return DateTime.UtcNow.ToString();
         }
 
-        static string GetDayStamp()
+        private static string GetDayStamp()
         {
-            System.DateTime theTime = System.DateTime.Now;
-            string time = "T" + theTime.Hour + "-" + theTime.Minute;
+            var theTime = DateTime.Now;
+            var time = "T" + theTime.Hour + "-" + theTime.Minute;
             return time;
         }
-        
-        static string GetDateStamp()
+
+        private static string GetDateStamp()
         {
-            System.DateTime theTime = System.DateTime.Now;
-            string date = theTime.Year + "-" + theTime.Month + "-" + theTime.Day;
+            var theTime = DateTime.Now;
+            var date = theTime.Year + "-" + theTime.Month + "-" + theTime.Day;
             return date;
         }
-        
+
         #endregion
     }
-    
-    
 }
