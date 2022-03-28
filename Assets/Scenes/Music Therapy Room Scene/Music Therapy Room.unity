@@ -221,30 +221,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
---- !u!4 &64720008 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400008, guid: ce816f2e6abb0504092c23ed9b970dfd,
-    type: 3}
-  m_PrefabInstance: {fileID: 64720007}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &64720009 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 481164, guid: ce816f2e6abb0504092c23ed9b970dfd,
-    type: 3}
-  m_PrefabInstance: {fileID: 64720007}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &64720010 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 477154, guid: ce816f2e6abb0504092c23ed9b970dfd,
-    type: 3}
-  m_PrefabInstance: {fileID: 64720007}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &64720011 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400012, guid: ce816f2e6abb0504092c23ed9b970dfd,
-    type: 3}
-  m_PrefabInstance: {fileID: 64720007}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &130649339
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -460,6 +436,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7d5994d289ec3d4ea084bda51bcbcdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trigger:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1409879169}
+        m_TargetAssemblyTypeName: Drum, Assembly-CSharp
+        m_MethodName: ActivateNumberHits
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
 --- !u!4 &340872974
 Transform:
   m_ObjectHideFlags: 0
@@ -1141,7 +1132,6 @@ GameObject:
   - component: {fileID: 1400341216}
   - component: {fileID: 1400341215}
   - component: {fileID: 1400341214}
-  - component: {fileID: 1400341213}
   m_Layer: 0
   m_Name: Normcore Manager
   m_TagString: Untagged
@@ -1149,25 +1139,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1400341213
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400341212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5b6ae53fe1e66d429cc41bbf5b29cb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _localAvatarPrefab: {fileID: 4485569304626101628, guid: 010242448ee50974fb01d6c8dae7bc58,
-    type: 3}
-  _localPlayer:
-    root: {fileID: 64720008}
-    head: {fileID: 64720011}
-    leftHand: {fileID: 64720010}
-    rightHand: {fileID: 64720009}
 --- !u!114 &1400341214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1211,6 +1182,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1409879168 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4638530819475782000, guid: e53951e13ea3c84419bb2cb1c9a9b550,
+    type: 3}
+  m_PrefabInstance: {fileID: 211276454}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1409879169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1409879168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5e72bc2608a46548bf8e4a6fde20214, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1461204914
 PrefabInstance:
   m_ObjectHideFlags: 0

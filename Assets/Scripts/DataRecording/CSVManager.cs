@@ -1,138 +1,84 @@
-using System.IO;
+using System;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace DataRecording
 {
-    public static class CsvManager
+    public class CsvManager : MonoBehaviour
     {
-        private static string reportDirectoryName = "Report";
-        private static string reportFileName = GetDayStamp()+".csv";
-        private static string reportSeparator = ",";
-        private static string timeStampHeader = "time stamp";
-        private static string[] reportHeaders = new string[18]
-        {
-            "Head X position",  //float or double
-            "Head Y position",  //float or double
-            "Head Z position",  //float or double
-            "Head X rotation",  //float or double
-            "Head Y rotation",  //float or double
-            "Head Z rotation",  //float or double
-            "Lhand X position",  //float or double
-            "Lhand Y position",  //float or double
-            "Lhand Z position",  //float or double
-            "Lhand X rotation",  //float or double
-            "Lhand Y rotation",  //float or double
-            "Lhand Z rotation",  //float or double
-            "Rhand X position",  //float or double                                                                                                                                                                                                                                                                            
-            "Rhand Y position",  //float or double
-            "Rhand Z position",  //float or double
-            "Rhand X rotation",  //float or double
-            "Rhand Y rotation",  //float or double
-            "Rhand Z rotation",  //float or double
-        };
+        private DataRecorder dataRecorder;
+        [SerializeField]private UnityEvent trigger;
 
-        #region Interactions
-
-        public static void AppendToReport(int num,string[] strings)
+        private void Start()
         {
-            Debug.Log(GetDayStamp());
-            VerifyDirectory();
-            VerifyFile(num);
-            using (StreamWriter sw = File.AppendText(GetFilePath(num)))
+            dataRecorder = FindObjectOfType<DataRecorder>();
+        }
+        
+
+        
+        private void Update()
+        {
+            trigger.Invoke();
+        }
+
+        void FixedUpdate()
+        {
+            print(dataRecorder.CurrentConnectedPlayers.Count);
+            if (dataRecorder.CurrentConnectedPlayers.Count > 0)
             {
-                string finalString = "";
-                finalString += reportSeparator + GetTimeStamp();
-                for (int i = 0; i < strings.Length; i++)
-                {
-                    if (finalString != "")
+                CsvPositionWriter.AppendToReport(1,
+                    new string[18]
                     {
-                        finalString += reportSeparator;
+                        dataRecorder.CurrentConnectedPlayers[0].head.position.x.ToString(), //float
+                        dataRecorder.CurrentConnectedPlayers[0].head.position.y.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].head.position.z.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].head.rotation.x.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].head.rotation.y.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].head.rotation.z.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].leftHand.position.x.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].leftHand.position.y.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].leftHand.position.z.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].leftHand.rotation.x.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].leftHand.rotation.y.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].leftHand.rotation.z.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].rightHand.position.x.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].rightHand.position.y.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].rightHand.position.z.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].rightHand.rotation.x.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].rightHand.rotation.y.ToString(), //float 
+                        dataRecorder.CurrentConnectedPlayers[0].rightHand.rotation.z.ToString(), //float 
                     }
-                    finalString += strings[i];
-                }
-                
-                sw.WriteLine(finalString);
-            }
-        }
+                );
 
-        public static void CreateReport(int num)
-        {
-            VerifyDirectory();
-            using (StreamWriter sw = File.CreateText(GetFilePath(num)))
-            {
-                string finalString = "";
-                finalString += reportSeparator + timeStampHeader;
-                for (int i = 0; i < reportHeaders.Length; i++)
+                if (dataRecorder.CurrentConnectedPlayers.Count > 1)
                 {
-                    if (finalString != "")
-                    {
-                        finalString += reportSeparator;
-                    }
-
-                    finalString += reportHeaders[i];
+                    CsvPositionWriter.AppendToReport(2,
+                        new string[18]
+                        {
+                            dataRecorder.CurrentConnectedPlayers[1].head.position.x.ToString(), //float
+                            dataRecorder.CurrentConnectedPlayers[1].head.position.y.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].head.position.z.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].head.rotation.x.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].head.rotation.y.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].head.rotation.z.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].leftHand.position.x.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].leftHand.position.y.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].leftHand.position.z.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].leftHand.rotation.x.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].leftHand.rotation.y.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].leftHand.rotation.z.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].rightHand.position.x.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].rightHand.position.y.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].rightHand.position.z.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].rightHand.rotation.x.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].rightHand.rotation.y.ToString(), //float 
+                            dataRecorder.CurrentConnectedPlayers[1].rightHand.rotation.z.ToString(), //float 
+                        }
+                    );
                 }
-                sw.WriteLine(finalString);
+                Debug.Log("Report updated succesfully!");
             }
         }
-        
-        #endregion
-        
-        #region Operations
-
-        static void VerifyDirectory()
-        {
-            string dir = GetDirectoryPath();
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
-        }
-
-        static void VerifyFile(int playernum)
-        {
-            string file = GetFilePath(playernum);
-            if (!File.Exists(file))
-            {
-                CreateReport(playernum);
-            }
-        }
-
-        #endregion
-
-        #region Queries
-
-        static string GetDirectoryPath()
-        {
-            return Application.dataPath + "/" + reportDirectoryName + "/" + GetDateStamp();
-        }
-
-        static string GetFilePath(int playerNum)
-        {
-            return GetDirectoryPath() + "/" + playerNum + reportFileName;
-        }
-
-        static string GetTimeStamp()
-        {
-            return System.DateTime.UtcNow.ToString();
-        }
-
-        static string GetDayStamp()
-        {
-            System.DateTime theTime = System.DateTime.Now;
-            string time = "T" + theTime.Hour + "-" + theTime.Minute;
-            return time;
-        }
-        
-        static string GetDateStamp()
-        {
-            System.DateTime theTime = System.DateTime.Now;
-            string date = theTime.Year + "-" + theTime.Month + "-" + theTime.Day;
-            return date;
-        }
-        
-        #endregion
     }
-    
-    
 }
