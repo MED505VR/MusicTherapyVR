@@ -36,8 +36,9 @@ namespace EmojiWall
                 _stopEmojiSounds.StopAllEmojiSoundsRightNow();
 
                 if (isPlaying) return;
+                
                 PlaySynchronizedSound();
-                if (emojiActivated != null) emojiActivated.Invoke(gameObject.name);
+                emojiActivated.Invoke(gameObject.name);
                 StartCoroutine(RecentlyTriggeredWait());
             }
         }
