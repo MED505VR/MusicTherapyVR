@@ -13,7 +13,7 @@ public class TrackSpeed : MonoBehaviour
     {
         lastPosition = transform.position; //We take the position from where we spawn and put it to lastPosition 
     }
-    private void FixedUpdate()  //Instaed of Update() that runs on every frame FixedUpdate runs every 0.2 sec
+    private void FixedUpdate()  //Instaed of Update() that runs on every frame FixedUpdate runs every 0.02 sec
     {
         speed = (((transform.position - lastPosition).magnitude) / Time.deltaTime); //How much have we moved in pr sec
         lastPosition = transform.position; //set the current position to the lastPosition
