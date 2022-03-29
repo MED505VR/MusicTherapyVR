@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using DataRecording;
 using UnityEngine;
+using UnityEngine.Events;
 namespace Sound
 {
     public class XylophoneKey : SynchronizedSound
@@ -14,13 +16,21 @@ namespace Sound
         
         [Header("Datarecording")][SerializeField] private int timesHit;
         
+        public static UnityEvent<string> instrumentHit;
+
+        protected void Awake()
+        {
+            instrumentHit ??= new UnityEvent<string>();
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("DrumstickHeadR") || other.CompareTag("DrumstickHeadL"))
             {
                 SoundAudioSource.volume = other.gameObject.GetComponent<TrackSpeed>().speed;
                 PlaySynchronizedSound();
-                TimesHit();
+                instrumentHit.Invoke(gameObject.name);
+                
 
                 if (other.CompareTag("DrumstickHeadR"))
                     StartCoroutine(Haptic(freq, amp, dura, true, false));
