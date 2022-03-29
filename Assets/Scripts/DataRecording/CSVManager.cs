@@ -7,23 +7,26 @@ namespace DataRecording
 {
     public class CsvManager : MonoBehaviour
     {
+
         private DataRecorder dataRecorder;
         [SerializeField]private UnityEvent trigger;
+
 
         private void Start()
         {
             dataRecorder = FindObjectOfType<DataRecorder>();
         }
         
-
         
         private void Update()
         {
             trigger.Invoke();
+
         }
 
         void FixedUpdate()
         {
+
             print(dataRecorder.CurrentConnectedPlayers.Count);
             if (dataRecorder.CurrentConnectedPlayers.Count >= 0)
             {
@@ -82,3 +85,4 @@ namespace DataRecording
         }
     }
 }
+
