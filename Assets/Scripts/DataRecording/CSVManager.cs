@@ -9,7 +9,6 @@ namespace DataRecording
     {
 
         private DataRecorder dataRecorder;
-        [SerializeField]private UnityEvent trigger;
 
 
         private void Start()
@@ -18,11 +17,7 @@ namespace DataRecording
         }
         
         
-        private void Update()
-        {
-            trigger.Invoke();
-
-        }
+       
 
         void FixedUpdate()
         {
