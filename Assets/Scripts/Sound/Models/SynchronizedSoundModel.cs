@@ -1,3 +1,4 @@
+using System;
 using Normal.Realtime;
 using Normal.Realtime.Serialization;
 

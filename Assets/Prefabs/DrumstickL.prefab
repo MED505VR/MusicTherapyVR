@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 2607632696523198179}
   - component: {fileID: 130129880526961397}
   - component: {fileID: 6478152787085605830}
+  - component: {fileID: 5875871609325795127}
   m_Layer: 0
   m_Name: DrumstickHeadL
   m_TagString: DrumstickHeadL
@@ -194,3 +195,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &5875871609325795127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7288039738102073554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d8ed4ee5a79a4a488b979bea40e1487, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0

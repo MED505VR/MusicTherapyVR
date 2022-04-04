@@ -1,15 +1,19 @@
+using System;
 using System.Collections;
 using Normal.Realtime;
 using Sound.Models;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Sound
 {
     [RequireComponent(typeof(AudioSource))]
     public abstract class SynchronizedSound : RealtimeComponent<SynchronizedSoundModel>
     {
+        public static event Action<string> SynchronizedSoundIsFired;
+        
         public AudioSource SoundAudioSource { get; set; }
-
+        
         [field: SerializeField] private AudioClip SoundAudioClip { get; set; }
 
         protected virtual void Start()
@@ -42,6 +46,8 @@ namespace Sound
 
         private void PlaySynchronizedSoundDidChange(SynchronizedSoundModel pModel, bool value)
         {
+            SynchronizedSoundIsFired?.Invoke(gameObject.name);
+            
             if (model.playSynchronizedSound)
                 SoundAudioSource.Play();
             else
