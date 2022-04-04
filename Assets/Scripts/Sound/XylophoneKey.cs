@@ -1,22 +1,22 @@
-using System;
 using System.Collections;
-using DataRecording;
 using UnityEngine;
 using UnityEngine.Events;
+
 namespace Sound
 {
     public class XylophoneKey : SynchronizedSound
     {
+        public static UnityEvent<string> instrumentHit;
+
         [Header("Haptic Settings")] [SerializeField]
         private float freq;
 
-       
+
         [SerializeField] private float amp;
         [SerializeField] private float dura;
-        
-        [Header("Datarecording")][SerializeField] private int timesHit;
-        
-        public static UnityEvent<string> instrumentHit;
+
+        [Header("Datarecording")] [SerializeField]
+        private int timesHit;
 
         protected void Awake()
         {
@@ -27,10 +27,12 @@ namespace Sound
         {
             if (other.CompareTag("DrumstickHeadR") || other.CompareTag("DrumstickHeadL"))
             {
-                SoundAudioSource.volume = other.gameObject.GetComponent<TrackSpeed>().speed;
+                var speed = other.gameObject.GetComponent<TrackSpeed>().speed;
+                SoundAudioSource.volume = speed;
+                SetSoundInteractionStrength(speed);
                 PlaySynchronizedSound();
                 instrumentHit.Invoke(gameObject.name);
-                
+
 
                 if (other.CompareTag("DrumstickHeadR"))
                     StartCoroutine(Haptic(freq, amp, dura, true, false));

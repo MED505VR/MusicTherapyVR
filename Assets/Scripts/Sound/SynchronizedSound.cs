@@ -25,22 +25,40 @@ namespace Sound
         }
 
         public static event Action<string> SynchronizedSoundIsFired;
+        public static event Action<string, float> SoundInteractionStrengthIsUsed;
 
         protected override void OnRealtimeModelReplaced(SynchronizedSoundModel previousModel,
             SynchronizedSoundModel currentModel)
         {
-            if (previousModel != null) // Unregister from events
+            if (previousModel != null) // Unregister from events 
+            {
                 previousModel.playSynchronizedSoundDidChange -= PlaySynchronizedSoundDidChange;
+                previousModel.soundInteractionStrengthDidChange -= SoundInteractionStrengthDidChange;
+            }
 
             if (currentModel != null)
             {
                 // If this is a model that has no data set on it, populate it with the current mesh renderer color.
                 if (currentModel.isFreshModel)
+                {
                     currentModel.playSynchronizedSound = false;
+                    currentModel.soundInteractionStrength = 0;
+                }
 
                 // Register for events so we'll know if the color changes later
                 currentModel.playSynchronizedSoundDidChange += PlaySynchronizedSoundDidChange;
+                currentModel.soundInteractionStrengthDidChange += SoundInteractionStrengthDidChange;
             }
+        }
+
+        private void SoundInteractionStrengthDidChange(SynchronizedSoundModel synchronizedSoundModel, float value)
+        {
+            SoundInteractionStrengthIsUsed?.Invoke(gameObject.name, value);
+        }
+
+        protected void SetSoundInteractionStrength(float value)
+        {
+            model.soundInteractionStrength = value;
         }
 
         private void PlaySynchronizedSoundDidChange(SynchronizedSoundModel pModel, bool value)

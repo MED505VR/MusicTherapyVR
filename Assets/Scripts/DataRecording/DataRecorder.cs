@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using ClosedXML.Excel;
 using Normal.Realtime;
 using Sound;
@@ -12,6 +13,7 @@ namespace DataRecording
     {
         private int _angryEmojiCounter;
         private int[] _balafonCounters;
+        private List<List<float>> _hitStrenght;
         private int _drumCounter;
         private int _neutralEmojiCounter;
         private int _sadEmojiCounter;
@@ -23,12 +25,20 @@ namespace DataRecording
         {
             _balafonCounters = new int[12];
             CurrentConnectedPlayers = new List<RealtimeAvatar>();
+
+            _hitStrenght = new List<List<float>>();
+
+            for (int i = 0; i < 13; i++)
+            {
+                _hitStrenght.Add(new List<float>());
+            }
         }
 
         private void Start()
         {
             InvokeRepeating(nameof(CheckForConnectedPlayers), 5f, 10f);
             SynchronizedSound.SynchronizedSoundIsFired += OnSynchronizedSoundIsFired;
+            SynchronizedSound.SoundInteractionStrengthIsUsed += OnInteractionStrengthIsUsed;
 
             _xlWorkbook = new XLWorkbook();
 
@@ -78,6 +88,7 @@ namespace DataRecording
                     break;
 
                 case "key1":
+                    _balafonCounters[0]++;
                     _xlWorkbook.Worksheet("Balafon data").Cell("C2").SetValue(_balafonCounters[0]);
                     break;
 
@@ -134,6 +145,81 @@ namespace DataRecording
                 case "key12":
                     _balafonCounters[11]++;
                     _xlWorkbook.Worksheet("Balafon data").Cell("N2").SetValue(_balafonCounters[11]);
+                    break;
+
+                default:
+                    Debug.Log(objectName + ": Is not a recognized object.");
+                    break;
+            }
+        }
+        
+        private void OnInteractionStrengthIsUsed(string objectName, float value)
+        {
+            switch (objectName)
+            {
+                case "drumCollider":
+                    _hitStrenght[0].Add(value);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("B3").SetValue(_hitStrenght[0].Average());
+                    break;
+
+                case "key1":
+                    _hitStrenght[1].Add(value);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("C3").SetValue(_hitStrenght[1].Average());
+                    break;
+
+                case "key2":
+                    _hitStrenght[2].Add(value);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("D3").SetValue(_hitStrenght[2].Average());
+                    break;
+
+                case "key3":
+                    _hitStrenght[3].Add(value);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("E3").SetValue(_hitStrenght[3].Average());
+                    break;
+
+                case "key4":
+                    _hitStrenght[4].Add(value);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("F3").SetValue(_hitStrenght[4].Average());
+                    break;
+
+                case "key5":
+                    _hitStrenght[5].Add(value);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("G3").SetValue(_hitStrenght[5].Average());
+                    break;
+
+                case "key6":
+                    _hitStrenght[6].Add(value);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("H3").SetValue(_hitStrenght[6].Average());
+                    break;
+
+                case "key7":
+                    _hitStrenght[7].Add(value);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("I3").SetValue(_hitStrenght[7].Average());
+                    break;
+
+                case "key8":
+                    _hitStrenght[8].Add(value);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("J3").SetValue(_hitStrenght[8].Average());
+                    break;
+
+                case "key9":
+                    _hitStrenght[9].Add(value);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("K3").SetValue(_hitStrenght[9].Average());
+                    break;
+
+                case "key10":
+                    _hitStrenght[10].Add(value);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("L3").SetValue(_hitStrenght[10].Average());
+                    break;
+
+                case "key11":
+                    _hitStrenght[11].Add(value);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("M3").SetValue(_hitStrenght[11].Average());
+                    break;
+
+                case "key12":
+                    _hitStrenght[12].Add(value);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("N3").SetValue(_hitStrenght[12].Average());
                     break;
 
                 default:
