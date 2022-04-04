@@ -44,18 +44,17 @@ namespace DataRecording
                 "Balafon key6", "Balafon key7", "Balafon key8", "Balafon key9", "Balafon key10", "Balafon key11",
                 "Balafon key12"
             };
+            
             string[] bColumns = { "Interaction Amount", "Interaction Strength" };
-            _xlWorkbook.Worksheets.Add("Balafon data").Cell(4, 1).InsertData(bHeaders, true);
-            _xlWorkbook.Worksheet("Balafon data").Cell(5, 1).InsertData(bColumns, false);
-            _xlWorkbook.Worksheet("Balafon data").Row(4).Style.Font.SetBold();
+            _xlWorkbook.Worksheets.Add("Balafon data").Cell(1, 1).InsertData(bHeaders, true);
+            _xlWorkbook.Worksheet("Balafon data").Cell(2, 1).InsertData(bColumns, false);
+            _xlWorkbook.Worksheet("Balafon data").Row(1).Style.Font.SetBold();
 
             StartCoroutine(SaveWorkbookRepeating(_xlWorkbook, 15, 30));
         }
 
         private void OnSynchronizedSoundIsFired(string objectName)
         {
-            Debug.Log("Logged: " + objectName);
-            
             switch (objectName)
             {
                 case "AngryEmoji":
@@ -75,66 +74,66 @@ namespace DataRecording
 
                 case "drumCollider":
                     _drumCounter++;
-                    _xlWorkbook.Worksheet("Balafon data").Cell("B5").SetValue(_drumCounter);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("B2").SetValue(_drumCounter);
                     break;
 
                 case "key1":
-                    _xlWorkbook.Worksheet("Balafon data").Cell("C5").SetValue(_balafonCounters[0]);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("C2").SetValue(_balafonCounters[0]);
                     break;
 
                 case "key2":
                     _balafonCounters[1]++;
-                    _xlWorkbook.Worksheet("Balafon data").Cell("D5").SetValue(_balafonCounters[1]);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("D2").SetValue(_balafonCounters[1]);
                     break;
 
                 case "key3":
                     _balafonCounters[2]++;
-                    _xlWorkbook.Worksheet("Balafon data").Cell("E5").SetValue(_balafonCounters[2]);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("E2").SetValue(_balafonCounters[2]);
                     break;
 
                 case "key4":
                     _balafonCounters[3]++;
-                    _xlWorkbook.Worksheet("Balafon data").Cell("F5").SetValue(_balafonCounters[3]);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("F2").SetValue(_balafonCounters[3]);
                     break;
 
                 case "key5":
                     _balafonCounters[4]++;
-                    _xlWorkbook.Worksheet("Balafon data").Cell("G5").SetValue(_balafonCounters[4]);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("G2").SetValue(_balafonCounters[4]);
                     break;
 
                 case "key6":
                     _balafonCounters[5]++;
-                    _xlWorkbook.Worksheet("Balafon data").Cell("H5").SetValue(_balafonCounters[5]);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("H2").SetValue(_balafonCounters[5]);
                     break;
 
                 case "key7":
                     _balafonCounters[6]++;
-                    _xlWorkbook.Worksheet("Balafon data").Cell("I5").SetValue(_balafonCounters[6]);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("I2").SetValue(_balafonCounters[6]);
                     break;
 
                 case "key8":
                     _balafonCounters[7]++;
-                    _xlWorkbook.Worksheet("Balafon data").Cell("J5").SetValue(_balafonCounters[7]);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("J2").SetValue(_balafonCounters[7]);
                     break;
 
                 case "key9":
                     _balafonCounters[8]++;
-                    _xlWorkbook.Worksheet("Balafon data").Cell("K5").SetValue(_balafonCounters[8]);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("K2").SetValue(_balafonCounters[8]);
                     break;
 
                 case "key10":
                     _balafonCounters[9]++;
-                    _xlWorkbook.Worksheet("Balafon data").Cell("L5").SetValue(_balafonCounters[9]);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("L2").SetValue(_balafonCounters[9]);
                     break;
 
                 case "key11":
                     _balafonCounters[10]++;
-                    _xlWorkbook.Worksheet("Balafon data").Cell("M5").SetValue(_balafonCounters[10]);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("M2").SetValue(_balafonCounters[10]);
                     break;
 
                 case "key12":
                     _balafonCounters[11]++;
-                    _xlWorkbook.Worksheet("Balafon data").Cell("N5").SetValue(_balafonCounters[11]);
+                    _xlWorkbook.Worksheet("Balafon data").Cell("N2").SetValue(_balafonCounters[11]);
                     break;
 
                 default:
